@@ -1,8 +1,8 @@
-﻿// LabProject00.cpp : 애플리케이션에 대한 진입점을 정의합니다.
+﻿// Labproject01.cpp : 애플리케이션에 대한 진입점을 정의합니다.
 //
 
-#include "stdafx.h"
-#include "LabProject00.h"
+#include "framework.h"
+#include "Labproject01.h"
 
 #define MAX_LOADSTRING 100
 
@@ -29,9 +29,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // 전역 문자열을 초기화합니다.
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_LABPROJECT00, szWindowClass, MAX_LOADSTRING);
-
-    //윈도우 클래스를 등록한다
+    LoadStringW(hInstance, IDC_LABPROJECT01, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     // 애플리케이션 초기화를 수행합니다:
@@ -40,12 +38,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_LABPROJECT00));
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_LABPROJECT01));
 
     MSG msg;
 
     // 기본 메시지 루프입니다:
-    while (GetMessage(&msg, nullptr, 0, 0))  //가져온 메세지가 WM_QUIT일 때 까지 반복
+    while (GetMessage(&msg, nullptr, 0, 0))
     {
         if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
         {
@@ -71,14 +69,14 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbSize = sizeof(WNDCLASSEX);
 
     wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;  //윈도우 프로시저 설정
+    wcex.lpfnWndProc    = WndProc;
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_LABPROJECT00));
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_LABPROJECT01));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_LABPROJECT00);
+    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_LABPROJECT01);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -89,7 +87,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //   함수: InitInstance(HINSTANCE, int)
 //
 //   용도: 인스턴스 핸들을 저장하고 주 창을 만듭니다.
-//         주 윈도우를 생성하고 화면에 보이도록 하는 함수
+//
 //   주석:
 //
 //        이 함수를 통해 인스턴스 핸들을 전역 변수에 저장하고
@@ -97,11 +95,14 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
+   DWORD dwStyle = WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU |
+        WS_BORDER;
+   RECT rc = { 0,0,640,480 };
+   AdjustWindowRect(&rc, dwStyle, FALSE);
 
-   //CreateWindow() 윈도우를 생성하는 윈도우 api 함수
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+   HWND hWnd = CreateWindow(szWindowClass, szTitle, dwStyle, CW_USEDEFAULT,
+       CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance,
+       NULL);
 
    if (!hWnd)
    {
@@ -124,8 +125,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
 //
 //
-//주 윈도우가 처리해야 하는 윈도우 메시지가 주 윈도우에게 전달될 때 호출되는 메시지 처리 함수
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)  //윈도우 핸들 , message ID , 2개의 파라미터
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
