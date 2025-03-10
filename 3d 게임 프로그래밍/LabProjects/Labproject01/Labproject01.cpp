@@ -98,6 +98,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    DWORD dwStyle = WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU |
         WS_BORDER;
    RECT rc = { 0,0,640,480 };
+   //윈도우가 원하는 클라이언트 크기를 가져오도록 해줌
    AdjustWindowRect(&rc, dwStyle, FALSE);
 
    HWND hWnd = CreateWindow(szWindowClass, szTitle, dwStyle, CW_USEDEFAULT,
