@@ -1,55 +1,30 @@
 //-------------------------------------------------------------------------------------------
 // 2025 STL 화56 목78  3월 11일 목요일      (1주 2일차 강의) 
 //-------------------------------------------------------------------------------------------
-//   template 복습
+//   많은 수의 자료를 처리하기
 //
 //-------------------------------------------------------------------------------------------
 #include<iostream>
+#include <random>
+#include<print>
 #include"save.h"
-using namespace std;      //우리는 이렇게 하면 안되지만, 공부시간을 줄이기 위해
 
+using namespace std;
 
-// C++에서 [문제] change 함수는 몇 번이나 overloading 해야 할까??
-// C++ 언어의 자료형은 몇 개인가? 무한개
+default_random_engine dre; //엔전에서 막 임의의 bit를 가공한다
+uniform_int_distribution uid{ 1,999'9999 };
+//[문제] 랜덤 int 1000개를 생성하여 화면에 출력하라
 
-class Dog {
-public:
-	
-	Dog() = default;
-	Dog(int n) :num{ n } { };
-	friend ostream& operator<<(ostream& os, const Dog& dog) {
-		return os << dog.num;
-	}
-private:
-	int num{ };
-};
-
-//템플릿은 선언과 정의를 동시에 한다
-template<class T>
-void change(T& a, T& b)
-{
-	T temp{ a };
-	a = b;
-	b = temp;
-}
 //----------
 int main()
 //----------
 {
-	cout << sizeof(Dog);
-	{
-		Dog a{ 1 }, b{ 2 };
-		change(a, b);
-		cout << a << " ," << b << endl;  //의도  -2,1  연산자 오버로딩 하는 줄
-	}
+	int p[1000];
+	for (int i = 0; i < 1000; ++i)
+		print("{:8}", uid(dre));  //나는 8 글자에 맞추어 볼래
+	cout << endl;
 
-	{
-		int a{ 1 }, b{ 2 };
-		change(a, b);
-		cout << a << " ," << b << endl;  //의도  -2,1
-	}
-	save("메인.cpp");
-	
+	save("메인.cpp");	
 }
 
 
