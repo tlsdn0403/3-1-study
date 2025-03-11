@@ -1,29 +1,58 @@
 //-------------------------------------------------------------------------------------------
-// 2025 STL 화56 목78  3월 6일 목요일      (1주 2일차 강의) 
+// 2025 STL 화56 목78  3월 11일 목요일      (1주 2일차 강의) 
 //-------------------------------------------------------------------------------------------
-//컴파일환경 확인/ 한학기 강의를 저장 할 save 파일 만들기
-// 과제 -save.cpp로 분리하세요
-//-------------------------------------------------------------------------------------------
-// VS 버전 - 17.13 이상
-// Release 모드의 x64  / C++ 언어 표준 - /std:: c++ latest, sdl 검사 - 아니요
+//   template 복습
+//
 //-------------------------------------------------------------------------------------------
 #include<iostream>
-#include<string>
-#include<fstream>
-#include<filesystem>
-#include<vector>
-#include<algorithm>
-#include<chrono>
 #include"save.h"
-//[문제] 문제없이 파일이 저장되도록 해라  
-void save(std::string_view fileName); //데이터 이름을 안바꿀 거고 데이터 크기가 있다보니 복사해서 가져오지 않을 꺼야 const string&랑 같다
+using namespace std;      //우리는 이렇게 하면 안되지만, 공부시간을 줄이기 위해
+
+
+// C++에서 [문제] change 함수는 몇 번이나 overloading 해야 할까??
+// C++ 언어의 자료형은 몇 개인가? 무한개
+
+class Dog {
+public:
+	
+	Dog() = default;
+	Dog(int n) :num{ n } { };
+	friend ostream& operator<<(ostream& os, const Dog& dog) {
+		return os << dog.num;
+	}
+private:
+	int num{ };
+};
+
+//템플릿은 선언과 정의를 동시에 한다
+template<class T>
+void change(T& a, T& b)
+{
+	T temp{ a };
+	a = b;
+	b = temp;
+}
 //----------
 int main()
 //----------
 {
-	std::cout << "2025 STL" << std::endl; //end of line 을 쓸 것이다
+	cout << sizeof(Dog);
+	{
+		Dog a{ 1 }, b{ 2 };
+		change(a, b);
+		cout << a << " ," << b << endl;  //의도  -2,1  연산자 오버로딩 하는 줄
+	}
 
+	{
+		int a{ 1 }, b{ 2 };
+		change(a, b);
+		cout << a << " ," << b << endl;  //의도  -2,1
+	}
 	save("메인.cpp");
+	
 }
+
+
+
 
 
