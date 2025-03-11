@@ -13,7 +13,8 @@ using namespace std;
 
 default_random_engine dre; //엔전에서 막 임의의 bit를 가공한다
 uniform_int_distribution uid{ 1,999'9999 };
-//[문제] 랜덤 int 1000개를 생성하여 화면에 출력하라
+//[문제] 랜덤 int 1000개를 메모리에 저장하라
+// 가장 큰 값을 찾아 화면에 출력하라
 
 //----------
 int main()
