@@ -5,7 +5,7 @@
 //
 //-------------------------------------------------------------------------------------------
 #include<iostream>
-#include <random>
+#include<random>
 #include<print>
 #include<fstream>
 #include<array>
@@ -18,7 +18,7 @@ default_random_engine dre{  }; //엔진의 시드를 설정할 수 있다.
 uniform_int_distribution uid{ 0,999'9999 }; 
 
 
-//[문제] 파일 "int 100개.txt"에는 intㄱ밧 100개가 text로 기록되어 있다.
+//[문제] 파일 "int 100개.txt"에는 int 1000개가 text로 기록되어 있다.
 // 가장 큰 값을 찾아 화면에 출력하라. 출력된 값이 무엇인지 적어라
 
 
@@ -29,14 +29,9 @@ int main()
 {
    
     ifstream in{ "int 1000개.txt" };
-    array<int, 1000> arr;
-    for (int i = 0; i < 1000; ++i) {
-        in >> arr[i];
-    }
-    cout << "가장 큰 값은 :" << *max_element(arr.begin(), arr.end()) << endl;
-    for (auto num : arr) {
-        print("{:8}", num);
-    }
+    if (not in)
+        return 20250313;
+    cout<<"최댓값은:"<<*max_element(istream_iterator<int>{in}, {})<<endl; //별 3개를 건너뛰고 이런코딩도 가능하다
 
 	save("메인.cpp");	
 
