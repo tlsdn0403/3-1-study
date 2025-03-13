@@ -1315,3 +1315,866 @@ void find_max_num(int num[]) {
 
 
 
+
+
+==============================================
+저장한 시간 :2025-03-13 오후 3:35:41 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 13일 목요일      (2주 2일차 강의) 
+//-------------------------------------------------------------------------------------------
+//   많은 수의 자료를 처리하기
+//
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include <random>
+#include<print>
+#include"save.h"
+
+using namespace std;
+
+default_random_engine dre; //엔전에서 막 임의의 bit를 가공한다
+uniform_int_distribution uid{ 1,999'9999 };
+//[문제] 랜덤 int 1000개를 메모리에 저장하라
+// 가장 큰 값을 찾아 화면에 출력하라
+void find_max_num(int num[]);
+
+//----------
+int main()
+//----------
+{
+	int p[1000];
+	for (int i = 0; i < 1000; ++i) {
+		p[i] = uid(dre);
+		print("{:8}", p[i]);  //나는 8 글자에 맞추어 볼래
+	}
+	cout << endl;
+	find_max_num(p);
+
+	save("메인.cpp");	
+}
+void find_max_num(int num[]) {
+	int maxNum = 0;
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, num[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+}
+
+
+
+
+
+
+
+==============================================
+저장한 시간 :2025-03-13 오후 3:36:39 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 13일 목요일      (2주 2일차 강의) 
+//-------------------------------------------------------------------------------------------
+//   많은 수의 자료를 처리하기
+//
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include <random>
+#include<print>
+#include"save.h"
+
+using namespace std;
+
+default_random_engine dre{ }; //엔진의 시드를 설정할 수 있다. 
+uniform_int_distribution uid{ 0,999'9999 };
+//[문제] 랜덤 int 1000개를 메모리에 저장하라
+// 가장 큰 값을 찾아 화면에 출력하라
+void find_max_num(int num[]);
+
+//----------
+int main()
+//----------
+{
+	int p[1000];
+	for (int i = 0; i < 1000; ++i) {
+		p[i] = uid(dre);
+		print("{:8}", p[i]);  //나는 8 글자에 맞추어 볼래
+	}
+	cout << endl;
+	find_max_num(p);
+
+	save("메인.cpp");	
+}
+void find_max_num(int num[]) {
+	int maxNum = 0;
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, num[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+}
+
+
+
+
+
+
+
+==============================================
+저장한 시간 :2025-03-13 오후 3:37:13 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 13일 목요일      (2주 2일차 강의) 
+//-------------------------------------------------------------------------------------------
+//   많은 수의 자료를 처리하기
+//
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include <random>
+#include<print>
+#include"save.h"
+
+using namespace std;
+
+default_random_engine dre{ random_device{}() }; //엔진의 시드를 설정할 수 있다. 
+uniform_int_distribution uid{ 0,999'9999 };
+//[문제] 랜덤 int 1000개를 메모리에 저장하라
+// 가장 큰 값을 찾아 화면에 출력하라
+void find_max_num(int num[]);
+
+//----------
+int main()
+//----------
+{
+	int p[1000];
+	for (int i = 0; i < 1000; ++i) {
+		p[i] = uid(dre);
+		print("{:8}", p[i]);  //나는 8 글자에 맞추어 볼래
+	}
+	cout << endl;
+	find_max_num(p);
+
+	save("메인.cpp");	
+}
+void find_max_num(int num[]) {
+	int maxNum = 0;
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, num[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+}
+
+
+
+
+
+
+
+==============================================
+저장한 시간 :2025-03-13 오후 3:39:42 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 13일 목요일      (2주 2일차 강의) 
+//-------------------------------------------------------------------------------------------
+//   많은 수의 자료를 처리하기
+//
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include <random>
+#include<print>
+#include"save.h"
+
+using namespace std;
+
+default_random_engine dre{ random_device{}() }; //엔진의 시드를 설정할 수 있다. 
+uniform_int_distribution uid{ 0,999'9999 };
+//[문제] 랜덤 int 1000개를 메모리에 저장하라
+// 가장 큰 값을 찾아 화면에 출력하라
+void find_max_num(int num[]);
+
+//----------
+int main()
+//----------
+{
+	int p[1000];
+	for (int i = 0; i < 1000; ++i) {
+		p[i] = uid(dre);
+		print("{:8}", p[i]);  //나는 8 글자에 맞추어 볼래
+	}
+	cout << endl;
+	find_max_num(p);
+
+	save("메인.cpp");	
+}
+void find_max_num(int num[]) {
+	int maxNum = 0;
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, num[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+}
+
+
+
+
+
+
+
+==============================================
+저장한 시간 :2025-03-13 오후 3:46:50 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 13일 목요일      (2주 2일차 강의) 
+//-------------------------------------------------------------------------------------------
+//   많은 수의 자료를 처리하기
+//
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include <random>
+#include<print>
+#include<vector>
+#include"save.h"
+
+using namespace std;
+
+default_random_engine dre{ random_device{}() }; //엔진의 시드를 설정할 수 있다. 
+uniform_int_distribution uid{ 0,999'9999 };
+//[문제] 랜덤 int 1000개를 메모리에 저장하라
+// 저장된 값 중에서 가장 큰 값을 찾아 화면에 출력하라 
+
+void find_max_num(int num[]);
+
+//----------
+int main()
+//----------
+{
+	int p[1000];
+	vector<int> vi;
+	vi.resize(1000);
+	for (int i = 0; i < 1000; ++i) {
+		vi[i] = uid(dre);
+		print("{:8}", p[i]);  //나는 8 글자에 맞추어 볼래
+	}
+	cout << endl;
+	auto mNum= *max_element(vi.begin(), vi.end());
+	cout << " 가장 큰 수는 :" << mNum << endl;
+	
+
+	save("메인.cpp");	
+}
+void find_max_num(int num[]) {
+	int maxNum = 0;
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, num[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+}
+
+
+
+
+
+
+
+==============================================
+저장한 시간 :2025-03-13 오후 3:47:05 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 13일 목요일      (2주 2일차 강의) 
+//-------------------------------------------------------------------------------------------
+//   많은 수의 자료를 처리하기
+//
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include <random>
+#include<print>
+#include<vector>
+#include"save.h"
+
+using namespace std;
+
+default_random_engine dre{ random_device{}() }; //엔진의 시드를 설정할 수 있다. 
+uniform_int_distribution uid{ 0,999'9999 };
+//[문제] 랜덤 int 1000개를 메모리에 저장하라
+// 저장된 값 중에서 가장 큰 값을 찾아 화면에 출력하라 
+
+void find_max_num(int num[]);
+
+//----------
+int main()
+//----------
+{
+	int p[1000];
+	vector<int> vi;
+	vi.resize(1000);
+	for (int i = 0; i < 1000; ++i) {
+		vi[i] = uid(dre);
+		print("{:8}", vi[i]);  //나는 8 글자에 맞추어 볼래
+	}
+	cout << endl;
+	auto mNum= *max_element(vi.begin(), vi.end());
+	cout << " 가장 큰 수는 :" << mNum << endl;
+	
+
+	save("메인.cpp");	
+}
+void find_max_num(int num[]) {
+	int maxNum = 0;
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, num[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+}
+
+
+
+
+
+
+
+==============================================
+저장한 시간 :2025-03-13 오후 3:48:27 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 13일 목요일      (2주 2일차 강의) 
+//-------------------------------------------------------------------------------------------
+//   많은 수의 자료를 처리하기
+//
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include <random>
+#include<print>
+#include<vector>
+#include"save.h"
+
+using namespace std;
+
+default_random_engine dre{  }; //엔진의 시드를 설정할 수 있다. 
+uniform_int_distribution uid{ 0,999'9999 };
+//[문제] 랜덤 int 1000개를 메모리에 저장하라
+// 저장된 값 중에서 가장 큰 값을 찾아 화면에 출력하라 
+
+void find_max_num(int num[]);
+
+//----------
+int main()
+//----------
+{
+	int p[1000];
+	vector<int> vi;
+	vi.resize(1000);
+	for (int i = 0; i < 1000; ++i) {
+		vi[i] = uid(dre);
+		print("{:8}", vi[i]);  //나는 8 글자에 맞추어 볼래
+	}
+	cout << endl;
+	auto mNum= *max_element(vi.begin(), vi.end());
+	cout << " 가장 큰 수는 :" << mNum << endl;
+	
+
+	save("메인.cpp");	
+}
+void find_max_num(int num[]) {
+	int maxNum = 0;
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, num[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+}
+
+
+
+
+
+
+
+==============================================
+저장한 시간 :2025-03-13 오후 3:51:32 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 13일 목요일      (2주 2일차 강의) 
+//-------------------------------------------------------------------------------------------
+//   많은 수의 자료를 처리하기
+//
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include <random>
+#include<print>
+#include<vector>
+#include"save.h"
+
+using namespace std;
+
+default_random_engine dre{  }; //엔진의 시드를 설정할 수 있다. 
+uniform_int_distribution uid{ 0,999'9999 }; 
+//[문제] 랜덤 int 1000개를 메모리에 저장하라
+// 저장된 값 중에서 가장 큰 값을 찾아 화면에 출력하라 
+
+void find_max_num(int num[]);
+
+//----------
+int main()
+//----------
+{
+	int p[1000];
+	vector<int> vi;
+	vi.resize(1000);
+	for (int i = 0; i < 1000; ++i) {
+		vi[i] = uid(dre);
+		print("{:8}", vi[i]);  //나는 8 글자에 맞추어 볼래
+	}
+	cout << endl;
+	auto mNum= *max_element(vi.begin(), vi.end());
+	cout << " 가장 큰 수는 :" << mNum << endl;
+	
+
+	save("메인.cpp");	
+}
+void find_max_num(int num[]) {
+	int maxNum{ numeric_limits<int>::min() }; //공부 좀 한 학생은 이렇게 쓴다.
+
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, num[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+}
+
+
+
+
+
+
+
+==============================================
+저장한 시간 :2025-03-13 오후 3:51:40 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 13일 목요일      (2주 2일차 강의) 
+//-------------------------------------------------------------------------------------------
+//   많은 수의 자료를 처리하기
+//
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include <random>
+#include<print>
+#include<vector>
+#include"save.h"
+
+using namespace std;
+
+default_random_engine dre{  }; //엔진의 시드를 설정할 수 있다. 
+uniform_int_distribution uid{ 0,999'9999 }; 
+//[문제] 랜덤 int 1000개를 메모리에 저장하라
+// 저장된 값 중에서 가장 큰 값을 찾아 화면에 출력하라 
+
+void find_max_num(int num[]);
+
+//----------
+int main()
+//----------
+{
+	int p[1000];
+	vector<int> vi;
+	vi.resize(1000);
+	for (int i = 0; i < 1000; ++i) {
+		vi[i] = uid(dre);
+		print("{:8}", vi[i]);  //나는 8 글자에 맞추어 볼래
+	}
+	cout << endl;
+	auto mNum= *max_element(vi.begin(), vi.end());
+	cout << " 가장 큰 수는 :" << mNum << endl;
+	
+
+	save("메인.cpp");	
+}
+void find_max_num(int num[]) {
+	int maxNum{ numeric_limits<int>::min() }; //공부 좀 한 학생은 이렇게 쓴다.
+
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, num[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+}
+
+
+
+
+
+
+
+==============================================
+저장한 시간 :2025-03-13 오후 3:57:49 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 13일 목요일      (2주 2일차 강의) 
+//-------------------------------------------------------------------------------------------
+//   많은 수의 자료를 처리하기
+//
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include <random>
+#include<print>
+#include<vector>
+#include<array>
+#include"save.h"
+
+using namespace std;
+
+default_random_engine dre{  }; //엔진의 시드를 설정할 수 있다. 
+uniform_int_distribution uid{ 0,999'9999 }; 
+
+
+//[문제] 랜덤 int 1000개를 메모리에 저장하라
+// 저장된 값 중에서 가장 큰 값을 찾아 화면에 출력하라 
+
+void find_max_num(int num[]);
+
+//----------
+int main()
+//----------
+{
+	array<int, 1000> arr; //일관된 표현식으로 바뀐다.
+
+	for (int i = 0; i < 1000; ++i) { // 1000은 magic number라 부름 무의미하다.  1000박아놓는거는 hard-wired 라고 한다 가능하면 피해야 한다.
+		arr[i] = uid(dre);
+	}
+	int maxNum{ numeric_limits<int>::min() }; //공부 좀 한 학생은 이렇게 쓴다.
+
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, arr[i]);
+	}
+	cout << endl;
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+	
+
+	save("메인.cpp");	
+}
+void find_max_num(int num[]) {
+	int maxNum{ numeric_limits<int>::min() }; //공부 좀 한 학생은 이렇게 쓴다.
+
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, num[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+}
+
+
+
+
+
+
+
+==============================================
+저장한 시간 :2025-03-13 오후 3:58:08 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 13일 목요일      (2주 2일차 강의) 
+//-------------------------------------------------------------------------------------------
+//   많은 수의 자료를 처리하기
+//
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include <random>
+#include<print>
+#include<vector>
+#include<array>
+#include"save.h"
+
+using namespace std;
+
+default_random_engine dre{  }; //엔진의 시드를 설정할 수 있다. 
+uniform_int_distribution uid{ 0,999'9999 }; 
+
+
+//[문제] 랜덤 int 1000개를 메모리에 저장하라
+// 저장된 값 중에서 가장 큰 값을 찾아 화면에 출력하라 
+
+void find_max_num(int num[]);
+
+//----------
+int main()
+//----------
+{
+	array<int, 1000> arr; //일관된 표현식으로 바뀐다.
+
+	for (int i = 0; i < arr.size(); ++i) { // 1000은 magic number라 부름 무의미하다.  1000박아놓는거는 hard-wired 라고 한다 가능하면 피해야 한다.
+		arr[i] = uid(dre);
+	}
+	int maxNum{ numeric_limits<int>::min() }; //공부 좀 한 학생은 이렇게 쓴다.
+
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, arr[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+	
+
+	save("메인.cpp");	
+}
+void find_max_num(int num[]) {
+	int maxNum{ numeric_limits<int>::min() }; //공부 좀 한 학생은 이렇게 쓴다.
+
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, num[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+}
+
+
+
+
+
+
+
+==============================================
+저장한 시간 :2025-03-13 오후 3:59:43 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 13일 목요일      (2주 2일차 강의) 
+//-------------------------------------------------------------------------------------------
+//   많은 수의 자료를 처리하기
+//
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include <random>
+#include<print>
+#include<vector>
+#include<array>
+#include"save.h"
+
+using namespace std;
+
+default_random_engine dre{  }; //엔진의 시드를 설정할 수 있다. 
+uniform_int_distribution uid{ 0,999'9999 }; 
+
+
+//[문제] 랜덤 int 1000개를 메모리에 저장하라
+// 저장된 값 중에서 가장 큰 값을 찾아 화면에 출력하라 
+
+void find_max_num(int num[]);
+
+//----------
+int main()
+//----------
+{
+	array<int, 1000> arr; //일관된 표현식으로 바뀐다.
+
+	for (int& num : arr) { //지역에서 지역밖에 있는거 못함 
+		num = uid(dre);
+	}
+	int maxNum{ numeric_limits<int>::min() }; //공부 좀 한 학생은 이렇게 쓴다.
+
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, arr[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+	
+
+	save("메인.cpp");	
+}
+void find_max_num(int num[]) {
+	int maxNum{ numeric_limits<int>::min() }; //공부 좀 한 학생은 이렇게 쓴다.
+
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, num[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+}
+
+
+
+
+
+
+
+==============================================
+저장한 시간 :2025-03-13 오후 4:01:02 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 13일 목요일      (2주 2일차 강의) 
+//-------------------------------------------------------------------------------------------
+//   많은 수의 자료를 처리하기
+//
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include <random>
+#include<print>
+#include<vector>
+#include<array>
+#include"save.h"
+
+using namespace std;
+
+default_random_engine dre{  }; //엔진의 시드를 설정할 수 있다. 
+uniform_int_distribution uid{ 0,999'9999 }; 
+
+
+//[문제] 랜덤 int 1000개를 메모리에 저장하라
+// 저장된 값 중에서 가장 큰 값을 찾아 화면에 출력하라 
+
+void find_max_num(int num[]);
+
+//----------
+int main()
+//----------
+{
+	array<int, 1000> arr; //일관된 표현식으로 바뀐다.
+
+	for (int& num : arr) { //지역에서 지역밖에 있는거 못함 
+		num = uid(dre);
+	}
+
+	int maxNum{ numeric_limits<int>::min() }; //공부 좀 한 학생은 이렇게 쓴다.
+
+	for (const int& num : arr) {
+		maxNum = max(maxNum, num);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+	
+
+	save("메인.cpp");	
+}
+void find_max_num(int num[]) {
+	int maxNum{ numeric_limits<int>::min() }; //공부 좀 한 학생은 이렇게 쓴다.
+
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, num[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+}
+
+
+
+
+
+
+
+==============================================
+저장한 시간 :2025-03-13 오후 4:09:06 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 13일 목요일      (2주 2일차 강의) 
+//-------------------------------------------------------------------------------------------
+//   많은 수의 자료를 처리하기
+//
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include <random>
+#include<print>
+#include<vector>
+#include<array>
+#include<algorithm>
+#include"save.h"
+
+using namespace std;
+
+default_random_engine dre{  }; //엔진의 시드를 설정할 수 있다. 
+uniform_int_distribution uid{ 0,999'9999 }; 
+
+
+//[문제] 랜덤 int 1000개를 메모리에 저장하라
+// 저장된 값 중에서 가장 큰 값을 찾아 화면에 출력하라 
+
+void find_max_num(int num[]);
+
+//----------
+int main()
+//----------
+{
+	array<int, 1000> arr; //일관된 표현식으로 바뀐다.
+
+	for (int& num : arr) { //지역에서 지역밖에 있는거 못함 
+		num = uid(dre);
+	}
+
+	auto maxIt = max_element(arr.begin(), arr.end());  //end는 iterator 가 마지막 원소 뒤에 값을 가리킨다.
+
+	cout << " 가장 큰 수는 :" << *maxIt << endl;
+	
+
+	save("메인.cpp");	
+}
+void find_max_num(int num[]) {
+	int maxNum{ numeric_limits<int>::min() }; //공부 좀 한 학생은 이렇게 쓴다.
+
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, num[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+}
+
+
+
+
+
+
+
+==============================================
+저장한 시간 :2025-03-13 오후 4:10:32 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 13일 목요일      (2주 2일차 강의) 
+//-------------------------------------------------------------------------------------------
+//   많은 수의 자료를 처리하기
+//
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include <random>
+#include<print>
+#include<vector>
+#include<array>
+#include<algorithm>
+#include"save.h"
+
+using namespace std;
+
+default_random_engine dre{  }; //엔진의 시드를 설정할 수 있다. 
+uniform_int_distribution uid{ 0,999'9999 }; 
+
+
+//[문제] 랜덤 int 1000개를 메모리에 저장하라
+// 저장된 값 중에서 가장 큰 값을 찾아 화면에 출력하라 
+
+void find_max_num(int num[]);
+
+//----------
+int main()
+//----------
+{
+	array<int, 1000> arr; //일관된 표현식으로 바뀐다.
+
+	for (int& num : arr) { //지역에서 지역밖에 있는거 못함 
+		num = uid(dre);
+	}
+
+	//end는 iterator 가 마지막 원소 뒤에 값을 가리킨다.
+
+	cout << " 가장 큰 수는 :" << *max_element(arr.begin(), arr.end()) << endl;
+	
+
+	save("메인.cpp");	
+}
+void find_max_num(int num[]) {
+	int maxNum{ numeric_limits<int>::min() }; //공부 좀 한 학생은 이렇게 쓴다.
+
+	for (int i = 0; i < 1000; ++i) {
+		maxNum = max(maxNum, num[i]);
+	}
+	cout << " 가장 큰 수는 :" << maxNum << endl;
+}
+
+
+
+
+
