@@ -40,6 +40,7 @@ int main()
     for (auto num : arr) {
         print("{:8}", num);
     }
+    cout << endl;
 	save("¸ŞÀÎ.cpp");	
 
 }
