@@ -7,9 +7,7 @@
 #include<iostream>
 #include <random>
 #include<print>
-#include<vector>
-#include<array>
-#include<algorithm>
+#include<fstream>
 #include"save.h"
 
 using namespace std;
@@ -18,38 +16,25 @@ default_random_engine dre{  }; //엔진의 시드를 설정할 수 있다.
 uniform_int_distribution uid{ 0,999'9999 }; 
 
 
-//[문제] 랜덤 int 1000개를 메모리에 저장하라
-// 저장된 값 중에서 가장 큰 값을 찾아 화면에 출력하라 
+//[문제] 랜덤 int 값 1000개를 파일"int 1000개.txt" 에 텍스트 모드로 저장하라
+// 파일을 열었을 때 사람이 읽을 수 있어야 한다.
+// 파일을 읽어서 원래 int값을 가져올 수 있어야 한다.
 
-void find_max_num(int num[]);
 
 //----------
 int main()
 //----------
 {
-	array<int, 1000> arr; //일관된 표현식으로 바뀐다.
+    ofstream out{ "int 1000개.txt"}; //RAII 하면 굳이 out.close()를 해줄 필요가 없다
+    int cnt{};
+    for (int i = 0; i < 1000; ++i) {
+        print(out, "{:8} , ", uid(dre)); //구분자 ,delimeter
+        if (not( ++cnt % 10))
+            out << endl;
+    }
 
-	for (int& num : arr) { //지역에서 지역밖에 있는거 못함 
-		num = uid(dre);
-	}
-
-	//end는 iterator 가 마지막 원소 뒤에 값을 가리킨다.
-
-	cout << " 가장 큰 수는 :" << *max_element(arr.begin(), arr.end()) << endl;
-	
+    ifstream in;
 
 	save("메인.cpp");	
+
 }
-void find_max_num(int num[]) {
-	int maxNum{ numeric_limits<int>::min() }; //공부 좀 한 학생은 이렇게 쓴다.
-
-	for (int i = 0; i < 1000; ++i) {
-		maxNum = max(maxNum, num[i]);
-	}
-	cout << " 가장 큰 수는 :" << maxNum << endl;
-}
-
-
-
-
-
