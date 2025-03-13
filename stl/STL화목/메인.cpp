@@ -19,7 +19,8 @@ uniform_int_distribution uid{ 0,999'9999 };
 
 
 //[문제] 파일 "int 100개.txt"에는 int 1000개가 text로 기록되어 있다.
-// 가장 큰 값을 찾아 화면에 출력하라. 출력된 값이 무엇인지 적어라
+// 이 데이터를 메모리에 저장하라.
+// 메모리에 있는 데이터를 화면에 출력하시오.
 
 
 
@@ -31,8 +32,14 @@ int main()
     ifstream in{ "int 1000개.txt" };
     if (not in)
         return 20250313;
-    cout<<"최댓값은:"<<*max_element(istream_iterator<int>{in}, {})<<endl; //별 3개를 건너뛰고 이런코딩도 가능하다
-
+    
+    array<int, 1000> arr;
+    for (int i = 0; i < 1000; ++i) {
+        in >> arr[i];
+    }
+    for (auto num : arr) {
+        print("{:8}", num);
+    }
 	save("메인.cpp");	
 
 }
