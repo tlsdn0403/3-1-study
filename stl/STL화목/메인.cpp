@@ -30,7 +30,7 @@ int main()
 	cout << "a에 들어있는 int 개수 -" << a.size() << endl;
 	//[문제] a의 data를 파일 "int 1000개 메모리 그대로" 에 기록하자
 	
-	ofstream out{ "int 1000개 메모리 그대로" };
+	ofstream out{ "int 1000개 메모리 그대로" ,ios::binary };  //파일을 텍스트 모드로 열었다
 	out.write((char*)a.data(), sizeof(int) * a.size()); //이파일에 메모리 그대로 입력하겠어 a.data() 어디다 저장했는지 알려준다. int가 들어있는 곳을 알려줌
 	
 	save("메인.cpp");	
