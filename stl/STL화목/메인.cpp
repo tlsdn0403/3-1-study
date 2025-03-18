@@ -9,13 +9,13 @@
 #include<iostream>
 #include<array>
 #include<numeric>
+#include<fstream>
 #include"save.h"
 
 using namespace std;
 
 
-//[문제] 메모리에 저장된 bit를 그대로 파일에 저장할 수 잇다.
-// -> 저수준 입출력 함수를 사용한다.
+
 
 
 
@@ -24,15 +24,14 @@ using namespace std;
 int main()
 //----------
 {
-	array<int, 1000> a; //초기화가 되는지 확인해보자.
+	array<int, 1000> a;
+	iota(a.begin(), a.end(), 1); //a의 시작부터 b의 끝까지 1부터 1씩 증가시켜서 넣어줘
 
-	iota(a.begin(), a.end(), 1); //a의 시작부터 b의 끝까지 1씩 증가시켜서 넣어줘
+	cout << "a에 들어있는 int 개수 -" << a.size() << endl;
+	//[문제] a의 data를 파일 "int 1000개 메모리 그대로" 에 기록하자
 	
-	for (int num : a) {
-		cout << num << " ";
-	}
-	//초기화 된다
-	cout << endl;
+	ofstream out{ "int 1000개 메모리 그대로" };
+	out.write((char*)a.data(), sizeof(int) * a.size()); //이파일에 메모리 그대로 입력하겠어 a.data() 어디다 저장했는지 알려준다. int가 들어있는 곳을 알려줌
 	
 	save("메인.cpp");	
 }
