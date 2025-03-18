@@ -9,6 +9,7 @@
 #include<iostream>
 #include<fstream>
 #include<array>
+#include<algorithm>
 #include"save.h"
 
 using namespace std;
@@ -27,18 +28,16 @@ using namespace std;
 int main()
 //----------
 {
-	array<int, 100000> p;
-	ifstream in{ "int 10만개에를 바이너리모드 wirte 함수로 기록",ios::binary };
-	if (!in) {
-		cerr << "파일을 열 수 없습니다." << endl;
-		return 1;
+	
+	ifstream in{ "int 10만개에를 바이너리모드 wirte 함수로 기록", ios::binary }; //읽을때도 바이너리로 열었다 텍스트로 열었어도 큰 지장은 없을 텐데....
+	if (not in) {
+		return 20250318;
 	}
-	in.read((char*)(p.data()),  sizeof(int)*p.size() );
-	if (!in) {
-		cerr << "파일을 열 수 없습니다." << endl;
-		return 1;
-	}
+	array<int, 100000> a; //콘티구어스 한 메모리라 for문 돌리는거는 바보같은 행위
+	in.read((char*)a.data(), sizeof(int) * a.size());
 
-	cout << "가장 작은 수 :" << *min_element(p.begin(), p.end()) << endl;
+	cout << "가장 작은 수 :" << *min_element(a.begin(), a.end()) << endl;
+	//가장 작은 수 :-2147431498
+	//가장 작은 수 :-1728550813 바이너리 모드로 안열음
 	save("메인.cpp");	
 }
