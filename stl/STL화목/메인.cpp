@@ -23,7 +23,12 @@ using namespace std;
 int main()
 //----------
 {
-	array<int, 1000> a{ }; //초기화가 되는지 확인해보자.
+	array<int, 1000> a; //초기화가 되는지 확인해보자.
+
+
+	int i{ };
+	for (int& num : a)
+		num = ++i;  //노는 지역이 달라서 안된다
 	for (int num : a) {
 		cout << num << " ";
 	}
