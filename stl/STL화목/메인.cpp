@@ -8,6 +8,7 @@
 //-------------------------------------------------------------------------------------------
 #include<iostream>
 #include<array>
+#include<numeric>
 #include"save.h"
 
 using namespace std;
@@ -25,10 +26,8 @@ int main()
 {
 	array<int, 1000> a; //초기화가 되는지 확인해보자.
 
-
-	int i{ };
-	for (int& num : a)
-		num = ++i;  //노는 지역이 달라서 안된다
+	iota(a.begin(), a.end(), 1); //a의 시작부터 b의 끝까지 1씩 증가시켜서 넣어줘
+	
 	for (int num : a) {
 		cout << num << " ";
 	}
