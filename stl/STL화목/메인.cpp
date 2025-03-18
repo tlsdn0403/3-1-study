@@ -4,16 +4,17 @@
 //   많은 수의 자료를 처리하기
 //
 //-------------------------------------------------------------------------------------------
+// 
+//-------------------------------------------------------------------------------------------
 #include<iostream>
-#include<bitset>
-#include<algorithm>
+#include<array>
 #include"save.h"
 
 using namespace std;
 
 
-//[문제] 파일 "int 100개.txt"에는 int 1000개가 text로 기록되어 있다.
-//  int 1000개를 저장하기 위해 몇 바이트를 사용했는가?? 8200
+//[문제] 메모리에 저장된 bit를 그대로 파일에 저장할 수 잇다.
+// -> 저수준 입출력 함수를 사용한다.
 
 
 
@@ -22,12 +23,12 @@ using namespace std;
 int main()
 //----------
 {
-	int num{ 0x01'02'03'04 };
-	bitset<32>binary = num;
-	cout << " 2진수 -" << binary << endl;
-	cout << "10진수 -" << num << endl;
-	cout << "16진수 -" << hex << num << endl;
-	
+	array<int, 1000> a; //초기화가 되는지 확인해보자.
+	for (int num : a) {
+		cout << num << " ";
+	}
+	//초기화 되어있지 않다는것을 확인
+	cout << endl;
 	
 	save("메인.cpp");	
 }
