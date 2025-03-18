@@ -23,11 +23,11 @@ using namespace std;
 int main()
 //----------
 {
-	array<int, 1000> a; //초기화가 되는지 확인해보자.
+	array<int, 1000> a{ }; //초기화가 되는지 확인해보자.
 	for (int num : a) {
 		cout << num << " ";
 	}
-	//초기화 되어있지 않다는것을 확인
+	//초기화 된다
 	cout << endl;
 	
 	save("메인.cpp");	
