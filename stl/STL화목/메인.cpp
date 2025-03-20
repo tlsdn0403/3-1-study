@@ -46,7 +46,7 @@ int main()
 		return 1231412;
 	// [문제] 다음 코드가 수정없이 실행되도록 필요한 코드를 class Dog에 추가하라.
 	for (Dog& dog : dogs) {
-		in >> dog;
+		in >> dog;  
 		cout << dog << endl;
 	}
 
