@@ -5,33 +5,44 @@
 // 
 //-------------------------------------------------------------------------------------------
 // constexpr 가 뭘까??? 알아보자
+// structured-binding
 //-------------------------------------------------------------------------------------------
 #include<iostream>
 #include<fstream>
 #include<array>
-#include<algorithm>
 #include"save.h"
+
 
 using namespace std;
 
-//[문제] binary mode 로 열어 wirte 함수로 int 10만개를 기록한
-//파일 "int 10만개에를 바이너리모드 wirte 함수로 기록"이 있다.
-//읽어서 메모리에 모두 저장하라
-//메모리에 있는 값 중에서 가장 작은 것과 가장 큰 것을 찾아 화면에 출력하라.
-//출력된 값을 답지에도 적어라
+// [문제] eclass에서 다운 받은 파일 "Dog 10만마리" 는 binary mode로 열었고,
+// 위에 적은 class Dog를 스트림의 write 함수를 사용하여 메모리 그대로 저장하였다.
+// Dog 객체 10만개를 메모리에 저장하라.
+// 가장 마지막 객체의 정보를 cout을 사용하여 화면에 출력하라. 
 
 
+class Dog {
+private:
+	string name;
+	int id{};
 
+	static int sid; // scope - local , life time - global
+	friend ostream& operator<<(ostream& os, const Dog& dog) {
+		os << "개 이름: " << dog.name << ",개 ID: " << dog.id;
+		return os;
+	}
+};
+
+int Dog::sid{ };
+array<Dog, 10'0000> Da;
 //----------
 int main()
 //----------
 {
-	ifstream in{ "int 10만개에를 바이너리모드 wirte 함수로 기록" , ios::binary };
-	array<int, 10'0000> a;
-	in.read( (char*)a.data(), a.size() * sizeof(int) );
+	ifstream in{ "Dog 10만마리", ios::binary };
+	
+	in.read((char*)&Da, sizeof(Dog) * Da.size());
 
-	auto [최솟값의위치, 최대값의위치] = minmax_element(a.begin(), a.end());  //앵글 브레킷
-	cout << "최솟값 : " << *최솟값의위치 << endl;
-	cout << "최댓값 : " << *최대값의위치 << endl;
+	cout << Da.back() << endl;
 	save("메인.cpp");	
 }
