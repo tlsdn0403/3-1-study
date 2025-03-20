@@ -27,22 +27,25 @@ private:
 	int id{};
 
 	static int sid; // scope - local , life time - global
-	friend ostream& operator<<(ostream& os, const Dog& dog) {
-		os << "개 이름: " << dog.name << ",개 ID: " << dog.id;
-		return os;
+
+	friend ostream& operator<<(ostream& os, const Dog& dog) { //friend는 클래스에서 제일 밑바닥에 있어야 한다.
+		return os << "개 이름: " << dog.name << ",개 ID: " << dog.id;
 	}
 };
 
 int Dog::sid{ };
-array<Dog, 10'0000> Da;
+array<Dog, 10'0000> dogs;
 //----------
 int main()
 //----------
 {
 	ifstream in{ "Dog 10만마리", ios::binary };
-	
-	in.read((char*)&Da, sizeof(Dog) * Da.size());
+	if (not in)
+		return 1231412;
 
-	cout << Da.back() << endl;
+	in.read((char*)dogs.data(), sizeof(Dog) * dogs.size());
+
+
+	cout << dogs.back() << endl;
 	save("메인.cpp");	
 }
