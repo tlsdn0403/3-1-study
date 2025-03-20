@@ -4,11 +4,12 @@
 //   많은 수의 자료를 처리하기 - Dog를 읽고 쓴다 , read/wirte
 // 
 //-------------------------------------------------------------------------------------------
-// 
+// constexpr 가 뭘까??? 알아보자
 //-------------------------------------------------------------------------------------------
 #include<iostream>
 #include<fstream>
 #include<array>
+#include<algorithm>
 #include"save.h"
 
 using namespace std;
@@ -28,7 +29,8 @@ int main()
 	ifstream in{ "int 10만개에를 바이너리모드 wirte 함수로 기록" , ios::binary };
 	array<int, 10'0000> a;
 	in.read( (char*)a.data(), a.size() * sizeof(int) );
-	cout << "가장 작은 값 :" << *min_element(a.cbegin(), a.cend()) << endl;
-	cout << "가장 큰 값 :" << *max_element(a.cbegin(), a.cend()) << endl;
+	auto p = minmax_element(a.begin(), a.end());
+	cout << "최솟값 : " << *p.first << endl;
+	cout << "최댓값 : " << *p.second << endl;
 	save("메인.cpp");	
 }
