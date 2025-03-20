@@ -29,8 +29,9 @@ int main()
 	ifstream in{ "int 10만개에를 바이너리모드 wirte 함수로 기록" , ios::binary };
 	array<int, 10'0000> a;
 	in.read( (char*)a.data(), a.size() * sizeof(int) );
-	auto p = minmax_element(a.begin(), a.end());
-	cout << "최솟값 : " << *p.first << endl;
-	cout << "최댓값 : " << *p.second << endl;
+
+	auto [최솟값의위치, 최대값의위치] = minmax_element(a.begin(), a.end());  //앵글 브레킷
+	cout << "최솟값 : " << *최솟값의위치 << endl;
+	cout << "최댓값 : " << *최대값의위치 << endl;
 	save("메인.cpp");	
 }
