@@ -42,7 +42,7 @@ int main()
 
 		
 		
-		cout << "1부터 " << num << " 까지 합계 :" << accumulate(arr, arr + num, 0) << endl;
+		cout << "1부터 " << num << " 까지 합계 :" << accumulate(arr, arr + num, 0LL) << endl; //제네릭 함수라서 0이 int 라서 int 값을 반환
 
 		delete[] arr;
 	}
