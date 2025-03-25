@@ -8,8 +8,6 @@
 //-------------------------------------------------------------------------------------------
 #include<iostream>
 #include<fstream>
-#include<string>
-#include<array>
 #include<algorithm>
 #include"save.h"
 using namespace std;
@@ -24,13 +22,8 @@ int main()
        return 12345;  
    ofstream out{ "메인 대문자.cpp" };  
    
-   char c;  
-   in >> noskipws;  
-   while (in >> c) {  
-         
-       c = toupper(c);  
-       out << c;  
-   }  
+   transform(istreambuf_iterator<char>{in}, {},
+       ostreambuf_iterator<char>{out}, [](char c) {return toupper(c); });
    
    return 0;  
 }

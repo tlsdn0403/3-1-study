@@ -8,8 +8,6 @@
 //-------------------------------------------------------------------------------------------
 #INCLUDE<IOSTREAM>
 #INCLUDE<FSTREAM>
-#INCLUDE<STRING>
-#INCLUDE<ARRAY>
 #INCLUDE<ALGORITHM>
 #INCLUDE"SAVE.H"
 USING NAMESPACE STD;
@@ -24,13 +22,8 @@ INT MAIN()
        RETURN 12345;  
    OFSTREAM OUT{ "메인 대문자.CPP" };  
    
-   CHAR C;  
-   IN >> NOSKIPWS;  
-   WHILE (IN >> C) {  
-         
-       C = TOUPPER(C);  
-       OUT << C;  
-   }  
+   TRANSFORM(ISTREAMBUF_ITERATOR<CHAR>{IN}, {},
+       OSTREAMBUF_ITERATOR<CHAR>{OUT}, [](CHAR C) {RETURN TOUPPER(C); });
    
    RETURN 0;  
 }
