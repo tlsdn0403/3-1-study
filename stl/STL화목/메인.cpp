@@ -1,54 +1,35 @@
 //-------------------------------------------------------------------------------------------
 // 2025 STL 화56 목78  3월 20일 목요일      (3주 2일차 강의) 
 //-------------------------------------------------------------------------------------------
-// 동적할당과 smart pointer - RAII
+// 동적할당과 smart pointer - RAII 클래스로 자원을 관리하는 것
+//  - C++ stack-unwinding을 보장한다
 //-------------------------------------------------------------------------------------------
-// constexpr 가 뭘까??? 알아보자
-// structured-binding
+// 많은 수의 자료 - FILE
 //-------------------------------------------------------------------------------------------
 #include<iostream>
-#include<numeric>
+#include<fstream>
+#include<string>
+#include<array>
+#include<algorithm>
 #include"save.h"
 using namespace std;
 
-class Dog {
-public:
-	Dog( ) { cout << "생성" << endl; }
-	~Dog() { cout << "소멸" << endl; }
-};
-
-class 스마트 {
-	Dog* p;
-public:
-	스마트(Dog* p) : p{ p } {
-	}
-	~스마트() {
-		delete p;
-	}
-};
-
-void f()
-{
-	
-
-	스마트 p{ new Dog }; //이게 RAII
-
-	//지역에 만들어진 객체를 파괴하는 것을 보장한다. 
-	throw 1;
-
-	
-}
+//[문제] "메인.cpp"의 내용 중에 소문자를 모두 대문자로 바꿔 "메인 대문자.cpp"에 저장하라
 
 //----------
 int main()
 //----------
-{
-	try {
-		f();
-	}
-	catch (...) {
+{	
+    ifstream in{ "메인.cpp" };
+    ofstream out{ "메인 대문자.cpp" };
+    string line;
+    
+    while (getline(in, line)) {
+        for (char& c : line) {
+            c = toupper(c);
+        }
+        out << line << endl;
+    }
 
-	}
-	
-	save("메인.cpp");	
+    return 0;
 }
