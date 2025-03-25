@@ -8,6 +8,7 @@
 //-------------------------------------------------------------------------------------------
 #include<iostream>
 #include<vector>
+#include<numeric>
 #include<array>
 #include"save.h"
 
@@ -18,7 +19,7 @@ using namespace std;
 int main()
 //----------
 {
-	//[문제] 양의 정수 num을 입력받는다.
+	//[문제] int의 최댓값까지  양의 정수 num을 입력받는다.
 	// 1부터  num 까지의 정수를 저장할 수 있는 메모리를 확보하고 
 	// 메모리의 값을 1부터 num까지 채운다.
 	// 메모리에 저장된 값의 합계를화면에 출력한다.
@@ -29,20 +30,19 @@ int main()
 		cout << " 정수를 입력하세요: ";
 		size_t num;
 		cin >> num;
-		
-		int* arr = new int[num];
-
-		// 배열을 1부터 num까지 채우기
-		for (size_t i = 0; i < num; ++i) {
-			arr[i] = i + 1;
+		int* arr;
+		try {
+			arr = new int[num];  //free-store 메모리를 달라고 요청 했을 떄 포인터를 가공해서 넘겨주기 때문에. heap은 void*를 리턴해준다.
 		}
-		
-		int sum = 0;
-		for (size_t i = 0; i < num; ++i) {
-			sum += arr[i];
+		catch (exception& e) {
+			cout << e.what() << endl;
+			return 20250325;
 		}
+		iota(arr, arr + num, 1);
 
-		cout << "1부터 " << num << " 까지 합계 :" << sum << endl;
+		
+		
+		cout << "1부터 " << num << " 까지 합계 :" << accumulate(arr, arr + num, 0) << endl;
 
 		delete[] arr;
 	}
