@@ -16,20 +16,21 @@ using namespace std;
 
 //[문제] "메인.cpp"의 내용 중에 소문자를 모두 대문자로 바꿔 "메인 대문자.cpp"에 저장하라
 
-//----------
-int main()
-//----------
-{	
-    ifstream in{ "메인.cpp" };
-    ofstream out{ "메인 대문자.cpp" };
-    string line;
-    
-    while (getline(in, line)) {
-        for (char& c : line) {
-            c = toupper(c);
-        }
-        out << line << endl;
-    }
-
-    return 0;
+int main()  
+//----------  
+{  
+   ifstream in{ "메인.cpp" };  
+   if (!in)  
+       return 12345;  
+   ofstream out{ "메인 대문자.cpp" };  
+   
+   char c;  
+   in >> noskipws;  
+   while (in >> c) {  
+         
+       c = toupper(c);  
+       out << c;  
+   }  
+   
+   return 0;  
 }

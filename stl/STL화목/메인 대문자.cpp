@@ -16,20 +16,21 @@ USING NAMESPACE STD;
 
 //[문제] "메인.CPP"의 내용 중에 소문자를 모두 대문자로 바꿔 "메인 대문자.CPP"에 저장하라
 
-//----------
-INT MAIN()
-//----------
-{	
-    IFSTREAM IN{ "메인.CPP" };
-    OFSTREAM OUT{ "메인 대문자.CPP" };
-    STRING LINE;
-    
-    WHILE (GETLINE(IN, LINE)) {
-        FOR (CHAR& C : LINE) {
-            C = TOUPPER(C);
-        }
-        OUT << LINE << ENDL;
-    }
-
-    RETURN 0;
+INT MAIN()  
+//----------  
+{  
+   IFSTREAM IN{ "메인.CPP" };  
+   IF (!IN)  
+       RETURN 12345;  
+   OFSTREAM OUT{ "메인 대문자.CPP" };  
+   
+   CHAR C;  
+   IN >> NOSKIPWS;  
+   WHILE (IN >> C) {  
+         
+       C = TOUPPER(C);  
+       OUT << C;  
+   }  
+   
+   RETURN 0;  
 }
