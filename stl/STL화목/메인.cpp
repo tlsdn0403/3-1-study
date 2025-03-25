@@ -1,50 +1,54 @@
 //-------------------------------------------------------------------------------------------
 // 2025 STL 화56 목78  3월 20일 목요일      (3주 2일차 강의) 
 //-------------------------------------------------------------------------------------------
-// 동적할당과 smart pointer
+// 동적할당과 smart pointer - RAII
 //-------------------------------------------------------------------------------------------
 // constexpr 가 뭘까??? 알아보자
 // structured-binding
 //-------------------------------------------------------------------------------------------
 #include<iostream>
-#include<vector>
 #include<numeric>
-#include<array>
 #include"save.h"
-
-
 using namespace std;
+
+class Dog {
+public:
+	Dog( ) { cout << "생성" << endl; }
+	~Dog() { cout << "소멸" << endl; }
+};
+
+class 스마트 {
+	Dog* p;
+public:
+	스마트(Dog* p) : p{ p } {
+	}
+	~스마트() {
+		delete p;
+	}
+};
+
+void f()
+{
+	
+
+	스마트 p{ new Dog }; //이게 RAII
+
+	//지역에 만들어진 객체를 파괴하는 것을 보장한다. 
+	throw 1;
+
+	
+}
 
 //----------
 int main()
 //----------
 {
-	//[문제] int의 최댓값까지  양의 정수 num을 입력받는다.
-	// 1부터  num 까지의 정수를 저장할 수 있는 메모리를 확보하고 
-	// 메모리의 값을 1부터 num까지 채운다.
-	// 메모리에 저장된 값의 합계를화면에 출력한다.
-	// 화면에 출력된 합계는 답지에도 써라.
-	// 이 문제가 아무런 문제 없이 영원히 반복실행될 수 있게 코딩하라
-
-	while(true) {
-		cout << " 정수를 입력하세요: ";
-		size_t num;
-		cin >> num;
-		int* arr;
-		try {
-			arr = new int[num];  //free-store 메모리를 달라고 요청 했을 떄 포인터를 가공해서 넘겨주기 때문에. heap은 void*를 리턴해준다.
-		}
-		catch (exception& e) {
-			cout << e.what() << endl;
-			return 20250325;
-		}
-		iota(arr, arr + num, 1);
-
-		
-		
-		cout << "1부터 " << num << " 까지 합계 :" << accumulate(arr, arr + num, 0LL) << endl; //제네릭 함수라서 0이 int 라서 int 값을 반환
-
-		delete[] arr;
+	try {
+		f();
 	}
+	catch (...) {
+
+	}
+	
 	save("메인.cpp");	
 }
