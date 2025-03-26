@@ -135,7 +135,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CGameFramework.cpp" />
-    <ClCompile Include="LabProject02.cpp" />
+    <ClCompile Include="LabProject02.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>

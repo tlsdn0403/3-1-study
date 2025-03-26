@@ -23,7 +23,7 @@
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
 #include <DirectXColors.h>
-
+#include<timeapi.h>
 #include <DirectXCollision.h>
 #include <DXGIDebug.h>
 using namespace DirectX;
@@ -38,3 +38,4 @@ using Microsoft::WRL::ComPtr;
 
 #define FRAME_BUFFER_WIDTH  800
 #define FRAME_BUFFER_HEIGHT 600
+

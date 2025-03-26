@@ -7,23 +7,42 @@
 // 많은 수의 자료 - FILE
 //-------------------------------------------------------------------------------------------
 #include<iostream>
-#include<fstream>
-#include<algorithm>
+#include<array>
+#include<random>
+#include<print>
 #include"save.h"
 using namespace std;
 
-//[문제] "메인.cpp"의 내용 중에 소문자를 모두 대문자로 바꿔 "메인 대문자.cpp"에 저장하라
+uniform_int_distribution<int> uid{ 1, 99999 };
+default_random_engine dre;
 
-int main()  
-//----------  
-{  
-   ifstream in{ "메인.cpp" };  
-   if (!in)  
-       return 12345;  
-   ofstream out{ "메인 대문자.cpp" };  
-   
-   transform(istreambuf_iterator<char>{in}, {},
-       ostreambuf_iterator<char>{out}, [](char c) {return toupper(c); });
+array<int, 100> arr;
+
+// int 정렬방법 (const void*,const void*);
+int cmp(const void* a, const void* b)
+{
+	
+	int x = *static_cast<const int*>(a);
+	int y = *static_cast<const int*>(b);
+	if (x < y)
+		return -1;
+	else if (x > y)
+		return 1;
+	return 0;
+}
+
+
+int main()
+{
+	for (int& num : arr)
+		num = uid(dre);
+
+
+	qsort(arr.data(), arr.size(), sizeof(int), cmp);
+
+	for (int num : arr) {
+		print("{:8}", num);
+	}
    
    return 0;  
 }

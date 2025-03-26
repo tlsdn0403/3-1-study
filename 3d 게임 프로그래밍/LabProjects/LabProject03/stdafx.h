@@ -1,13 +1,13 @@
-ï»¿//ë¯¸ë¦¬ ì»´íŒŒì¼ ë˜ëŠ” í—¤ë” íŒŒì¼
-//êµì²´ë  ì¼ ì—†ê³  í¬ê¸°ê°€ í° íŒŒì¼ë“¤ì„ ë¯¸ë¦¬ ì»´íŒŒì¼ í•´ë‘ë©´ ì¢‹ë‹¤.
-
 #pragma once
+//¹Ì¸® ÄÄÆÄÀÏ µÇ´Â Çì´õ ÆÄÀÏ
+//±³Ã¼µÉ ÀÏ ¾ø°í Å©±â°¡ Å« ÆÄÀÏµéÀ» ¹Ì¸® ÄÄÆÄÀÏ ÇØµÎ¸é ÁÁ´Ù.
+
 
 #include "targetver.h"
-#define WIN32_LEAN_AND_MEAN             // ê±°ì˜ ì‚¬ìš©ë˜ì§€ ì•ŠëŠ” ë‚´ìš©ì„ Windows í—¤ë”ì—ì„œ ì œì™¸í•©ë‹ˆë‹¤.
-// Windows í—¤ë” íŒŒì¼
+#define WIN32_LEAN_AND_MEAN             // °ÅÀÇ »ç¿ëµÇÁö ¾Ê´Â ³»¿ëÀ» Windows Çì´õ¿¡¼­ Á¦¿ÜÇÕ´Ï´Ù.
+// Windows Çì´õ ÆÄÀÏ
 #include <windows.h>
-// C ëŸ°íƒ€ìž„ í—¤ë” íŒŒì¼ìž…ë‹ˆë‹¤.
+// C ·±Å¸ÀÓ Çì´õ ÆÄÀÏÀÔ´Ï´Ù.
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
@@ -16,8 +16,8 @@
 #include<string>
 #include<wrl.h>
 #include<shellapi.h>
-
-#include <d3d12.h> //ë‹¤ì´ë ‰íŠ¸ 3d 12ì˜ api í•¨ìˆ˜ë“¤ì„ ì‚¬ìš©í•˜ê¸° ìœ„í•´ì„œ í•„ìš”
+#include<timeapi.h>
+#include <d3d12.h> //´ÙÀÌ·ºÆ® 3d 12ÀÇ api ÇÔ¼öµéÀ» »ç¿ëÇÏ±â À§ÇØ¼­ ÇÊ¿ä
 #include <dxgi1_4.h>
 #include <D3Dcompiler.h>
 #include <DirectXMath.h>

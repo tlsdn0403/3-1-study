@@ -1,4 +1,6 @@
 #pragma once
+#include"Timer.h"
+
 class CGameFramework
 {
 private:
