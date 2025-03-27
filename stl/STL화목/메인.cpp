@@ -10,41 +10,39 @@
 #include<random>
 #include<array>
 #include<print>
+#include<ranges>
+#include<algorithm>
 #include"save.h"
 using namespace std;
+
+
+//[문제] 랜덤 int 1000만개를 메모리에 저장하자.
+// 랜덤 int 값은 [0, 1'000'0000 ) == 0부터 999'9999 까지 값을 갖도록 
+// c++언어의 sort를 사용해서 오름차순으로 정렬하라
+//정렬한 결과를 앞에서부터 1000개만 화면에 출력하라
+
+array<int, 1'000'0000> a;
 
 uniform_int_distribution uid{ 0, 999'9999 };
 default_random_engine dre;
 
-//[문제] 랜덤 int 1000만개를 메모리에 저장하자.
-// 랜덤 int 값은 [0, 1'000'0000 ) == 0부터 999'9999 까지 값을 갖도록 
-// qsort를 사용해서 오름차순으로 정렬하라
-//정렬한 결과를 앞에서부터 1000개만 화면에 출력하라
-
-array<int, 1'000'0000> arr;
-
-int cmp(const void* a, const void* b) {
-	if (*(int*)a > *(int*)b) {
-		return 1;
-	}
-	else if (*(int*)a < *(int*)b) {
-		return -1;
-	}
-	else {
-		return 0;
-	}
+bool 오름차순(const int a, const int b)
+{
+	return a < b;
 }
+
 //----------
 int main()
 //----------
 {
-	for (int& num : arr)
+	for (int& num : a)
 		num = uid(dre);
-	qsort(arr.data(), arr.size(), sizeof(int), cmp);
 
-	for (int i = 0; i < 1000; ++i) {
-		print("{:5}", arr[i]);
-	}
+	//정렬
+	sort(a.begin(), a.end(),오름차순);  // 디폴트 정렬 operator <
+	
+	for (int num:a | views::take(1000))
+		print("{:8}", num);
 	cout << endl;
 	
 	save("메인.cpp");
