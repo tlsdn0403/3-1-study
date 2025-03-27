@@ -12,6 +12,7 @@
 #include<print>
 #include<ranges>
 #include<algorithm>
+#include<chrono>
 #include"save.h"
 using namespace std;
 
@@ -35,15 +36,38 @@ bool 오름차순(const int a, const int b)
 int main()
 //----------
 {
-	for (int& num : a)
-		num = uid(dre);
+	{ 
+		for (int& num : a)
+			num = uid(dre);
 
-	//정렬
-	sort(a.begin(), a.end(),오름차순);  // 디폴트 정렬 operator <
-	
-	for (int num:a | views::take(1000))
+		//정렬에 걸리는 시간 측정
+		auto 시작 = chrono::high_resolution_clock::now();//스톱워치 시작
+		sort(a.begin(), a.end(), 오름차순);  // 디폴트 정렬 operator <
+		auto 끝 = chrono::high_resolution_clock::now();//스톱워치 시작
+
+		cout << "경과 시간(ms)  : " << chrono::duration_cast<chrono::milliseconds>(끝 - 시작) << endl;
+
+	}
+
+	{ //내림차순
+		for (int& num : a)
+			num = uid(dre);
+
+		//정렬에 걸리는 시간 측정
+		auto 시작 = chrono::high_resolution_clock::now();//스톱워치 시작
+		sort(a.begin(), a.end(), [](const int a, const int b) {
+			return a > b;
+		});
+		auto 끝 = chrono::high_resolution_clock::now();//스톱워치 시작
+
+		cout << "경과 시간(ms)  : " << chrono::duration_cast<chrono::milliseconds>(끝 - 시작) << endl;
+
+	}
+	//스톱워치 끝
+	/*for (int num:a | views::take(1000))
 		print("{:8}", num);
-	cout << endl;
+	cout << endl;*/
+	
 	
 	save("메인.cpp");
 }
