@@ -4,45 +4,48 @@
 // 동적할당과 smart pointer - RAII 클래스로 자원을 관리하는 것
 //  - C++ stack-unwinding을 보장한다
 //-------------------------------------------------------------------------------------------
-// 많은 수의 자료 - FILE
+// Callable
 //-------------------------------------------------------------------------------------------
 #include<iostream>
-#include<array>
 #include<random>
+#include<array>
 #include<print>
 #include"save.h"
 using namespace std;
 
-uniform_int_distribution<int> uid{ 1, 99999 };
+uniform_int_distribution uid{ 0, 999'9999 };
 default_random_engine dre;
 
-array<int, 100> arr;
+//[문제] 랜덤 int 1000만개를 메모리에 저장하자.
+// 랜덤 int 값은 [0, 1'000'0000 ) == 0부터 999'9999 까지 값을 갖도록 
+// qsort를 사용해서 오름차순으로 정렬하라
+//정렬한 결과를 앞에서부터 1000개만 화면에 출력하라
 
-// int 정렬방법 (const void*,const void*);
-int cmp(const void* a, const void* b)
-{
-	
-	int x = *static_cast<const int*>(a);
-	int y = *static_cast<const int*>(b);
-	if (x < y)
-		return -1;
-	else if (x > y)
+array<int, 1'000'0000> arr;
+
+int cmp(const void* a, const void* b) {
+	if (*(int*)a > *(int*)b) {
 		return 1;
-	return 0;
+	}
+	else if (*(int*)a < *(int*)b) {
+		return -1;
+	}
+	else {
+		return 0;
+	}
 }
-
-
+//----------
 int main()
+//----------
 {
 	for (int& num : arr)
 		num = uid(dre);
-
-
 	qsort(arr.data(), arr.size(), sizeof(int), cmp);
 
-	for (int num : arr) {
-		print("{:8}", num);
+	for (int i = 0; i < 1000; ++i) {
+		print("{:5}", arr[i]);
 	}
-   
-   return 0;  
+	cout << endl;
+	
+	save("메인.cpp");
 }
