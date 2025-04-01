@@ -32,7 +32,6 @@ public:
 private:
     string name;
     int id;
-
     friend ostream& operator<<(ostream& os, const Dog& dog) {
         return os <<dog.id<<" "<<dog.name<< " ";
     }
@@ -59,11 +58,13 @@ int main()
 {
     
     ifstream in("Dog 십만마리");
+
     for (Dog& dogs : da) {
         in >> dogs;
     }
 
     cout << "가장 뒤에 있는 Dog :" << da.back() << endl;
+
     sort(da.begin(), da.end(), Dog{});
     for (Dog& dogs : da |views::take(100))
         cout << dogs << endl;
