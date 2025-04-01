@@ -29,17 +29,15 @@ int main()
 //----------
 {
     array<int, 10> a{ 1,3,5,7,9,2,4,6,8,10 };
-    class Dog {
-    public:
-        bool operator()( int a,  int b) const {
-            return a > b; //a에서 b쪽으로 내려가게
-        }
-    };
+ 
+
+    auto Dog = [](int a, int b)->bool{return a > b;};  //이게 정식형태
+    
     //[문제] 다음 코드가 의도대로 실행될 수 있게 필요한 코딩을 추가하라
 
-    sort(a.begin(), a.end(), Dog{});
+    sort(a.begin(), a.end(), Dog);
     for (int num : a)
         cout << num<< " ";
-    cout << endl; //10,9,8,7,6,5,4,3,2,1
+    cout << endl; //10 9 8 7 6 5 4 3 2 1
     save("메인.cpp");
 }
