@@ -1,73 +1,48 @@
 //-------------------------------------------------------------------------------------------
 // 2025 STL 화56 목78  3월 20일 목요일      (3주 2일차 강의) 
+// 4월 24일 중간고사 8주차 2일
 //-------------------------------------------------------------------------------------------
-// 동적할당과 smart pointer - RAII 클래스로 자원을 관리하는 것
-//  - C++ stack-unwinding을 보장한다
+// Callable type -호출 가능한 타입
+// 1.합수
+// 2.합수 포인터
+// 3. 람다 - 이름 없는함수 - 실체가 있어야 한다. (VS 에서는 class로 코딩해준다)
+// 4. 함수 객체(function object) - 함수호출연산자를 오버로딩 한 클래스 객체
 //-------------------------------------------------------------------------------------------
-// Callable
+// 
 //-------------------------------------------------------------------------------------------
 #include<iostream>
-#include<random>
 #include<array>
-#include<print>
-#include<ranges>
-#include<algorithm>
-#include<chrono>
 #include"save.h"
 using namespace std;
 
+#include<iostream>
+#include<array>
+#include<algorithm>
+#include"save.h"
+using namespace std;
 
-//[문제] 랜덤 int 1000만개를 메모리에 저장하자.
-// 랜덤 int 값은 [0, 1'000'0000 ) == 0부터 999'9999 까지 값을 갖도록 
-// c++언어의 sort를 사용해서 오름차순으로 정렬하라
-//정렬한 결과를 앞에서부터 1000개만 화면에 출력하라
+class Dog {
+public:
+    int operator()(const int a,const int b) {
+        if (a > b)
+            return 1;
+        else
+            return 0;
 
-array<int, 1'000'0000> a;
-
-uniform_int_distribution uid{ 0, 999'9999 };
-default_random_engine dre;
-
-bool 오름차순(const int a, const int b)
-{
-	return a < b;
-}
+    }
+};
 
 //----------
 int main()
 //----------
 {
-	{ 
-		for (int& num : a)
-			num = uid(dre);
+    array<int, 10> a{ 1,3,5,7,9,2,4,6,8,10 };
 
-		//정렬에 걸리는 시간 측정
-		auto 시작 = chrono::high_resolution_clock::now();//스톱워치 시작
-		sort(a.begin(), a.end(), 오름차순);  // 디폴트 정렬 operator <
-		auto 끝 = chrono::high_resolution_clock::now();//스톱워치 시작
+    //[문제] 다음 코드가 의도대로 실행될 수 있게 필요한 코딩을 추가하라
 
-		cout << "경과 시간(ms)  : " << chrono::duration_cast<chrono::milliseconds>(끝 - 시작) << endl;
-
-	}
-
-	{ //내림차순
-		for (int& num : a)
-			num = uid(dre);
-
-		//정렬에 걸리는 시간 측정
-		auto 시작 = chrono::high_resolution_clock::now();//스톱워치 시작
-		sort(a.begin(), a.end(), [](const int a, const int b) {
-			return a > b;
-		});
-		auto 끝 = chrono::high_resolution_clock::now();//스톱워치 시작
-
-		cout << "경과 시간(ms)  : " << chrono::duration_cast<chrono::milliseconds>(끝 - 시작) << endl;
-
-	}
-	//스톱워치 끝
-	/*for (int num:a | views::take(1000))
-		print("{:8}", num);
-	cout << endl;*/
-	
-	
-	save("메인.cpp");
+    sort(a.begin(), a.end(), Dog{});
+    for (int num : a)
+        cout << num<< " ";
+    cout << endl; //10,9,8,7,6,5,4,3,2,1
+    save("메인.cpp");
 }
