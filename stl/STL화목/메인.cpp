@@ -12,6 +12,7 @@
 //-------------------------------------------------------------------------------------------
 #include<iostream>
 #include<array>
+#include<algorithm>
 #include"save.h"
 using namespace std;
 
@@ -21,23 +22,19 @@ using namespace std;
 #include"save.h"
 using namespace std;
 
-class Dog {
-public:
-    int operator()(const int a,const int b) {
-        if (a > b)
-            return 1;
-        else
-            return 0;
 
-    }
-};
 
 //----------
 int main()
 //----------
 {
     array<int, 10> a{ 1,3,5,7,9,2,4,6,8,10 };
-
+    class Dog {
+    public:
+        bool operator()( int a,  int b) const {
+            return a > b; //a에서 b쪽으로 내려가게
+        }
+    };
     //[문제] 다음 코드가 의도대로 실행될 수 있게 필요한 코딩을 추가하라
 
     sort(a.begin(), a.end(), Dog{});
