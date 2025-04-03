@@ -29,6 +29,10 @@ public:
     size_t getNameLen( )const {
         return name.length();
     }
+
+    bool operator<(const Dog& other) const {
+        return name.size() < other.name.size();
+    }
 private:
     string name;
     int id;
@@ -67,9 +71,8 @@ int main()
     dogs.back().show();
 
     cout << "Dog name 길이기준 오름차순( ascending order) 으로 정렬합니다" << endl;
-    sort(dogs.begin(), dogs.end(), [](const Dog dog1 ,const Dog dog2) {
-        return dog1.getNameLen()< dog2.getNameLen();
-        }); 
+
+    sort(dogs.begin(), dogs.end());
     
     for (const Dog& dog : dogs | views::reverse)
         dog.show();
