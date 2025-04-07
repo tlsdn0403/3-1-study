@@ -43,7 +43,7 @@ public:
 	void BuildObjects();
 	void ReleaseObjects();
 
-	void ProcessInput();
+	void ProcessInput(); //사용자 입력을 받아드림
 	void AnimateObjects();
 	void FrameAdvance();
 

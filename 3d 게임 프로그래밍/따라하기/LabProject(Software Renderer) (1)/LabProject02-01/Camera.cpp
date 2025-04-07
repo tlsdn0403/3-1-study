@@ -5,7 +5,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-void CViewport::SetViewport(int nLeft, int nTop, int nWidth, int nHeight)
+void CViewport::SetViewport(int nLeft, int nTop, int nWidth, int nHeight)  //입력한 매개변수 값으로 뷰포트 값 저장
 {
 	m_nLeft = nLeft; 
 	m_nTop = nTop; 

@@ -2,7 +2,7 @@
 
 #include "Mesh.h"
 
-class CViewport
+class CViewport  //left, top , width , height 값 저장 
 {
 public:
 	CViewport() { }
@@ -49,7 +49,7 @@ public:
 	XMFLOAT4X4					m_xmf4x4OrthographicProject = Matrix4x4::Identity();
 	XMFLOAT4X4					m_xmf4x4ViewOrthographicProject = Matrix4x4::Identity();
 
-	CViewport					m_Viewport;
+	CViewport					m_Viewport; //left, top , width , height 값 저장 
 
 public:
 	void SetFOVAngle(float fFOVAngle);

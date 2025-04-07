@@ -136,7 +136,7 @@ void CGameObject::LookAt(XMFLOAT3& xmf3LookAt, XMFLOAT3& xmf3Up)
 
 void CGameObject::UpdateBoundingBox()
 {
-	if (m_pMesh)
+	if (m_pMesh)  //m_pMesh가 널을 가르키지 않을 때
 	{
 		m_pMesh->m_xmOOBB.Transform(m_xmOOBB, XMLoadFloat4x4(&m_xmf4x4World));
 		XMStoreFloat4(&m_xmOOBB.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_xmOOBB.Orientation)));

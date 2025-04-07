@@ -74,10 +74,10 @@ void CGameFramework::BuildObjects()
 
 	m_pPlayer = new CAirplanePlayer();
 	m_pPlayer->SetPosition(0.0f, 0.0f, 0.0f);
-	m_pPlayer->SetMesh(pAirplaneMesh);
+	m_pPlayer->SetMesh(pAirplaneMesh); 
 	m_pPlayer->SetColor(RGB(0, 0, 255));
 	m_pPlayer->SetCamera(pCamera);
-	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));
+	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));  //카메라 오프셋 설정
 
 	m_pScene = new CScene(m_pPlayer);
 	m_pScene->BuildObjects();
@@ -119,19 +119,19 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 
 void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
-	if (m_pScene) m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
+	if (m_pScene) m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam); //null이 아닌 경우
 
 	switch (nMessageID)
 	{
 	case WM_KEYDOWN:
 		switch (wParam)
 		{
-		case VK_ESCAPE:
+		case VK_ESCAPE:  //esc 누르면 꺼찜
 			::PostQuitMessage(0);
 			break;
 		case VK_RETURN:
 			break;
-		case VK_CONTROL:
+		case VK_CONTROL:  //컨트롤 키 누름
 			((CAirplanePlayer*)m_pPlayer)->FireBullet(m_pLockedObject);
 			m_pLockedObject = NULL;
 			break;
@@ -174,7 +174,7 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
 	return(0);
 }
 
-void CGameFramework::ProcessInput()
+void CGameFramework::ProcessInput()//사용자 입력을 받아드림
 {
 	static UCHAR pKeyBuffer[256];
 	if (GetKeyboardState(pKeyBuffer))
@@ -212,25 +212,25 @@ void CGameFramework::ProcessInput()
 
 void CGameFramework::AnimateObjects()
 {
-	float fTimeElapsed = m_GameTimer.GetTimeElapsed();
-	if (m_pPlayer) m_pPlayer->Animate(fTimeElapsed);
-	if (m_pScene) m_pScene->Animate(fTimeElapsed);
+	float fTimeElapsed = m_GameTimer.GetTimeElapsed(); //현재 Elapsed 타임을 가져온다
+	if (m_pPlayer) m_pPlayer->Animate(fTimeElapsed); //플레이어를 애니메이트 한다
+	if (m_pScene) m_pScene->Animate(fTimeElapsed);  //씬을 애니메이트 한다.
 }
 
-void CGameFramework::FrameAdvance()
+void CGameFramework::FrameAdvance() //매 프레임 마다 이 함수의 과정을 반복한다.
 {    
-	m_GameTimer.Tick(60.0f);
+	m_GameTimer.Tick(60.0f); //프레임레이트가 60이 되도록 한다.
 
-	ProcessInput();
+	ProcessInput();//사용자 입력을 받아드림
 
-	AnimateObjects();
+	AnimateObjects(); //씬에 있는 오브젝트를 애니메이트 함
 
     ClearFrameBuffer(RGB(255, 255, 255));
 
 	CCamera* pCamera = m_pPlayer->GetCamera();
-	if (m_pScene) m_pScene->Render(m_hDCFrameBuffer, pCamera);
+	if (m_pScene) m_pScene->Render(m_hDCFrameBuffer, pCamera); //애니메이트 한 결과에 따라서 씬을 랜더한다.
 
-	PresentFrameBuffer();
+	PresentFrameBuffer(); //랜더한 결과를 화면에 그려준다.
 
 	m_GameTimer.GetFrameRate(m_pszFrameRate + 12, 37);
 	::SetWindowText(m_hWnd, m_pszFrameRate);

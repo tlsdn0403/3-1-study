@@ -2,6 +2,7 @@
 
 #include "Mesh.h"
 #include "Camera.h"
+#include<array>
 
 class CGameObject
 {
@@ -81,7 +82,8 @@ public:
 
 	bool						m_bBlowingUp = false;
 
-	XMFLOAT4X4					m_pxmf4x4Transforms[EXPLOSION_DEBRISES];
+
+	std::array<XMFLOAT4X4, EXPLOSION_DEBRISES> m_pxmf4x4Transforms;
 
 	float						m_fElapsedTimes = 0.0f;
 	float						m_fDuration = 2.0f;
@@ -98,15 +100,16 @@ public:
 	static void PrepareExplosion();
 };
 
-class CWallsObject : public CGameObject
+class CWallsObject : public CGameObject //6개의 평면과 바운딩 박스를 가지고 있다.
 {
 public:
 	CWallsObject();
 	virtual ~CWallsObject();
 
 public:
-	BoundingOrientedBox			m_xmOOBBPlayerMoveCheck = BoundingOrientedBox();
-	XMFLOAT4					m_pxmf4WallPlanes[6];
+	BoundingOrientedBox			m_xmOOBBPlayerMoveCheck = BoundingOrientedBox(); //바운딩 박스
+
+	std::array<XMFLOAT4, 6> m_pxmf4WallPlanes; //6개의 평면을 나타냄
 
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 };

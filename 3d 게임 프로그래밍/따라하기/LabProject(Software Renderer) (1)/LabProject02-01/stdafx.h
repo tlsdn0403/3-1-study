@@ -37,7 +37,7 @@ using namespace DirectX::PackedVector;
 #define DIR_UP					0x10
 #define DIR_DOWN				0x20
 
-#define EXPLOSION_DEBRISES		240
+#define EXPLOSION_DEBRISES		80  //폭발 할 때 애니메이션 나오는 객체 수
 
 #define RANDOM_COLOR			(0xFF000000 | ((rand() * 0xFFFFFF) / RAND_MAX))
 

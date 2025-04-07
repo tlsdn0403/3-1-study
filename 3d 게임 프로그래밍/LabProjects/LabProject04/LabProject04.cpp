@@ -1,8 +1,8 @@
-﻿// LABPROJECT04.cpp : 애플리케이션에 대한 진입점을 정의합니다.
+﻿// LABPROject04.cpp : 애플리케이션에 대한 진입점을 정의합니다.
 //
 
 #include "stdafx.h"
-#include "LabProject04.h"
+#include "LABPROject04.h"
 #include"CGameFramework.h"
 #include"Timer.h"
 #define MAX_LOADSTRING 100
@@ -82,7 +82,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
     wcex.hInstance = hInstance;
-    wcex.hIcon = ::LoadIcon(hInstance, MAKEINTRESOURCE(IDI_LABPROJECT04));
+    wcex.hIcon = ::LoadIcon(hInstance, MAKEINTRESOURCE(IDC_LABPROJECT04));
     wcex.hCursor = ::LoadCursor(NULL, IDC_ARROW);
     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
     //주 윈도우의 메뉴가 나타나지 않도록 한다.
@@ -104,15 +104,22 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-    RECT rc = { 0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT };
-    DWORD dwStyle = WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_BORDER;
+    HINSTANCE ghAppInstance = hInstance;
+    RECT rc = { 0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT }; //left,top,light,bottom
+    DWORD dwStyle = WS_OVERLAPPED | WS_CAPTION | WS_MINIMIZEBOX | WS_BORDER | WS_SYSMENU;
     AdjustWindowRect(&rc, dwStyle, FALSE);
+
+    //윈도우를 생성하는 윈도우 생성함수
     HWND hMainWnd = CreateWindow(szWindowClass, szTitle, dwStyle, CW_USEDEFAULT,
         CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
+
     if (!hMainWnd) return(FALSE);
     gGameFramework.OnCreate(hInstance, hMainWnd);
     ::ShowWindow(hMainWnd, nCmdShow);
     ::UpdateWindow(hMainWnd);
+#ifdef _WITH_SWAPCHAIN_FULLSCREEN_STATE
+    gGameFramework.ChangeSwapChainState();
+#endif
     return(TRUE);
 }
 

@@ -2,7 +2,6 @@
 //미리 컴파일 되는 헤더 파일
 //교체될 일 없고 크기가 큰 파일들을 미리 컴파일 해두면 좋다.
 
-
 #include "targetver.h"
 #define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용을 Windows 헤더에서 제외합니다.
 // Windows 헤더 파일
@@ -30,11 +29,13 @@ using namespace DirectX;
 using namespace DirectX::PackedVector;
 using Microsoft::WRL::ComPtr;
 
-
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
+#pragma comment(lib, "winmm.lib") // 추가된 부분
 
 #define FRAME_BUFFER_WIDTH  800
 #define FRAME_BUFFER_HEIGHT 600
+//시작할 때 전체화면이 됨.
+//#define _WITH_SWAPCHAIN_FULLSCREEN_STATE

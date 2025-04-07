@@ -215,7 +215,9 @@ CGameObject* CScene::PickObjectPointedByCursor(int xClient, int yClient, CCamera
 
 void CScene::CheckObjectByObjectCollisions()
 {
-	for (int i = 0; i < m_nObjects; i++) m_ppObjects[i]->m_pObjectCollided = NULL;
+	//각 오브젝트들이 어떤 오브젝트하고 충돌이 일어났는지 알려주는 포인터 변수를 null로 초기화 시킨다.
+	for (int i = 0; i < m_nObjects; i++) m_ppObjects[i]->m_pObjectCollided = NULL; 
+  
 	for (int i = 0; i < m_nObjects; i++)
 	{
 		for (int j = (i + 1); j < m_nObjects; j++)
@@ -247,31 +249,38 @@ void CScene::CheckObjectByWallCollisions()
 {
 	for (int i = 0; i < m_nObjects; i++)
 	{
-		ContainmentType containType = m_pWallsObject->m_xmOOBB.Contains(m_ppObjects[i]->m_xmOOBB);
-		switch (containType)
+		ContainmentType containType = m_pWallsObject->m_xmOOBB.Contains(m_ppObjects[i]->m_xmOOBB); //벽 자체의 바운딩 박스가 오브젝트의 바운딩 박스를 포함하고 있으면
+		switch (containType) //컨테이너 타입에 따라서
 		{
-		case DISJOINT:
+		case DISJOINT:  //오브젝트가 벽을 벗어났다는 뜻
 		{
+			//어느면을 벗어난 건지 찾아야 한다.
 			int nPlaneIndex = -1;
 			for (int j = 0; j < 6; j++)
 			{
-				PlaneIntersectionType intersectType = m_ppObjects[i]->m_xmOOBB.Intersects(XMLoadFloat4(&m_pWallsObject->m_pxmf4WallPlanes[j]));
+				//오브젝트의 바운딩 박스와 , j번째의 벽평면하고의 intersects를 해서 안쪽공간으로 법선벡터가 향하고 있다고 하면 벗어나면 평면의 뒤에 있다
+				PlaneIntersectionType intersectType = m_ppObjects[i]->m_xmOOBB.Intersects(XMLoadFloat4(&m_pWallsObject->m_pxmf4WallPlanes[j])); 
 				if (intersectType == BACK)
 				{
+					//j 번쨰 평면을 벗어났다.
 					nPlaneIndex = j;
 					break;
 				}
 			}
-			if (nPlaneIndex != -1)
+			if (nPlaneIndex != -1) //벗어나는 평면이 있으면
 			{
+				//그 평면에 대해서 반사벡터를 구해서 오브젝트의 이동방향 벡터를 반사벡터로 만든다
 				XMVECTOR xmvNormal = XMVectorSet(m_pWallsObject->m_pxmf4WallPlanes[nPlaneIndex].x, m_pWallsObject->m_pxmf4WallPlanes[nPlaneIndex].y, m_pWallsObject->m_pxmf4WallPlanes[nPlaneIndex].z, 0.0f);
-				XMVECTOR xmvReflect = XMVector3Reflect(XMLoadFloat3(&m_ppObjects[i]->m_xmf3MovingDirection), xmvNormal);
-				XMStoreFloat3(&m_ppObjects[i]->m_xmf3MovingDirection, xmvReflect);
+				XMVECTOR xmvReflect = XMVector3Reflect(XMLoadFloat3(&m_ppObjects[i]->m_xmf3MovingDirection), xmvNormal); //반사벡터를 구함
+				XMStoreFloat3(&m_ppObjects[i]->m_xmf3MovingDirection, xmvReflect); //이동방향 벡터를 반사벡터로 만든다
+
+				//물체들은 벽에 반사되는 형태들로 이동하게 될 것임
 			}
 			break;
 		}
-		case INTERSECTS:
+		case INTERSECTS: //걸쳐저 있다는 뜻
 		{
+			//걸쳐저 있어도 똑같은 일을 해주면 된다.
 			int nPlaneIndex = -1;
 			for (int j = 0; j < 6; j++)
 			{
@@ -290,7 +299,7 @@ void CScene::CheckObjectByWallCollisions()
 			}
 			break;
 		}
-		case CONTAINS:
+		case CONTAINS: //포함한다 , 충돌하지 않았다는 뜻
 			break;
 		}
 	}
@@ -324,17 +333,19 @@ void CScene::CheckObjectByBulletCollisions()
 
 void CScene::Animate(float fElapsedTime)
 {
-	m_pWallsObject->Animate(fElapsedTime);
+	m_pWallsObject->Animate(fElapsedTime);  //벽을 애니메이트 함
 
-	for (int i = 0; i < m_nObjects; i++) m_ppObjects[i]->Animate(fElapsedTime);
+	for (int i = 0; i < m_nObjects; i++) m_ppObjects[i]->Animate(fElapsedTime); //큐브들을 애니메이트 함. 각각의 오브젝트들은 위치가 바뀔 것임.
 
-	CheckPlayerByWallCollision();
+	//월드좌표계에서 충돌을 감지한다.
+	//애니메이트 된 결과에 따라서 충돌을 감지함.
+	CheckPlayerByWallCollision(); //플레이어랑 벽 충돌 검사
 
-	CheckObjectByWallCollisions();
+	CheckObjectByWallCollisions(); //오브젝트랑 벽 
 
-	CheckObjectByObjectCollisions();
+	CheckObjectByObjectCollisions(); //오브젝트랑 오브젝트
 
-	CheckObjectByBulletCollisions();
+	CheckObjectByBulletCollisions(); //오브젝트랑 촐알
 }
 
 void CScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)

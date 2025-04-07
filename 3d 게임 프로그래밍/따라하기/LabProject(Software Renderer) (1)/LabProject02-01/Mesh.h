@@ -46,7 +46,8 @@ protected:
 	CPolygon					**m_ppPolygons = NULL;
 
 public:
-	BoundingOrientedBox			m_xmOOBB = BoundingOrientedBox();
+	//모든 바운딩 박스는 기본적으로 Mesh가 가지고 있다.
+	BoundingOrientedBox			m_xmOOBB = BoundingOrientedBox(); //기본 생성자 호출하여 초기화, OOBB바운딩 박스
 
 public:
 	void SetPolygon(int nIndex, CPolygon *pPolygon);
