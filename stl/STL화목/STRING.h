@@ -10,7 +10,9 @@
 
 class STRING {
 public:
-    STRING();                          //2025. 04 . 08
+    STRING();                                           //2025. 04 . 08
+    ~STRING();                                          //관찰을 위해 어쩔 수 없이...
+    
     STRING(const char* s);
 
     //복사생성과 복사할당
@@ -20,7 +22,6 @@ public:
     STRING& operator=(const STRING& other);             //2025.04.08
 
     //이동생성과 이동할당
-
 
     size_t size()const;
 
@@ -32,6 +33,11 @@ private:
     // 디폴트로 딜리트 되어있다.
     std::unique_ptr<char[]> p{};
 
+    size_t id;                                //2025.04.08
+
     friend std::ostream& operator<<(std::ostream& os, const STRING& str);
 
+    static size_t gid;     //글로벌 한 id                           //2025.04.08
+
+    
 };

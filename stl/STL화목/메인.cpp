@@ -3,30 +3,30 @@
 // 4월 24일 중간고사(30) 8주차 2일
 // 과제    (30) - 4월 10일 설명
 //-------------------------------------------------------------------------------------------
-// STRING - std::stromg과 유사한 클래스, STL 표준 container가 되도록 발전시켜나갈것임
+// STRING - std::string과 유사한 클래스, STL 표준 container가 되도록 발전시켜나갈것임
+//          내부 동작을 관찰할 수 있게 하자.
 //-------------------------------------------------------------------------------------------
 #include<iostream>
+#include<array>
 #include<string>
 #include<memory>
+#include<algorithm>
 #include"save.h"
 #include"STRING.h"
 using namespace std;
 
 
+
+extern bool 관찰; // 관찰하려면 true로
+
 //----------
 int main()
 //------------------------------------------------------------
 {
-    STRING s{ "std::string과 유사한 클래스" };
-    cout << s.size() << endl; //s가 확보한 자원의 바이트 수
-    cout << s << endl;
+    관찰 = true;
+    STRING S;
+    S = "안녕";
+    
 
-    STRING t;
-    t = s;
-
-    STRING u = s;
-
-    cout << t << endl;
-    cout << s << endl;
     save("메인.cpp");
 }
