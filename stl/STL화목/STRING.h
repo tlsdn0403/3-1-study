@@ -10,14 +10,26 @@
 
 class STRING {
 public:
+    STRING();                          //2025. 04 . 08
     STRING(const char* s);
-    STRING();
-    STRING(const STRING& other);
+
+    //복사생성과 복사할당
+
+    //자기 자신을 리턴해야 한다. 그래서 앞에 STRING
+    STRING(const STRING& other);                        //2025.04.08
+    STRING& operator=(const STRING& other);             //2025.04.08
+
+    //이동생성과 이동할당
+
+
     size_t size()const;
 
-    STRING& operator=(const STRING& other);
+    
 private:
     size_t len{}; //null char를 쓰지 않겠다는 소리
+
+    //유니크 포인터는 복사가 금지되어있다.
+    // 디폴트로 딜리트 되어있다.
     std::unique_ptr<char[]> p{};
 
     friend std::ostream& operator<<(std::ostream& os, const STRING& str);
