@@ -22,7 +22,7 @@ private:
 
 	CPlayer*					m_pPlayer = NULL;
 
-	CScene*						m_pScene = NULL;
+	CGameScene*						m_pScene = NULL;
 
 	CGameTimer					m_GameTimer;
 

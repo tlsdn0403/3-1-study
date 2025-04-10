@@ -23,7 +23,8 @@ private:
     HBITMAP						m_hBitmapSelect = NULL;
 
 	CPlayer*					m_pPlayer = NULL;
-	CScene*						m_pScene = NULL;
+	
+	CGameScene*						m_pScene = NULL;
 	CGameObject*				m_pLockedObject = NULL;
 
 	CGameTimer					m_GameTimer;
@@ -31,6 +32,7 @@ private:
 	POINT						m_ptOldCursorPos;
 
 	_TCHAR						m_pszFrameRate[50];
+
 
 public:
 	void OnCreate(HINSTANCE hInstance, HWND hMainWnd);
@@ -52,5 +54,9 @@ public:
 	LRESULT CALLBACK OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 
 	void SetActive(bool bActive) { m_bActive = bActive; }
+
+	void RenderTitle(HDC hDC);
+
+	void ChoiceGameMode();
 };
 

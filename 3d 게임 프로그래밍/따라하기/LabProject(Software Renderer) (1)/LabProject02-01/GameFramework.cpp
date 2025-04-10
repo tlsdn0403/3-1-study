@@ -79,7 +79,7 @@ void CGameFramework::BuildObjects()
 	m_pPlayer->SetCamera(pCamera);
 	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));  //카메라 오프셋 설정
 
-	m_pScene = new CScene(m_pPlayer);
+	m_pScene = new CGameScene(m_pPlayer);
 	m_pScene->BuildObjects();
 }
 
@@ -227,8 +227,11 @@ void CGameFramework::FrameAdvance() //매 프레임 마다 이 함수의 과정을 반복한다.
 
     ClearFrameBuffer(RGB(255, 255, 255));
 
-	CCamera* pCamera = m_pPlayer->GetCamera();
-	if (m_pScene) m_pScene->Render(m_hDCFrameBuffer, pCamera); //애니메이트 한 결과에 따라서 씬을 랜더한다.
+	ChoiceGameMode(); //게임 모드 설정
+
+	//CCamera* pCamera = m_pPlayer->GetCamera();
+	//if (m_pScene) m_pScene->Render(m_hDCFrameBuffer, pCamera); //애니메이트 한 결과에 따라서 씬을 랜더한다.
+
 
 	PresentFrameBuffer(); //랜더한 결과를 화면에 그려준다.
 
@@ -236,4 +239,49 @@ void CGameFramework::FrameAdvance() //매 프레임 마다 이 함수의 과정을 반복한다.
 	::SetWindowText(m_hWnd, m_pszFrameRate);
 }
 
+//이름 , 학번을 화면에 출력해줌
+void CGameFramework::RenderTitle(HDC hDC)
+{
+    static float angle = 0.0f;
+    angle += 0.01f; // 회전 속도
 
+    // "박신우" 텍스트 회전
+    SetGraphicsMode(hDC, GM_ADVANCED);
+    XFORM xForm;
+    xForm.eM11 = cos(angle);
+    xForm.eM12 = sin(angle);
+    xForm.eM21 = -sin(angle);
+    xForm.eM22 = cos(angle);
+    xForm.eDx = 300; // 텍스트 위치 (x)
+    xForm.eDy = 250; // 텍스트 위치 (y)
+    SetWorldTransform(hDC, &xForm);
+
+	TextOutW(hDC, 0, 0, L"박신우", wcslen(L"박신우"));
+
+    // 회전하지 않는 "3D 게임프로그래밍 1" 텍스트
+    ModifyWorldTransform(hDC, NULL, MWT_IDENTITY);
+    TextOut(hDC, 320, 240, L"3D 게임프로그래밍 1", wcslen(L"3D 게임프로그래밍 1"));
+}
+
+void CGameFramework::ChoiceGameMode()// 모드에 따라 화면 출력
+{
+	enum GameState { TITLE, MENU, GAME };
+	m_pScene->ChangeGameState(CGameScene::GAME);
+	if (m_pScene && m_pPlayer)
+	{
+		switch (m_pScene->GetCurrentState())
+		{
+		case TITLE:
+			RenderTitle(m_hDCFrameBuffer); // 타이틀 화면 렌더링
+			break;
+		case MENU:
+			// RenderMenu(m_hDCFrameBuffer); // 메뉴 화면 렌더링
+			break;
+		case GAME:
+			CCamera* pCamera = m_pPlayer->GetCamera();
+			if (pCamera) m_pScene->Render(m_hDCFrameBuffer, pCamera); // 게임 화면 렌더링
+			break;
+		}
+	}
+
+}

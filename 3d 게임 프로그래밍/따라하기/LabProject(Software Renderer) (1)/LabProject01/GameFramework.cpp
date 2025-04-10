@@ -69,7 +69,7 @@ void CGameFramework::BuildObjects()
 	m_pPlayer->SetCamera(pCamera);
 	m_pPlayer->SetPosition(0.0f, 3.0f, -40.0f);
 
-	m_pScene = new CScene();
+	m_pScene = new CGameScene();
 	m_pScene->BuildObjects();
 }
 

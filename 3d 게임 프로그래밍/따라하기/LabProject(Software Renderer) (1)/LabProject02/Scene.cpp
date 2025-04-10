@@ -2,16 +2,16 @@
 #include "Scene.h"
 #include "GraphicsPipeline.h"
 
-CScene::CScene(CPlayer* pPlayer)
+CGameScene::CGameScene(CPlayer* pPlayer)
 {
 	m_pPlayer = pPlayer;
 }
 
-CScene::~CScene()
+CGameScene::~CGameScene()
 {
 }
 
-void CScene::BuildObjects()
+void CGameScene::BuildObjects()
 {
 	CCubeMesh* pCubeMesh = new CCubeMesh(4.0f, 4.0f, 4.0f);
 
@@ -64,17 +64,17 @@ void CScene::BuildObjects()
 	m_ppObjects[4]->SetMovingSpeed(0.0f);
 }
 
-void CScene::ReleaseObjects()
+void CGameScene::ReleaseObjects()
 {
 	for (int i = 0; i < m_nObjects; i++) if (m_ppObjects[i]) delete m_ppObjects[i];
 	if (m_ppObjects) delete[] m_ppObjects;
 }
 
-void CScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
+void CGameScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
 }
 
-void CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
+void CGameScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
 	switch (nMessageID)
 	{
@@ -104,12 +104,12 @@ void CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wPar
 	}
 }
 
-void CScene::Animate(float fElapsedTime)
+void CGameScene::Animate(float fElapsedTime)
 {
 	for (int i = 0; i < m_nObjects; i++) m_ppObjects[i]->Animate(fElapsedTime);
 }
 
-void CScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
+void CGameScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 {
 	CGraphicsPipeline::SetViewport(&pCamera->m_Viewport);
 	CGraphicsPipeline::SetViewPerspectiveProjectTransform(&pCamera->m_xmf4x4ViewPerspectiveProject);

@@ -3,11 +3,11 @@
 #include "GameObject.h"
 #include "Camera.h"
 
-class CScene
+class CGameScene
 {
 public:
-	CScene();
-	virtual ~CScene();
+	CGameScene();
+	virtual ~CGameScene();
 
 private:
 	int							m_nObjects = 0;

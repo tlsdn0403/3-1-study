@@ -2,16 +2,16 @@
 #include "Scene.h"
 #include "GraphicsPipeline.h"
 
-CScene::CScene(CPlayer* pPlayer)
+CGameScene::CGameScene(CPlayer* pPlayer)
 {
 	m_pPlayer = pPlayer;
 }
 
-CScene::~CScene()
+CGameScene::~CGameScene()
 {
 }
 
-void CScene::BuildObjects()
+void CGameScene::BuildObjects()
 {
 	CExplosiveObject::PrepareExplosion();
 
@@ -132,7 +132,8 @@ void CScene::BuildObjects()
 #endif
 }
 
-void CScene::ReleaseObjects()
+
+void CGameScene::ReleaseObjects()
 {
 	if (CExplosiveObject::m_pExplosionMesh) CExplosiveObject::m_pExplosionMesh->Release();
 
@@ -146,11 +147,16 @@ void CScene::ReleaseObjects()
 #endif
 }
 
-void CScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
+void CGameScene::ChangeGameState(GameState state)
+{
+	CurrentState = state;
+}
+
+void CGameScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
 }
 
-void CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
+void CGameScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
 	switch (nMessageID)
 	{
@@ -187,7 +193,7 @@ void CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wPar
 	}
 }
 
-CGameObject* CScene::PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamera)
+CGameObject* CGameScene::PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamera)
 {
 	XMFLOAT3 xmf3PickPosition;
 	xmf3PickPosition.x = (((2.0f * xClient) / (float)pCamera->m_Viewport.m_nWidth) - 1) / pCamera->m_xmf4x4PerspectiveProject._11;
@@ -213,7 +219,7 @@ CGameObject* CScene::PickObjectPointedByCursor(int xClient, int yClient, CCamera
 	return(pNearestObject);
 }
 
-void CScene::CheckObjectByObjectCollisions()
+void CGameScene::CheckObjectByObjectCollisions()
 {
 	//각 오브젝트들이 어떤 오브젝트하고 충돌이 일어났는지 알려주는 포인터 변수를 null로 초기화 시킨다.
 	for (int i = 0; i < m_nObjects; i++) m_ppObjects[i]->m_pObjectCollided = NULL; 
@@ -245,7 +251,7 @@ void CScene::CheckObjectByObjectCollisions()
 	}
 }
 
-void CScene::CheckObjectByWallCollisions()
+void CGameScene::CheckObjectByWallCollisions()
 {
 	for (int i = 0; i < m_nObjects; i++)
 	{
@@ -305,7 +311,7 @@ void CScene::CheckObjectByWallCollisions()
 	}
 }
 
-void CScene::CheckPlayerByWallCollision()
+void CGameScene::CheckPlayerByWallCollision()
 {
 	BoundingOrientedBox xmOOBBPlayerMoveCheck;
 	m_pWallsObject->m_xmOOBBPlayerMoveCheck.Transform(xmOOBBPlayerMoveCheck, XMLoadFloat4x4(&m_pWallsObject->m_xmf4x4World));
@@ -314,7 +320,7 @@ void CScene::CheckPlayerByWallCollision()
 	if (!xmOOBBPlayerMoveCheck.Intersects(m_pPlayer->m_xmOOBB)) m_pWallsObject->SetPosition(m_pPlayer->m_xmf3Position);
 }
 
-void CScene::CheckObjectByBulletCollisions()
+void CGameScene::CheckObjectByBulletCollisions()
 {
 	CBulletObject** ppBullets = ((CAirplanePlayer*)m_pPlayer)->m_ppBullets;
 	for (int i = 0; i < m_nObjects; i++)
@@ -331,7 +337,7 @@ void CScene::CheckObjectByBulletCollisions()
 	}
 }
 
-void CScene::Animate(float fElapsedTime)
+void CGameScene::Animate(float fElapsedTime)
 {
 	m_pWallsObject->Animate(fElapsedTime);  //벽을 애니메이트 함
 
@@ -348,7 +354,7 @@ void CScene::Animate(float fElapsedTime)
 	CheckObjectByBulletCollisions(); //오브젝트랑 촐알
 }
 
-void CScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
+void CGameScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 {
 	CGraphicsPipeline::SetViewport(&pCamera->m_Viewport);
 
