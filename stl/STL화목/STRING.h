@@ -21,8 +21,12 @@ public:
     STRING(const STRING& other);                        //2025.04.08
     STRING& operator=(const STRING& other);             //2025.04.08
 
-    //이동생성과 이동할당
+    //이동생성과 이동할당연산자                               //2025. 4. 10
+    STRING(STRING&&);                                   //&& ->rvalue reference   여기 넘겨진 인자는 이동달할 것이다.
+    STRING& operator=(STRING&&);
 
+    
+    //인터 페이스 함수들
     size_t size()const;
 
     

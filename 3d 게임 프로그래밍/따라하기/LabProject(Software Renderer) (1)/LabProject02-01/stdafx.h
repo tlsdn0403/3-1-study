@@ -15,7 +15,7 @@
 #include <memory.h>
 #include <tchar.h>
 #include <math.h>
-
+#include<memory>
 #include <Mmsystem.h>
 #pragma comment(lib, "winmm.lib")
 

@@ -160,11 +160,12 @@ void CAirplanePlayer::Animate(float fElapsedTime)
 	}
 }
 
-void CAirplanePlayer::OnUpdateTransform()
+void CAirplanePlayer::OnUpdateTransform() 
 {
 	CPlayer::OnUpdateTransform();
-
-	m_xmf4x4World = Matrix4x4::Multiply(XMMatrixRotationRollPitchYaw(XMConvertToRadians(90.0f), 0.0f, 0.0f), m_xmf4x4World);
+	//z축 방향을 가르키도록 바꾸어줌
+	m_xmf4x4World = Matrix4x4::Multiply(XMMatrixRotationRollPitchYaw(XMConvertToRadians(90.0f), 0.0f, 0.0f), m_xmf4x4World); //x축으로 90도 회전 . 회전행렬을 월드변환 왼쪽에다 둠
+	//90도를 라디안값으로 바꿔줘야 함
 }
 
 void CAirplanePlayer::Render(HDC hDCFrameBuffer, CCamera* pCamera)

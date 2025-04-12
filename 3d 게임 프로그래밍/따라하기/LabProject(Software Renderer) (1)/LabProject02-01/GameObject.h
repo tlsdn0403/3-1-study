@@ -14,19 +14,21 @@ public:
 	bool						m_bActive = true;
 
 	CMesh*						m_pMesh = NULL;
-	XMFLOAT4X4					m_xmf4x4World = Matrix4x4::Identity();
 
-	BoundingOrientedBox			m_xmOOBB = BoundingOrientedBox();
+	//	기본적으로 단위행렬 값을 가지도록 ideentity()
+	XMFLOAT4X4					m_xmf4x4World = Matrix4x4::Identity();  //월드 변환 행렬  (단위행렬)
 
-	CGameObject*				m_pObjectCollided = NULL;
+	BoundingOrientedBox			m_xmOOBB = BoundingOrientedBox(); //게임 오브젝트가 가지고 있는 바운딩 박스는 월드 좌표계이다.
+
+	CGameObject*				m_pObjectCollided = NULL; //다른 충돌된 오브젝트에 대한 포인터
 	DWORD						m_dwColor = RGB(255, 0, 0);
 
-	XMFLOAT3					m_xmf3MovingDirection = XMFLOAT3(0.0f, 0.0f, 1.0f);
-	float						m_fMovingSpeed = 0.0f;
+	XMFLOAT3					m_xmf3MovingDirection = XMFLOAT3(0.0f, 0.0f, 1.0f); //움직이는 방향
+	float						m_fMovingSpeed = 0.0f; //움직이는 속도
 	float						m_fMovingRange = 0.0f;
 
-	XMFLOAT3					m_xmf3RotationAxis = XMFLOAT3(0.0f, 1.0f, 0.0f);
-	float						m_fRotationSpeed = 0.0f;
+	XMFLOAT3					m_xmf3RotationAxis = XMFLOAT3(0.0f, 1.0f, 0.0f); //회전축
+	float						m_fRotationSpeed = 0.0f; //회전 각도(스피드)
 
 public:
 	void SetActive(bool bActive) { m_bActive = bActive; }
@@ -74,7 +76,7 @@ public:
 	int PickObjectByRayIntersection(XMVECTOR& xmPickPosition, XMMATRIX& xmmtxView, float* pfHitDistance);
 };
 
-class CExplosiveObject : public CGameObject
+class CExplosiveObject : public CGameObject //게임 오브젝트에서 파생시킴
 {
 public:
 	CExplosiveObject();
@@ -85,17 +87,17 @@ public:
 
 	std::array<XMFLOAT4X4, EXPLOSION_DEBRISES> m_pxmf4x4Transforms;
 
-	float						m_fElapsedTimes = 0.0f;
-	float						m_fDuration = 2.0f;
-	float						m_fExplosionSpeed = 10.0f;
-	float						m_fExplosionRotation = 720.0f;
+	float						m_fElapsedTimes = 0.0f; //폭발 시작하고 얼마나 시간이 지났는지.
+	float						m_fDuration = 2.0f; //몇초동안 폭발을 할 것인지.
+	float						m_fExplosionSpeed = 10.0f; //폭발되는 작은 육면체 속도
+	float						m_fExplosionRotation = 720.0f; //회전
 
 	virtual void Animate(float fElapsedTime);
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 
 public:
 	static CMesh*				m_pExplosionMesh;
-	static XMFLOAT3				m_pxmf3SphereVectors[EXPLOSION_DEBRISES];
+	static XMFLOAT3				m_pxmf3SphereVectors[EXPLOSION_DEBRISES]; //이 작은 오브젝트를 모든 방향으로 발사시킴
 
 	static void PrepareExplosion();
 };

@@ -1,5 +1,5 @@
 #pragma once
-
+#include<memory>
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 class CVertex
@@ -18,10 +18,8 @@ public:
 	CPolygon() { }
 	CPolygon(int nVertices);
 	~CPolygon();
-
 	int							m_nVertices = 0;
 	CVertex						*m_pVertices = NULL;
-
 	void SetVertex(int nIndex, CVertex& vertex);
 };
 
@@ -46,7 +44,7 @@ protected:
 	CPolygon					**m_ppPolygons = NULL;
 
 public:
-	//모든 바운딩 박스는 기본적으로 Mesh가 가지고 있다.
+	//모든 바운딩 박스는 기본적으로 Mesh가 가지고 있다. 메쉬가 가지고 있는 바운딩 박스는 모델 좌표계이다.
 	BoundingOrientedBox			m_xmOOBB = BoundingOrientedBox(); //기본 생성자 호출하여 초기화, OOBB바운딩 박스
 
 public:
@@ -86,4 +84,10 @@ public:
 	virtual ~CAxisMesh() { }
 
 	virtual void Render(HDC hDCFrameBuffer);
+};
+class CTankMesh : public CMesh
+{
+public:
+	CTankMesh(float fWidth = 20.0f, float fHeight = 20.0f, float fDepth = 4.0f);
+	virtual ~CTankMesh() {}
 };

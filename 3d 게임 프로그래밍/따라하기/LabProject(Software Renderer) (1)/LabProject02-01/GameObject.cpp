@@ -101,20 +101,21 @@ void CGameObject::MoveForward(float fDistance)
 	CGameObject::SetPosition(xmf3Position);
 }
 
-void CGameObject::Rotate(float fPitch, float fYaw, float fRoll)
+void CGameObject::Rotate(float fPitch, float fYaw, float fRoll) //x,y,z 축으로 몇도만큼
 {
 	XMFLOAT4X4 mtxRotate = Matrix4x4::RotationYawPitchRoll(fPitch, fYaw, fRoll);
-	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);
+	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);  //회전 행렬의 좌측에 곱해야지만 자전의 의미가 된다.
 }
 
-void CGameObject::Rotate(XMFLOAT3& xmf3RotationAxis, float fAngle)
+void CGameObject::Rotate(XMFLOAT3& xmf3RotationAxis, float fAngle) 
 {
 	XMFLOAT4X4 mtxRotate = Matrix4x4::RotationAxis(xmf3RotationAxis, fAngle);
 	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);
 }
 
-void CGameObject::Move(XMFLOAT3& vDirection, float fSpeed)
+void CGameObject::Move(XMFLOAT3& vDirection, float fSpeed)  //방향벡터 , 속도
 {
+	//월드변환 행렬의 4번째 행이 포지션이니까.
 	SetPosition(m_xmf4x4World._41 + vDirection.x * fSpeed, m_xmf4x4World._42 + vDirection.y * fSpeed, m_xmf4x4World._43 + vDirection.z * fSpeed);
 }
 
@@ -145,6 +146,7 @@ void CGameObject::UpdateBoundingBox()
 
 void CGameObject::Animate(float fElapsedTime)
 {
+	//각각의 오브젝트를 회전을 시키고 이동을 시킨다.
 	if (m_fRotationSpeed != 0.0f) Rotate(m_xmf3RotationAxis, m_fRotationSpeed * fElapsedTime);
 	if (m_fMovingSpeed != 0.0f) Move(m_xmf3MovingDirection, m_fMovingSpeed * fElapsedTime);
 
@@ -153,13 +155,15 @@ void CGameObject::Animate(float fElapsedTime)
 
 void CGameObject::Render(HDC hDCFrameBuffer, XMFLOAT4X4* pxmf4x4World, CMesh* pMesh)
 {
-	if (pMesh)
+	if (pMesh)//메쉬가 있으면
 	{
-		CGraphicsPipeline::SetWorldTransform(pxmf4x4World);
+		CGraphicsPipeline::SetWorldTransform(pxmf4x4World); //그 메쉬를 월드변환 행렬을 사용을 해서 변환
 
 		HPEN hPen = ::CreatePen(PS_SOLID, 0, m_dwColor);
 		HPEN hOldPen = (HPEN)::SelectObject(hDCFrameBuffer, hPen);
-		pMesh->Render(hDCFrameBuffer);
+
+		pMesh->Render(hDCFrameBuffer); //재귀호출 형태
+
 		::SelectObject(hDCFrameBuffer, hOldPen);
 		::DeleteObject(hPen);
 	}
