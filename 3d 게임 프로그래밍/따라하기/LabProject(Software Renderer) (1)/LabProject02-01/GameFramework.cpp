@@ -135,6 +135,9 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 			((CAirplanePlayer*)m_pPlayer)->FireBullet(m_pLockedObject);
 			m_pLockedObject = NULL;
 			break;
+		case VK_LSHIFT:
+			m_pScene->ChangeGameState(CGameScene::GAME);
+			break;
 		default:
 			m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
 			break;
@@ -266,7 +269,7 @@ void CGameFramework::RenderTitle(HDC hDC)
 void CGameFramework::ChoiceGameMode()// 모드에 따라 화면 출력
 {
 	enum GameState { TITLE, MENU, GAME };
-	m_pScene->ChangeGameState(CGameScene::GAME);
+
 	if (m_pScene && m_pPlayer)
 	{
 		switch (m_pScene->GetCurrentState())

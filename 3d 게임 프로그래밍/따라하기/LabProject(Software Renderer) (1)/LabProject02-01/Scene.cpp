@@ -351,7 +351,7 @@ void CGameScene::Animate(float fElapsedTime)
 
 	CheckObjectByObjectCollisions(); //오브젝트랑 오브젝트
 
-	CheckObjectByBulletCollisions(); //오브젝트랑 촐알
+	CheckObjectByBulletCollisions(); //오브젝트랑 총알
 }
 
 void CGameScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
