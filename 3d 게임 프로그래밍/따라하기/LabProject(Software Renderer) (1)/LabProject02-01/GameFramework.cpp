@@ -104,7 +104,12 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 	case WM_LBUTTONDOWN:
 		::SetCapture(hWnd);
 		::GetCursorPos(&m_ptOldCursorPos);
-		if (nMessageID == WM_RBUTTONDOWN) m_pLockedObject = m_pScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera);
+		if (nMessageID == WM_RBUTTONDOWN) //오른쪽 마우스 버튼이 눌려지면 
+		{
+			m_pLockedObject = m_pScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera); //씬에 있는 어떤 오브젝트를 클릭을 했는지 찾아내겠다.
+			if (m_pLockedObject)m_pLockedObject->SetColor(RGB(0, 0, 0));
+		}
+			
 		break;
 	case WM_LBUTTONUP:
 	case WM_RBUTTONUP:
@@ -135,8 +140,8 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 			((CAirplanePlayer*)m_pPlayer)->FireBullet(m_pLockedObject);
 			m_pLockedObject = NULL;
 			break;
-		case VK_LSHIFT:
-			m_pScene->ChangeGameState(CGameScene::GAME);
+		case VK_SHIFT:
+			m_pScene->ChangeGameState(CGameScene::TITLE);
 			break;
 		default:
 			m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);

@@ -33,13 +33,19 @@ public:
 	virtual ~CMesh();
 
 private:
+	//인스턴싱(Instancing)을 위하여 메쉬는 게임 객체들에 공유될 수 있다. 
+	//다음 참조값(Reference Count)은 메쉬가 공유되는 게임 객체의 개수를 나타낸다
 	int							m_nReferences = 1;
 
 public:
+	//메쉬가 게임 객체에 공유될 때마다 참조값을 1씩 증가시킨다. 
 	void AddRef() { m_nReferences++; }
+	//메쉬를 공유하는 게임 객체가 소멸될 때마다 참조값을 1씩 감소시킨다. 
+	//참조값이 0이되면 메쉬를 소멸시킨다.
 	void Release() { m_nReferences--; if (m_nReferences <= 0) delete this; }
 
 protected:
+	//메쉬를 구성하는 다각형(면)들의 리스트이다. 
 	int							m_nPolygons = 0;
 	CPolygon					**m_ppPolygons = NULL;
 
@@ -50,6 +56,7 @@ public:
 public:
 	void SetPolygon(int nIndex, CPolygon *pPolygon);
 
+	//메쉬를 렌더링한다. 
 	virtual void Render(HDC hDCFrameBuffer);
 
 	BOOL RayIntersectionByTriangle(XMVECTOR& xmRayOrigin, XMVECTOR& xmRayDirection, XMVECTOR v0, XMVECTOR v1, XMVECTOR v2, float* pfNearHitDistance);

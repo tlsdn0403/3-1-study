@@ -45,6 +45,7 @@ public:
 
 	GameState GetCurrentState() const { return CurrentState; }
 
+	//매개변수  (마우스의 x좌표 , y좌표 , 플레이어가 가지고 있는 현재 카메라로)
 	CGameObject* PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamera);
 
 

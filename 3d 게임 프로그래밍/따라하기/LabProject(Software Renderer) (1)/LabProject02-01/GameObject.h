@@ -18,9 +18,12 @@ public:
 	//	기본적으로 단위행렬 값을 가지도록 ideentity()
 	XMFLOAT4X4					m_xmf4x4World = Matrix4x4::Identity();  //월드 변환 행렬  (단위행렬)
 
+	//바운딩 오리엔티드 박스로 충돌검사를 할 것임.
 	BoundingOrientedBox			m_xmOOBB = BoundingOrientedBox(); //게임 오브젝트가 가지고 있는 바운딩 박스는 월드 좌표계이다.
 
 	CGameObject*				m_pObjectCollided = NULL; //다른 충돌된 오브젝트에 대한 포인터
+
+	//선분의 색
 	DWORD						m_dwColor = RGB(255, 0, 0);
 
 	XMFLOAT3					m_xmf3MovingDirection = XMFLOAT3(0.0f, 0.0f, 1.0f); //움직이는 방향
@@ -48,11 +51,15 @@ public:
 	void SetRotationAxis(XMFLOAT3& xmf3RotationAxis) { m_xmf3RotationAxis = Vector3::Normalize(xmf3RotationAxis); }
 	void SetRotationSpeed(float fSpeed) { m_fRotationSpeed = fSpeed; }
 
+
 	void MoveStrafe(float fDistance = 1.0f);
 	void MoveUp(float fDistance = 1.0f);
 	void MoveForward(float fDistance = 1.0f);
+
+	//게임 객체를 x-축, y-축, z-축으로 이동한다.
 	void Move(XMFLOAT3& vDirection, float fSpeed);
 
+	//게임 객체를 x-축, y-축, z-축을 기준으로 회전한다.
 	void Rotate(float fPitch = 10.0f, float fYaw = 10.0f, float fRoll = 10.0f);
 	void Rotate(XMFLOAT3& xmf3Axis, float fAngle);
 
@@ -69,6 +76,7 @@ public:
 	void Render(HDC hDCFrameBuffer, XMFLOAT4X4* pxmf4x4World, CMesh* pMesh);
 
 	virtual void OnUpdateTransform() { }
+
 	virtual void Animate(float fElapsedTime);
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 

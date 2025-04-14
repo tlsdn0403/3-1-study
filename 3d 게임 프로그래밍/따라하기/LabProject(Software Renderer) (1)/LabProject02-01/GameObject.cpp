@@ -171,27 +171,35 @@ void CGameObject::Render(HDC hDCFrameBuffer, XMFLOAT4X4* pxmf4x4World, CMesh* pM
 
 void CGameObject::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 {
+	//바운딩 박스가 카메라 절두체 안에 있으면 랜더하고, 아니면 안한다.
+	//월드 좌표게에서의 프러스텀 컬링을 한다.
 	if (pCamera->IsInFrustum(m_xmOOBB)) CGameObject::Render(hDCFrameBuffer, &m_xmf4x4World, m_pMesh);
 }
 
 void CGameObject::GenerateRayForPicking(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, XMVECTOR& xmvPickRayOrigin, XMVECTOR& xmvPickRayDirection)
 {
-	XMMATRIX xmmtxToModel = XMMatrixInverse(NULL, XMLoadFloat4x4(&m_xmf4x4World) * xmmtxView);
+	//카메라 좌표계를 모델 좌표계로 바꿔주는 행렬의 의미가 된다.
+	XMMATRIX xmmtxToModel = XMMatrixInverse(NULL, XMLoadFloat4x4(&m_xmf4x4World) * xmmtxView);  //월드변환 행렬과 카메라 변환 행렬을 곱한거의 역행렬을 구한다.  
 
 	XMFLOAT3 xmf3CameraOrigin(0.0f, 0.0f, 0.0f);
-	xmvPickRayOrigin = XMVector3TransformCoord(XMLoadFloat3(&xmf3CameraOrigin), xmmtxToModel);
-	xmvPickRayDirection = XMVector3TransformCoord(xmvPickPosition, xmmtxToModel);
-	xmvPickRayDirection = XMVector3Normalize(xmvPickRayDirection - xmvPickRayOrigin);
+	xmvPickRayOrigin = XMVector3TransformCoord(XMLoadFloat3(&xmf3CameraOrigin), xmmtxToModel); //카메라 좌표계의 0,0,0을 모델 좌표계로 바꿔주는 변환.
+	xmvPickRayDirection = XMVector3TransformCoord(xmvPickPosition, xmmtxToModel); //피킹 포지션도 모델 좌표계로 바꿔준다.
+
+	xmvPickRayDirection = XMVector3Normalize(xmvPickRayDirection - xmvPickRayOrigin); //모델 좌표계의 광선의 방향
 }
 
-int CGameObject::PickObjectByRayIntersection(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, float* pfHitDistance)
+int CGameObject::PickObjectByRayIntersection(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, float* pfHitDistance) //포지션 , 카메라 변환행렬
 {
 	int nIntersected = 0;
 	if (m_pMesh)
 	{
 		XMVECTOR xmvPickRayOrigin, xmvPickRayDirection;
-		GenerateRayForPicking(xmvPickPosition, xmmtxView, xmvPickRayOrigin, xmvPickRayDirection);
-		nIntersected = m_pMesh->CheckRayIntersection(xmvPickRayOrigin, xmvPickRayDirection, pfHitDistance);
+		//우리는 충돌이라고 하는 것을 월드좌표게에서 할 것이다.
+		GenerateRayForPicking(xmvPickPosition, xmmtxView, xmvPickRayOrigin, xmvPickRayDirection); //광선을 월드좌표게의 벡터로 만든다.
+		//xmvPickRayOrigin과 xmvPickRayDirection은 월드좌표게의 벡터가 된다.
+
+		//바운딩 박스에 대한 충돌검사를 먼저하고 바운딩 박스 안에 있는 메쉬에 대해서 충돌 검사를 하겠다.
+		nIntersected = m_pMesh->CheckRayIntersection(xmvPickRayOrigin, xmvPickRayDirection, pfHitDistance);  //여기서는 모델좌표게에서 피킹을 하겠다.
 	}
 	return(nIntersected);
 }

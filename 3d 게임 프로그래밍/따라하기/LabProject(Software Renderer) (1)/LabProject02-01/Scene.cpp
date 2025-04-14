@@ -195,23 +195,28 @@ void CGameScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM 
 
 CGameObject* CGameScene::PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamera)
 {
-	XMFLOAT3 xmf3PickPosition;
+	XMFLOAT3 xmf3PickPosition; //카메라 피킹 광선 (벡터이다)
+
+	// 뷰포트 맵핑을 해서 카메라 좌표를 찾고 , 투영변환 행렬의 11과 22 를 X,Y에 나눈다( 역행렬을 곱한다)   -> 카메라 좌표의 X,Y를 구했다.
 	xmf3PickPosition.x = (((2.0f * xClient) / (float)pCamera->m_Viewport.m_nWidth) - 1) / pCamera->m_xmf4x4PerspectiveProject._11;
 	xmf3PickPosition.y = -(((2.0f * yClient) / (float)pCamera->m_Viewport.m_nHeight) - 1) / pCamera->m_xmf4x4PerspectiveProject._22;
+	//투영평면에서 FOV가 90도라고 하면 D가 항상 1이기로 햇다
 	xmf3PickPosition.z = 1.0f;
 
-	XMVECTOR xmvPickPosition = XMLoadFloat3(&xmf3PickPosition);
+	XMVECTOR xmvPickPosition = XMLoadFloat3(&xmf3PickPosition);//피킹을 하는 가장 앞쪽에 있는 점이라고 생각을 하자.
 	XMMATRIX xmmtxView = XMLoadFloat4x4(&pCamera->m_xmf4x4View);
 
 	int nIntersected = 0;
-	float fNearestHitDistance = FLT_MAX;
-	CGameObject* pNearestObject = NULL;
+	float fNearestHitDistance = FLT_MAX; //가장 가까운 거리	
+	CGameObject* pNearestObject = NULL;  //가장 가까운 오브젝트
 	for (int i = 0; i < m_nObjects; i++)
 	{
 		float fHitDistance = FLT_MAX;
-		nIntersected = m_ppObjects[i]->PickObjectByRayIntersection(xmvPickPosition, xmmtxView, &fHitDistance);
-		if ((nIntersected > 0) && (fHitDistance < fNearestHitDistance))
+		//픽 포지션으로 가는 벡터하고 오브젝트의 바운딩박스하고의 충돌을 찾아내서 충돌이 되는 오브젝트중에 가장 가까운 오브젝트
+		nIntersected = m_ppObjects[i]->PickObjectByRayIntersection(xmvPickPosition, xmmtxView, &fHitDistance); 
+		if ((nIntersected > 0) && (fHitDistance < fNearestHitDistance)) //이전부터 찾은거중 가장 가까운
 		{
+			//오브젝트 포인터랑 거리를 바꿔서 루프를 다 돈다.
 			fNearestHitDistance = fHitDistance;
 			pNearestObject = m_ppObjects[i];
 		}
@@ -356,7 +361,7 @@ void CGameScene::Animate(float fElapsedTime)
 
 void CGameScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 {
-	CGraphicsPipeline::SetViewport(&pCamera->m_Viewport);
+	CGraphicsPipeline::SetViewport(&pCamera->m_Viewport);  //m_Viewport를 뷰포트 값으로 설정
 
 	CGraphicsPipeline::SetViewPerspectiveProjectTransform(&pCamera->m_xmf4x4ViewPerspectiveProject);
 	m_pWallsObject->Render(hDCFrameBuffer, pCamera);

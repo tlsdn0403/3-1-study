@@ -21,11 +21,13 @@ CCamera::~CCamera()
 {
 }
 
-void CCamera::GenerateViewMatrix()
+void CCamera::GenerateViewMatrix() //카메라가 움직이거나 회전을 하면 항상 호출이 되는 함수
 {
 	m_xmf3Look = Vector3::Normalize(m_xmf3Look);
 	m_xmf3Right = Vector3::Normalize(Vector3::CrossProduct(m_xmf3Up, m_xmf3Look));
 	m_xmf3Up = Vector3::Normalize(Vector3::CrossProduct(m_xmf3Look, m_xmf3Right));
+
+	//카메라 변환행렬
 	m_xmf4x4View._11 = m_xmf3Right.x; m_xmf4x4View._12 = m_xmf3Up.x; m_xmf4x4View._13 = m_xmf3Look.x;
 	m_xmf4x4View._21 = m_xmf3Right.y; m_xmf4x4View._22 = m_xmf3Up.y; m_xmf4x4View._23 = m_xmf3Look.y;
 	m_xmf4x4View._31 = m_xmf3Right.z; m_xmf4x4View._32 = m_xmf3Up.z; m_xmf4x4View._33 = m_xmf3Look.z;
@@ -36,12 +38,14 @@ void CCamera::GenerateViewMatrix()
 	m_xmf4x4ViewPerspectiveProject = Matrix4x4::Multiply(m_xmf4x4View, m_xmf4x4PerspectiveProject);
 	m_xmf4x4OrthographicProject = Matrix4x4::Multiply(m_xmf4x4View, m_xmf4x4OrthographicProject);
 
+	//카메라 변환행렬의 역행렬  -> (카메라 좌표를 월드좌표로 바꾸기 위한 행렬)
 	m_xmf4x4InverseView._11 = m_xmf3Right.x; m_xmf4x4InverseView._12 = m_xmf3Right.y; m_xmf4x4InverseView._13 = m_xmf3Right.z;
 	m_xmf4x4InverseView._21 = m_xmf3Up.x; m_xmf4x4InverseView._22 = m_xmf3Up.y; m_xmf4x4InverseView._23 = m_xmf3Up.z;
 	m_xmf4x4InverseView._31 = m_xmf3Look.x; m_xmf4x4InverseView._32 = m_xmf3Look.y; m_xmf4x4InverseView._33 = m_xmf3Look.z;
 	m_xmf4x4InverseView._41 = m_xmf3Position.x; m_xmf4x4InverseView._42 = m_xmf3Position.y; m_xmf4x4InverseView._43 = m_xmf3Position.z;
 
-	m_xmFrustumView.Transform(m_xmFrustumWorld, XMLoadFloat4x4(&m_xmf4x4InverseView));
+	//카메라 행렬변환을 갱신을 할 때마다 
+	m_xmFrustumView.Transform(m_xmFrustumWorld, XMLoadFloat4x4(&m_xmf4x4InverseView)); // m_xmFrustumWorld 를 월드좌표계로 바꾸어 줌
 }
 
 void CCamera::SetLookAt(XMFLOAT3& xmf3Position, XMFLOAT3& xmf3LookAt, XMFLOAT3& xmf3Up)
@@ -76,10 +80,10 @@ void CCamera::SetFOVAngle(float fFOVAngle)
 void CCamera::GeneratePerspectiveProjectionMatrix(float fNearPlaneDistance, float fFarPlaneDistance, float fFOVAngle)
 {
 	float fAspectRatio = (float(m_Viewport.m_nWidth) / float(m_Viewport.m_nHeight));
-	XMMATRIX xmmtxProjection = XMMatrixPerspectiveFovLH(XMConvertToRadians(fFOVAngle), fAspectRatio, fNearPlaneDistance, fFarPlaneDistance);
+	XMMATRIX xmmtxProjection = XMMatrixPerspectiveFovLH(XMConvertToRadians(fFOVAngle), fAspectRatio, fNearPlaneDistance, fFarPlaneDistance); //투영변환 행렬 생성
 	XMStoreFloat4x4(&m_xmf4x4PerspectiveProject, xmmtxProjection);
 
-	BoundingFrustum::CreateFromMatrix(m_xmFrustumView, xmmtxProjection);
+	BoundingFrustum::CreateFromMatrix(m_xmFrustumView, xmmtxProjection);//카메라 좌표계의 바운딩 프러스텀을 생성해서 가지고 있는다.
 }
 
 void CCamera::GenerateOrthographicProjectionMatrix(float fNearPlaneDistance, float fFarPlaneDistance, float fWidth, float hHeight)
@@ -90,6 +94,8 @@ void CCamera::GenerateOrthographicProjectionMatrix(float fNearPlaneDistance, flo
 
 bool CCamera::IsInFrustum(BoundingOrientedBox& xmBoundingBox)
 {
+	//월드좌표계의 프러스텀을 업데이트를 했다면 IsInFrustum을 호출하는 바운딩 박스는 월드좌표계의 바운딩 박스라고 하면 프러스텀안에 있으면 true를 리턴하고 그렇지 않으면 false
+	//어떤 오브젝트의 월드 좌표계의 바운딩 박스가 이 프러스텀안에 있는지 없는지 판단.
 	return(m_xmFrustumWorld.Intersects(xmBoundingBox));
 }
 
