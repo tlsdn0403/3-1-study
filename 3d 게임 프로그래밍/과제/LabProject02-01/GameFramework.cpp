@@ -107,13 +107,13 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 		::GetCursorPos(&m_ptOldCursorPos);
 		if (nMessageID == WM_RBUTTONDOWN) //오른쪽 마우스 버튼이 눌려지면 
 		{
-			switch (m_pScene->GetCurrentState())
+			switch (pGameState->GetCurrentState())
 			{
 			case TITLE:
 
 				break;
 			case MENU:
-				// RenderMenu(m_hDCFrameBuffer); // 메뉴 화면 렌더링
+				pMenuScene->OnMouseClick(LOWORD(lParam), HIWORD(lParam)); // x, y 좌표 전달
 				break;
 			case GAME:
 				m_pLockedObject = m_pScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera); //씬에 있는 어떤 오브젝트를 클릭을 했는지 찾아내겠다.
@@ -138,7 +138,7 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
 	if (m_pScene) m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam); //null이 아닌 경우
-
+	enum GameState { TITLE, MENU, GAME };
 	switch (nMessageID)
 	{
 	case WM_KEYDOWN:
@@ -154,7 +154,7 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 			m_pLockedObject = NULL;
 			break;
 		case VK_SHIFT:
-			m_pScene->ChangeGameState(CGameScene::TITLE);
+			pGameState->CGameState::ChangeGameState(CGameState::TITLE);
 			break;
 		default:
 			m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
@@ -269,7 +269,7 @@ void CGameFramework::ChoiceGameMode()// 모드에 따라 화면 출력
 
 	if (m_pScene && m_pPlayer)
 	{
-		switch (m_pScene->GetCurrentState())
+		switch (pGameState->GetCurrentState())
 		{
 		case TITLE:
 			if (!pStartScene) pStartScene = new StartScene();

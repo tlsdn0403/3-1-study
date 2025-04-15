@@ -24,10 +24,10 @@ private:
 
 	CPlayer*					m_pPlayer = NULL;
 	
+	CGameState* pGameState = new CGameState();;
 	StartScene*					pStartScene = NULL;
 	MenuScene* pMenuScene = NULL;
 	CGameScene*						m_pScene = NULL;
-
 
 
 	CGameObject*				m_pLockedObject = NULL;

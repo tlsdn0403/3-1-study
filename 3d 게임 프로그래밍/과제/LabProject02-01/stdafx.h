@@ -26,6 +26,7 @@
 
 #include<vector>
 #include<string>
+#include<iostream>
 
 using namespace DirectX;
 using namespace DirectX::PackedVector;

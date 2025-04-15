@@ -2,6 +2,11 @@
 #include "Scene.h"
 #include "GraphicsPipeline.h"
 
+CGameState::GameState CGameState::CurrentState = CGameState::MENU; // 정적 멤버 초
+void CGameState::ChangeGameState(GameState state)
+{
+	CurrentState = state;
+}
 
 void StartScene::Render(HDC hDCFrameBuffer)
 {
@@ -50,17 +55,23 @@ void MenuScene::Render(HDC hDCFrameBuffer) {
     }  
 }
 
-void MenuScene::OnMouseClick(int x, int y) {
-	for (size_t i = 0; i < m_MenuItemRects.size(); ++i) {
-		if (PtInRect(&m_MenuItemRects[i], POINT{ x, y })) {
-			if (m_MenuItems[i] == "Start") {
-			}
-			else if (m_MenuItems[i] == "End") {
-				PostQuitMessage(0); // 게임 종료
-			}
-			break;
-		}
-	}
+
+void MenuScene::OnMouseClick(int x, int y)  
+{  
+  for (size_t i = 0; i < m_MenuItemRects.size(); ++i)  
+  {  
+      if (PtInRect(&m_MenuItemRects[i], POINT{ x, y }))  
+      {  
+          if (m_MenuItems[i] == "End")  
+          {  
+              ::PostQuitMessage(0); // 프로그램 종료  
+          }  
+          else if (m_MenuItems[i] == "Start")  
+          {  
+              CGameState::ChangeGameState(CGameState::GAME); // 게임 상태로 변경  
+          }  
+      }  
+  }  
 }
 
 
@@ -209,10 +220,7 @@ void CGameScene::ReleaseObjects()
 #endif
 }
 
-void CGameScene::ChangeGameState(GameState state)
-{
-	CurrentState = state;
-}
+
 
 void CGameScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
@@ -438,4 +446,5 @@ void CGameScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 	m_pWorldAxis->Render(hDCFrameBuffer, pCamera);
 #endif
 }
+
 
