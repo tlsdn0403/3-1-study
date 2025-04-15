@@ -4,12 +4,33 @@
 #include "Camera.h"
 #include "Player.h"
 
+
+
+class StartScene {
+public:
+	virtual void Render(HDC hDCFrameBuffer);
+};
+
+
+class MenuScene {
+private:
+	std::vector<std::string> m_MenuItems = { "Tutorial", "Level-1", "Level-2", "Start", "End" };
+	std::vector<RECT> m_MenuItemRects;
+
+public:
+	MenuScene();
+	void Render(HDC hDCFrameBuffer);
+	void OnMouseClick(int x, int y);
+};
+
+
 class CGameScene
 {
 public:
 	CGameScene(CPlayer *pPlayer);
 	virtual ~CGameScene();
 	static enum GameState { TITLE, MENU, GAME };
+
 private:
 	int							m_nObjects = 0;
 	CGameObject					**m_ppObjects = NULL;
@@ -18,8 +39,10 @@ private:
 
 	CPlayer*					m_pPlayer = NULL;
 
-	
-	GameState CurrentState = GAME; // 초기 상태
+
+
+	GameState CurrentState = MENU;
+
 #ifdef _WITH_DRAW_AXIS
 	CGameObject*				m_pWorldAxis = NULL;
 #endif

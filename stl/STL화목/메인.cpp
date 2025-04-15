@@ -1,16 +1,16 @@
 //-------------------------------------------------------------------------------------------
-// 2025 STL 화56 목78  3월 20일 목요일      (6주 2일차 강의) 
+// 2025 STL 화56 목78  3월 20일 목요일      (7주 1일차 강의) 
 // 4월 24일 중간고사(30) 8주차 2일
 // 5월 6일(화) -> 6월 19(예정)
 //-------------------------------------------------------------------------------------------
-// STRING - std::string과 유사한 클래스, STL 표준 container가 되도록 발전시켜나갈것임
-//          내부 동작을 관찰할 수 있게 하자.
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> /dynamic(runtime)  array
 //-------------------------------------------------------------------------------------------
 #include<iostream>
-#include<array>
-#include<string>
-#include<memory>
-#include<algorithm>
+
+#include<vector>
 #include"save.h"
 #include"STRING.h"
 using namespace std;
@@ -19,20 +19,24 @@ using namespace std;
 
 extern bool 관찰; // 관찰하려면 true로
 
+//키보드에서 입력한 정수값의 합계와 평균을 출력하시오.
+
 //----------
 int main()
 //------------------------------------------------------------
 {
-    array<STRING, 5> a{ "1","333","22","55555","4444" };
-    관찰 = true;
-    std::sort(a.begin(), a.end(), [](const STRING& lhs, STRING& rhs)  //가오 좀 부리자
-        {
-            return lhs.size() < rhs.size();
-        });
+    int num
+    <int> v{ 1,2,3, };
+    //반복자를 사용하여 access
 
-    
-    for (const STRING& str : a)
-        cout << str << endl;
-    관찰 = false;
+    for (int i = 4; i < 10; ++i) {
+        v.push_back(i);
+        cout << v.data() << endl;
+    }
+
+    for ( auto i= ; i != v.crend(); --i) { //이때는 오토를 사용하는 것을 권장한다.
+        cout << *i << endl;
+    }
+
     save("메인.cpp");
 }

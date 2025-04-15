@@ -2,6 +2,68 @@
 #include "Scene.h"
 #include "GraphicsPipeline.h"
 
+
+void StartScene::Render(HDC hDCFrameBuffer)
+{
+	static float angle = 0.0f;
+	angle += 0.01f; // 회전 속도
+
+	// "박신우" 텍스트 회전
+	SetGraphicsMode(hDCFrameBuffer, GM_ADVANCED);
+	XFORM xForm;
+	xForm.eM11 = cos(angle);
+	xForm.eM12 = sin(angle);
+	xForm.eM21 = -sin(angle);
+	xForm.eM22 = cos(angle);
+	xForm.eDx = 300; // 텍스트 위치 (x)
+	xForm.eDy = 250; // 텍스트 위치 (y)
+	SetWorldTransform(hDCFrameBuffer, &xForm);
+
+	TextOutW(hDCFrameBuffer, 0, 0, L"박신우", wcslen(L"박신우"));
+
+	// 회전하지 않는 "3D 게임프로그래밍 1" 텍스트
+	ModifyWorldTransform(hDCFrameBuffer, NULL, MWT_IDENTITY);
+	TextOut(hDCFrameBuffer, 320, 240, L"3D 게임프로그래밍 1", wcslen(L"3D 게임프로그래밍 1"));
+}
+
+
+MenuScene::MenuScene() {
+	int x = FRAMEBUFFER_WIDTH/2, y = FRAMEBUFFER_HEIGHT/4, width = 200, height = 40, spacing = 50;
+
+	for (size_t i = 0; i < m_MenuItems.size(); ++i) {
+		RECT rect = { x -width, y + static_cast<int>(i * spacing), x + width, y + height + static_cast<int>(i * spacing) };
+		m_MenuItemRects.push_back(rect);
+	}
+}
+void MenuScene::Render(HDC hDCFrameBuffer) {  
+    for (size_t i = 0; i < m_MenuItems.size(); ++i) {  
+        // 메뉴 항목 텍스트를 그리기
+		std::wstring wideText = std::wstring(m_MenuItems[i].begin(), m_MenuItems[i].end());
+		DrawText(hDCFrameBuffer, wideText.c_str(), -1, &m_MenuItemRects[i], DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+
+
+
+        // 선택된 메뉴 항목 강조 표시 (예: 테두리 그리기)
+        //if (/* 조건: 현재 선택된 메뉴 항목 */) {
+        //    FrameRect(hDCFrameBuffer, &m_MenuItemRects[i], (HBRUSH)GetStockObject(BLACK_BRUSH));
+        //}
+    }  
+}
+
+void MenuScene::OnMouseClick(int x, int y) {
+	for (size_t i = 0; i < m_MenuItemRects.size(); ++i) {
+		if (PtInRect(&m_MenuItemRects[i], POINT{ x, y })) {
+			if (m_MenuItems[i] == "Start") {
+			}
+			else if (m_MenuItems[i] == "End") {
+				PostQuitMessage(0); // 게임 종료
+			}
+			break;
+		}
+	}
+}
+
+
 CGameScene::CGameScene(CPlayer* pPlayer)
 {
 	m_pPlayer = pPlayer;
@@ -376,3 +438,4 @@ void CGameScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 	m_pWorldAxis->Render(hDCFrameBuffer, pCamera);
 #endif
 }
+

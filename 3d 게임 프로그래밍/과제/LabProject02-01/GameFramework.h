@@ -24,7 +24,12 @@ private:
 
 	CPlayer*					m_pPlayer = NULL;
 	
+	StartScene*					pStartScene = NULL;
+	MenuScene* pMenuScene = NULL;
 	CGameScene*						m_pScene = NULL;
+
+
+
 	CGameObject*				m_pLockedObject = NULL;
 
 	CGameTimer					m_GameTimer;
@@ -55,8 +60,8 @@ public:
 
 	void SetActive(bool bActive) { m_bActive = bActive; }
 
-	void RenderTitle(HDC hDC);
 
 	void ChoiceGameMode();
+
 };
 

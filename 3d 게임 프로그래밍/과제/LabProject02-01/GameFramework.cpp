@@ -96,6 +96,7 @@ void CGameFramework::ReleaseObjects()
 
 void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
+	enum GameState { TITLE, MENU, GAME };
 	if (m_pScene) m_pScene->OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
 
 	switch (nMessageID)
@@ -106,8 +107,20 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 		::GetCursorPos(&m_ptOldCursorPos);
 		if (nMessageID == WM_RBUTTONDOWN) //오른쪽 마우스 버튼이 눌려지면 
 		{
-			m_pLockedObject = m_pScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera); //씬에 있는 어떤 오브젝트를 클릭을 했는지 찾아내겠다.
-			if (m_pLockedObject)m_pLockedObject->SetColor(RGB(0, 0, 0));
+			switch (m_pScene->GetCurrentState())
+			{
+			case TITLE:
+
+				break;
+			case MENU:
+				// RenderMenu(m_hDCFrameBuffer); // 메뉴 화면 렌더링
+				break;
+			case GAME:
+				m_pLockedObject = m_pScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera); //씬에 있는 어떤 오브젝트를 클릭을 했는지 찾아내겠다.
+				if (m_pLockedObject)m_pLockedObject->SetColor(RGB(0, 0, 0));
+				break;
+			}
+
 		}
 			
 		break;
@@ -247,29 +260,8 @@ void CGameFramework::FrameAdvance() //매 프레임 마다 이 함수의 과정을 반복한다.
 	::SetWindowText(m_hWnd, m_pszFrameRate);
 }
 
-//이름 , 학번을 화면에 출력해줌
-void CGameFramework::RenderTitle(HDC hDC)
-{
-    static float angle = 0.0f;
-    angle += 0.01f; // 회전 속도
 
-    // "박신우" 텍스트 회전
-    SetGraphicsMode(hDC, GM_ADVANCED);
-    XFORM xForm;
-    xForm.eM11 = cos(angle);
-    xForm.eM12 = sin(angle);
-    xForm.eM21 = -sin(angle);
-    xForm.eM22 = cos(angle);
-    xForm.eDx = 300; // 텍스트 위치 (x)
-    xForm.eDy = 250; // 텍스트 위치 (y)
-    SetWorldTransform(hDC, &xForm);
 
-	TextOutW(hDC, 0, 0, L"박신우", wcslen(L"박신우"));
-
-    // 회전하지 않는 "3D 게임프로그래밍 1" 텍스트
-    ModifyWorldTransform(hDC, NULL, MWT_IDENTITY);
-    TextOut(hDC, 320, 240, L"3D 게임프로그래밍 1", wcslen(L"3D 게임프로그래밍 1"));
-}
 
 void CGameFramework::ChoiceGameMode()// 모드에 따라 화면 출력
 {
@@ -280,10 +272,12 @@ void CGameFramework::ChoiceGameMode()// 모드에 따라 화면 출력
 		switch (m_pScene->GetCurrentState())
 		{
 		case TITLE:
-			RenderTitle(m_hDCFrameBuffer); // 타이틀 화면 렌더링
+			if (!pStartScene) pStartScene = new StartScene();
+			pStartScene->Render(m_hDCFrameBuffer);
 			break;
 		case MENU:
-			// RenderMenu(m_hDCFrameBuffer); // 메뉴 화면 렌더링
+			if (!pMenuScene) pMenuScene = new MenuScene();
+			pMenuScene->Render(m_hDCFrameBuffer);
 			break;
 		case GAME:
 			CCamera* pCamera = m_pPlayer->GetCamera();
