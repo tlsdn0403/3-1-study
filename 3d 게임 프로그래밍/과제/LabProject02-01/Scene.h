@@ -5,7 +5,7 @@
 #include "Player.h"
 class CGameState {
 public:
-	static enum GameState { TITLE, MENU, GAME };
+	static enum GameState { TITLE, MENU, GAME , GAME_1};
 	GameState GetCurrentState() const { return CurrentState; }
 	static GameState CurrentState;
 	static void ChangeGameState(GameState state);
@@ -22,6 +22,11 @@ public:
 class StartScene {
 public:
 	virtual void Render(HDC hDCFrameBuffer);
+	void OnMouseClick(int x, int y);
+	bool isExploding = false;
+	float angle = 0.0f;
+private:
+	
 };
 
 

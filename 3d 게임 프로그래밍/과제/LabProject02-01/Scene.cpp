@@ -2,34 +2,185 @@
 #include "Scene.h"
 #include "GraphicsPipeline.h"
 
-CGameState::GameState CGameState::CurrentState = CGameState::MENU; // 정적 멤버 초
+CGameState::GameState CGameState::CurrentState = CGameState::TITLE; // 정적 멤버 초
 void CGameState::ChangeGameState(GameState state)
 {
 	CurrentState = state;
 }
 
-void StartScene::Render(HDC hDCFrameBuffer)
+
+
+void StartScene::Render(HDC hDCFrameBuffer)  
+{  
+   static float explosionScale = 1.0f;  
+
+   if (isExploding)
+   {
+	   if (explosionScale < 5.0f) {
+           static float explosionScale = 1.0f;
+           static float 박_dx = 0.0f, 박_dy = 0.0f; 
+           static float 신_dx = 0.0f, 신_dy = 0.0f; 
+           static float 우_dx = 0.0f, 우_dy = 0.0f; 
+
+           if (isExploding)
+           {
+               if (explosionScale < 5.0f)
+               {
+ 
+                   XFORM 박_xForm;
+                   박_dx -= 5.0f; 
+                   박_dy -= 5.0f; 
+                   박_xForm.eM11 = cos(angle) * explosionScale;
+                   박_xForm.eM12 = sin(angle) * explosionScale;
+                   박_xForm.eM21 = -sin(angle) * explosionScale;
+                   박_xForm.eM22 = cos(angle) * explosionScale;
+                   박_xForm.eDx = 250 + 박_dx; // 텍스트 위치 (x)
+                   박_xForm.eDy = 250 + 박_dy; // 텍스트 위치 (y)
+                   SetWorldTransform(hDCFrameBuffer, &박_xForm);
+                   TextOutW(hDCFrameBuffer, 0, 0, L"박", 1);
+
+   
+                   XFORM 신_xForm;
+                   신_dx -= 5.0f; 
+                   신_dy += 5.0f; 
+                   신_xForm.eM11 = cos(angle) * explosionScale;
+                   신_xForm.eM12 = sin(angle) * explosionScale;
+                   신_xForm.eM21 = -sin(angle) * explosionScale;
+                   신_xForm.eM22 = cos(angle) * explosionScale;
+                   신_xForm.eDx = 300 + 신_dx; // 텍스트 위치 (x)
+                   신_xForm.eDy = 250 + 신_dy; // 텍스트 위치 (y)
+                   SetWorldTransform(hDCFrameBuffer, &신_xForm);
+                   TextOutW(hDCFrameBuffer, 0, 0, L"신", 1);
+
+   
+                   XFORM 우_xForm;
+                   우_dx += 1.0f; 
+                   우_dy -= 5.0f; 
+                   우_xForm.eM11 = cos(angle) * explosionScale;
+                   우_xForm.eM12 = sin(angle) * explosionScale;
+                   우_xForm.eM21 = -sin(angle) * explosionScale;
+                   우_xForm.eM22 = cos(angle) * explosionScale;
+                   우_xForm.eDx = 350 + 우_dx; // 텍스트 위치 (x)
+                   우_xForm.eDy = 250 + 우_dy; // 텍스트 위치 (y)
+                   SetWorldTransform(hDCFrameBuffer, &우_xForm);
+                   TextOutW(hDCFrameBuffer, 0, 0, L"우", 1);
+
+                   explosionScale += 0.1f;
+               }
+               else
+               {
+                   CGameState::ChangeGameState(CGameState::MENU); // 게임 상태로 변경
+               }
+
+               // 나머지 텍스트는 고정
+               ModifyWorldTransform(hDCFrameBuffer, NULL, MWT_IDENTITY);
+               TextOutW(hDCFrameBuffer, 200, 250, L"3D 게임프로그래밍 1", wcslen(L"3D 게임프로그래밍 1"));
+           }
+           else
+           {
+               angle += 0.01f; // 회전 속도
+
+               SetGraphicsMode(hDCFrameBuffer, GM_ADVANCED);
+               XFORM xForm;
+               xForm.eM11 = cos(angle) * explosionScale;
+               xForm.eM12 = sin(angle) * explosionScale;
+               xForm.eM21 = -sin(angle) * explosionScale;
+               xForm.eM22 = cos(angle) * explosionScale;
+               xForm.eDx = 300; // 텍스트 위치 (x)
+               xForm.eDy = 250; // 텍스트 위치 (y)
+               SetWorldTransform(hDCFrameBuffer, &xForm);
+
+               TextOutW(hDCFrameBuffer, 0, 0, L"3D 게임프로그래밍 1 박신우", wcslen(L"3D 게임프로그래밍 1 박신우"));
+           }
+
+           ModifyWorldTransform(hDCFrameBuffer, NULL, MWT_IDENTITY); // 월드변환 행렬 초기화
+
+		  
+	   }
+	   else {
+		   CGameState::ChangeGameState(CGameState::MENU); // 게임 상태로 변경  
+	   }
+	   // 나머지 텍스트는 고정  
+	   ModifyWorldTransform(hDCFrameBuffer, NULL, MWT_IDENTITY);
+	   TextOutW(hDCFrameBuffer, 200, 250, L"3D 게임프로그래밍 1", wcslen(L"3D 게임프로그래밍 1"));
+   }
+   else {
+        
+	   angle += 0.01f; // 회전 속도  
+	   // "박신우" 텍스트 회전 및 폭발 효과  
+	   SetGraphicsMode(hDCFrameBuffer, GM_ADVANCED);
+	   XFORM xForm;
+	   xForm.eM11 = cos(angle) ;
+	   xForm.eM12 = sin(angle) ;
+	   xForm.eM21 = -sin(angle);
+	   xForm.eM22 = cos(angle);
+	   xForm.eDx = 300; // 텍스트 위치 (x)  
+	   xForm.eDy = 250; // 텍스트 위치 (y)  
+	   SetWorldTransform(hDCFrameBuffer, &xForm);
+
+	   TextOutW(hDCFrameBuffer, 0, 0, L"3D 게임프로그래밍 1 박신우", wcslen(L"3D 게임프로그래밍 1 박신우"));
+   }
+ 
+   ModifyWorldTransform(hDCFrameBuffer, NULL, MWT_IDENTITY);  //월드변환 행렬 초기화
+
+}  
+void StartScene::OnMouseClick(int x, int y)
 {
-	static float angle = 0.0f;
-	angle += 0.01f; // 회전 속도
+	// "박신우" 텍스트의 회전 중심 좌표와 반지름 정의  
+	const int centerX = 300;
+	const int centerY = 250;
+	const int radius = 50; // 클릭 가능한 반경  
 
-	// "박신우" 텍스트 회전
-	SetGraphicsMode(hDCFrameBuffer, GM_ADVANCED);
-	XFORM xForm;
-	xForm.eM11 = cos(angle);
-	xForm.eM12 = sin(angle);
-	xForm.eM21 = -sin(angle);
-	xForm.eM22 = cos(angle);
-	xForm.eDx = 300; // 텍스트 위치 (x)
-	xForm.eDy = 250; // 텍스트 위치 (y)
-	SetWorldTransform(hDCFrameBuffer, &xForm);
+	// 클릭한 좌표를 텍스트의 회전 좌표계로 변환  
+	float cosAngle = cos(-angle);
+	float sinAngle = sin(-angle);
 
-	TextOutW(hDCFrameBuffer, 0, 0, L"박신우", wcslen(L"박신우"));
 
-	// 회전하지 않는 "3D 게임프로그래밍 1" 텍스트
-	ModifyWorldTransform(hDCFrameBuffer, NULL, MWT_IDENTITY);
-	TextOut(hDCFrameBuffer, 320, 240, L"3D 게임프로그래밍 1", wcslen(L"3D 게임프로그래밍 1"));
+	int textcoordX = centerX + (50.0 * cos(angle));
+	int textcoordY = centerY + (50.0 * sin(angle));
+
+	int dx = x - textcoordX;
+	int dy = y - textcoordY;
+	int distanceSquared = dx + dy;
+
+	if (distanceSquared <200)
+	{
+		isExploding = true; // 폭발 효과 활성화  
+	}
 }
+//void StartScene::OnMouseClick(int x, int y)  
+//{  
+//   RECT textRect = { 300 - 50, 250 - 20, 300 + 50, 250 + 20 }; // 텍스트 중심을 기준으로 사각형 정의  
+//
+//   if (PtInRect(&textRect, POINT{ x, y }))  
+//   {  
+//       isExploding = true; // 폭발 효과 활성화  
+//	   if(!isExploding)
+//		CGameState::ChangeGameState(CGameState::MENU); // 게임 상태로 변경  
+//   }  
+//}
+//void StartScene::Render(HDC hDCFrameBuffer)
+//{
+//	static float angle = 0.0f;
+//	angle += 0.01f; // 회전 속도
+//
+//	// "박신우" 텍스트 회전
+//	SetGraphicsMode(hDCFrameBuffer, GM_ADVANCED);
+//	XFORM xForm;
+//	xForm.eM11 = cos(angle);
+//	xForm.eM12 = sin(angle);
+//	xForm.eM21 = -sin(angle);
+//	xForm.eM22 = cos(angle);
+//	xForm.eDx = 300; // 텍스트 위치 (x)
+//	xForm.eDy = 250; // 텍스트 위치 (y)
+//	SetWorldTransform(hDCFrameBuffer, &xForm);
+//
+//	TextOutW(hDCFrameBuffer, 0, 0, L"박신우", wcslen(L"박신우"));
+//
+//	// 회전하지 않는 "3D 게임프로그래밍 1" 텍스트
+//	ModifyWorldTransform(hDCFrameBuffer, NULL, MWT_IDENTITY);
+//	TextOut(hDCFrameBuffer, 320, 240, L"3D 게임프로그래밍 1", wcslen(L"3D 게임프로그래밍 1"));
+//}
 
 
 MenuScene::MenuScene() {

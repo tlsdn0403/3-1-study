@@ -110,14 +110,27 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 			switch (pGameState->GetCurrentState())
 			{
 			case TITLE:
+				break;
+			case MENU:
+				break;
+			case GAME:
+				m_pLockedObject = m_pScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera); //씬에 있는 어떤 오브젝트를 클릭을 했는지 찾아내겠다.
+				if (m_pLockedObject)m_pLockedObject->SetColor(RGB(0, 0, 0));
+				break;
+			}
 
+		}
+		else if (nMessageID == WM_LBUTTONDOWN) //왼쪽 마우스 버튼이 눌려지면 
+		{
+			switch (pGameState->GetCurrentState())
+			{
+			case TITLE:
+				pStartScene->OnMouseClick(LOWORD(lParam), HIWORD(lParam)); // x, y 좌표 전달
 				break;
 			case MENU:
 				pMenuScene->OnMouseClick(LOWORD(lParam), HIWORD(lParam)); // x, y 좌표 전달
 				break;
 			case GAME:
-				m_pLockedObject = m_pScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera); //씬에 있는 어떤 오브젝트를 클릭을 했는지 찾아내겠다.
-				if (m_pLockedObject)m_pLockedObject->SetColor(RGB(0, 0, 0));
 				break;
 			}
 
@@ -154,7 +167,7 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 			m_pLockedObject = NULL;
 			break;
 		case VK_SHIFT:
-			pGameState->CGameState::ChangeGameState(CGameState::TITLE);
+			pGameState->CGameState::ChangeGameState(CGameState::MENU);
 			break;
 		default:
 			m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
@@ -263,9 +276,10 @@ void CGameFramework::FrameAdvance() //매 프레임 마다 이 함수의 과정을 반복한다.
 
 
 
-void CGameFramework::ChoiceGameMode()// 모드에 따라 화면 출력
+
+void CGameFramework::ChoiceGameMode() // 모드에 따라 화면 출력
 {
-	enum GameState { TITLE, MENU, GAME };
+	enum GameState { TITLE, MENU, GAME, GAME_1 };
 
 	if (m_pScene && m_pPlayer)
 	{
@@ -280,10 +294,14 @@ void CGameFramework::ChoiceGameMode()// 모드에 따라 화면 출력
 			pMenuScene->Render(m_hDCFrameBuffer);
 			break;
 		case GAME:
-			CCamera* pCamera = m_pPlayer->GetCamera();
+		{
+			CCamera* pCamera = m_pPlayer->GetCamera(); // 중괄호로 스코프를 감쌈
 			if (pCamera) m_pScene->Render(m_hDCFrameBuffer, pCamera); // 게임 화면 렌더링
 			break;
 		}
+		case GAME_1:
+			// GAME_1에 대한 추가 로직 작성 가능
+			break;
+		}
 	}
-
 }
