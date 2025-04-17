@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "GameFramework.h"
 
+enum GameState { TITLE, MENU, GAME, GAME_1 };
 void CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 {
 	::srand(timeGetTime());
@@ -63,6 +64,7 @@ void CGameFramework::PresentFrameBuffer()
 
 void CGameFramework::BuildObjects()
 {
+	
 	CCamera* pCamera = new CCamera();
 	pCamera->SetViewport(0, 0, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
 	pCamera->GeneratePerspectiveProjectionMatrix(1.01f, 500.0f, 60.0f);
@@ -78,9 +80,20 @@ void CGameFramework::BuildObjects()
 	m_pPlayer->SetColor(RGB(0, 0, 255));
 	m_pPlayer->SetCamera(pCamera);
 	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));  //카메라 오프셋 설정
-
-	m_pScene = new CGameScene(m_pPlayer);
-	m_pScene->BuildObjects();
+	switch (pGameState->GetCurrentState())
+	{
+	case GAME:
+	{
+		m_pScene = new CGameScene(m_pPlayer);
+		m_pScene->BuildObjects();
+		break;
+	}
+	case GAME_1:
+		m_pScene_1 = new CGameScene_1(m_pPlayer);
+		m_pScene_1->BuildObjects();
+		break;
+	}
+	
 }
 
 void CGameFramework::ReleaseObjects()
@@ -90,13 +103,17 @@ void CGameFramework::ReleaseObjects()
 		m_pScene->ReleaseObjects();
 		delete m_pScene;
 	}
-
+	if (m_pScene_1)
+	{
+		m_pScene_1->ReleaseObjects();
+		delete m_pScene_1;
+	}
 	if (m_pPlayer) delete m_pPlayer;
 }
 
 void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
-	enum GameState { TITLE, MENU, GAME };
+	
 	if (m_pScene) m_pScene->OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
 
 	switch (nMessageID)
@@ -247,8 +264,20 @@ void CGameFramework::ProcessInput()//사용자 입력을 받아드림
 void CGameFramework::AnimateObjects()
 {
 	float fTimeElapsed = m_GameTimer.GetTimeElapsed(); //현재 Elapsed 타임을 가져온다
-	if (m_pPlayer) m_pPlayer->Animate(fTimeElapsed); //플레이어를 애니메이트 한다
-	if (m_pScene) m_pScene->Animate(fTimeElapsed);  //씬을 애니메이트 한다.
+
+	switch (pGameState->GetCurrentState())
+	{
+	case GAME:
+	{
+		if (m_pPlayer) m_pPlayer->Animate(fTimeElapsed); //플레이어를 애니메이트 한다
+		if (m_pScene) m_pScene->Animate(fTimeElapsed);  //씬을 애니메이트 한다.
+		break;
+	}
+	case GAME_1:
+		if (m_pPlayer) m_pPlayer->Animate(fTimeElapsed); //플레이어를 애니메이트 한다
+		if (m_pScene_1) m_pScene_1->Animate(fTimeElapsed);  //씬을 애니메이트 한다.
+		break;
+	}
 }
 
 void CGameFramework::FrameAdvance() //매 프레임 마다 이 함수의 과정을 반복한다.
@@ -279,9 +308,17 @@ void CGameFramework::FrameAdvance() //매 프레임 마다 이 함수의 과정을 반복한다.
 
 void CGameFramework::ChoiceGameMode() // 모드에 따라 화면 출력
 {
-	enum GameState { TITLE, MENU, GAME, GAME_1 };
-
-	if (m_pScene && m_pPlayer)
+	if (pGameState->GetCurrentState() == GAME_1 && m_pScene) {
+		m_pScene->ReleaseObjects();
+		delete m_pScene;
+		m_pScene = nullptr;
+	}
+	if (pGameState->GetCurrentState() == GAME && m_pScene_1) {
+		m_pScene_1->ReleaseObjects();
+		delete m_pScene_1;
+		m_pScene_1 = nullptr;
+	}
+	if ( m_pPlayer)
 	{
 		switch (pGameState->GetCurrentState())
 		{
@@ -295,12 +332,22 @@ void CGameFramework::ChoiceGameMode() // 모드에 따라 화면 출력
 			break;
 		case GAME:
 		{
+			if (!m_pScene) {
+				m_pScene = new CGameScene(m_pPlayer);
+				m_pScene->BuildObjects(); // 게임 모드로 전환 시 객체 초기화
+			}
 			CCamera* pCamera = m_pPlayer->GetCamera(); // 중괄호로 스코프를 감쌈
 			if (pCamera) m_pScene->Render(m_hDCFrameBuffer, pCamera); // 게임 화면 렌더링
 			break;
 		}
 		case GAME_1:
-			// GAME_1에 대한 추가 로직 작성 가능
+			if (!m_pScene_1) {
+				m_pScene_1 = new CGameScene_1(m_pPlayer);
+				m_pScene_1->BuildObjects(); // 게임 모드로 전환 시 객체 초기화
+
+			}
+			CCamera* pCamera = m_pPlayer->GetCamera(); // 중괄호로 스코프를 감쌈
+			if (pCamera) m_pScene_1->Render(m_hDCFrameBuffer, pCamera); // 게임 화면 렌더링
 			break;
 		}
 	}

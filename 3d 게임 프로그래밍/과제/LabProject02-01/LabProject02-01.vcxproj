@@ -154,6 +154,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="GameFramework.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="CGameScene_1.h" />
     <ClInclude Include="GraphicsPipeline.h" />
     <ClInclude Include="LabProject02-01.h" />
     <ClInclude Include="Mesh.h" />
@@ -168,6 +169,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="GameFramework.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="CGameScene_1.cpp" />
     <ClCompile Include="GraphicsPipeline.cpp" />
     <ClCompile Include="LabProject02-01.cpp" />
     <ClCompile Include="Mesh.cpp" />

@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Scene.h"
 #include "Timer.h"
+#include"CGameScene_1.h"
 
 class CGameFramework
 {
@@ -28,6 +29,7 @@ private:
 	StartScene*					pStartScene = NULL;
 	MenuScene* pMenuScene = NULL;
 	CGameScene*						m_pScene = NULL;
+	CGameScene_1*					m_pScene_1 = nullptr;
 
 
 	CGameObject*				m_pLockedObject = NULL;

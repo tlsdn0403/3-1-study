@@ -148,40 +148,11 @@ void StartScene::OnMouseClick(int x, int y)
 		isExploding = true; // 폭발 효과 활성화  
 	}
 }
-//void StartScene::OnMouseClick(int x, int y)  
-//{  
-//   RECT textRect = { 300 - 50, 250 - 20, 300 + 50, 250 + 20 }; // 텍스트 중심을 기준으로 사각형 정의  
-//
-//   if (PtInRect(&textRect, POINT{ x, y }))  
-//   {  
-//       isExploding = true; // 폭발 효과 활성화  
-//	   if(!isExploding)
-//		CGameState::ChangeGameState(CGameState::MENU); // 게임 상태로 변경  
-//   }  
-//}
-//void StartScene::Render(HDC hDCFrameBuffer)
-//{
-//	static float angle = 0.0f;
-//	angle += 0.01f; // 회전 속도
-//
-//	// "박신우" 텍스트 회전
-//	SetGraphicsMode(hDCFrameBuffer, GM_ADVANCED);
-//	XFORM xForm;
-//	xForm.eM11 = cos(angle);
-//	xForm.eM12 = sin(angle);
-//	xForm.eM21 = -sin(angle);
-//	xForm.eM22 = cos(angle);
-//	xForm.eDx = 300; // 텍스트 위치 (x)
-//	xForm.eDy = 250; // 텍스트 위치 (y)
-//	SetWorldTransform(hDCFrameBuffer, &xForm);
-//
-//	TextOutW(hDCFrameBuffer, 0, 0, L"박신우", wcslen(L"박신우"));
-//
-//	// 회전하지 않는 "3D 게임프로그래밍 1" 텍스트
-//	ModifyWorldTransform(hDCFrameBuffer, NULL, MWT_IDENTITY);
-//	TextOut(hDCFrameBuffer, 320, 240, L"3D 게임프로그래밍 1", wcslen(L"3D 게임프로그래밍 1"));
-//}
 
+
+//--------------------------------------------------------------------------------------------------------------------------------
+//                           메뉴
+//--------------------------------------------------------------------------------------------------------------------------------
 
 MenuScene::MenuScene() {
 	int x = FRAMEBUFFER_WIDTH/2, y = FRAMEBUFFER_HEIGHT/4, width = 200, height = 40, spacing = 50;
@@ -220,11 +191,18 @@ void MenuScene::OnMouseClick(int x, int y)
           else if (m_MenuItems[i] == "Start")  
           {  
               CGameState::ChangeGameState(CGameState::GAME); // 게임 상태로 변경  
-          }  
+          }
+		  else if (m_MenuItems[i] == "Level-1")
+		  {
+			  CGameState::ChangeGameState(CGameState::GAME_1); // 게임 상태로 변경  
+		  }
       }  
   }  
 }
 
+//--------------------------------------------------------------------------------------------------------------------------------
+//                           게임
+//--------------------------------------------------------------------------------------------------------------------------------
 
 CGameScene::CGameScene(CPlayer* pPlayer)
 {
@@ -367,7 +345,7 @@ void CGameScene::ReleaseObjects()
 	if (m_pWallsObject) delete m_pWallsObject;
 
 #ifdef _WITH_DRAW_AXIS
-	if (m_pWorldAxis) delete m_pWorldAxis;
+	if (m_pWorldAxis) delete m_pWorldAxis; //	m_pWorldAxis는 월드 축을 나타내는 객체
 #endif
 }
 
@@ -585,6 +563,7 @@ void CGameScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 	CGraphicsPipeline::SetViewport(&pCamera->m_Viewport);  //m_Viewport를 뷰포트 값으로 설정
 
 	CGraphicsPipeline::SetViewPerspectiveProjectTransform(&pCamera->m_xmf4x4ViewPerspectiveProject);
+
 	m_pWallsObject->Render(hDCFrameBuffer, pCamera);
 	for (int i = 0; i < m_nObjects; i++) m_ppObjects[i]->Render(hDCFrameBuffer, pCamera);
 
