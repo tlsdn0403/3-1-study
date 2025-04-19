@@ -12,7 +12,7 @@ CGameScene_1::~CGameScene_1()
 {
 }
 void CGameScene_1::BuildObjects() {
-	CCubeMesh* pCubeMesh = new CCubeMesh(4.0f, 4.0f, 4.0f);
+	CTankMesh* pCubeMesh = new CTankMesh(4.0f, 4.0f, 4.0f);
 
 	m_nObjects_1 = 2;
 	m_ppObjects_1 = new CGameObject * [m_nObjects_1];

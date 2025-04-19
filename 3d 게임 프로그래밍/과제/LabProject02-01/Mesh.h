@@ -98,3 +98,8 @@ public:
 	CTankMesh(float fWidth = 20.0f, float fHeight = 20.0f, float fDepth = 4.0f);
 	virtual ~CTankMesh() {}
 };
+class CRollerCoasterMesh : public CMesh {
+public:
+	CRollerCoasterMesh(float fWidth = 1.0f, float fHeight = 1.0f, float fDepth = 1.0f, int nSegments = 100);
+	virtual ~CRollerCoasterMesh();
+};

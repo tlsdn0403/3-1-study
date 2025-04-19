@@ -168,7 +168,6 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
 	if (m_pScene) m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam); //null이 아닌 경우
-	enum GameState { TITLE, MENU, GAME };
 	switch (nMessageID)
 	{
 	case WM_KEYDOWN:
@@ -187,6 +186,7 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 			pGameState->CGameState::ChangeGameState(CGameState::MENU);
 			break;
 		default:
+			if(m_pScene)
 			m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
 			break;
 		}

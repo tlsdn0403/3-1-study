@@ -437,58 +437,7 @@ CAirplaneMesh::CAirplaneMesh(float fWidth, float fHeight, float fDepth) : CMesh(
 
 	m_xmOOBB = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fx, fy, fz), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
 }
-
-CAxisMesh::CAxisMesh(float fWidth, float fHeight, float fDepth) : CMesh(3)
-{
-	float fHalfWidth = fWidth * 0.5f;
-	float fHalfHeight = fHeight * 0.5f;
-	float fHalfDepth = fDepth * 0.5f;
-
-	CPolygon* pxAxis = new CPolygon(2);
-	pxAxis->SetVertex(0, CVertex(-fHalfWidth, 0.0f, 0.0f));
-	pxAxis->SetVertex(1, CVertex(+fHalfWidth, 0.0f, 0.0f));
-	SetPolygon(0, pxAxis);
-
-	CPolygon* pyAxis = new CPolygon(2);
-	pyAxis->SetVertex(0, CVertex(0.0f, -fHalfWidth, 0.0f));
-	pyAxis->SetVertex(1, CVertex(0.0f, +fHalfWidth, 0.0f));
-	SetPolygon(1, pyAxis);
-
-	CPolygon* pzAxis = new CPolygon(2);
-	pzAxis->SetVertex(0, CVertex(0.0f, 0.0f, -fHalfWidth));
-	pzAxis->SetVertex(1, CVertex(0.0f, 0.0f, +fHalfWidth));
-	SetPolygon(2, pzAxis);
-}
-
-void CAxisMesh::Render(HDC hDCFrameBuffer)
-{
-	XMFLOAT3 f3PreviousProject = CGraphicsPipeline::Project(m_ppPolygons[0]->m_pVertices[0].m_xmf3Position);
-	XMFLOAT3 f3CurrentProject = CGraphicsPipeline::Project(m_ppPolygons[0]->m_pVertices[1].m_xmf3Position);
-	HPEN hPen = ::CreatePen(PS_SOLID, 0, RGB(255, 0, 0));
-	HPEN hOldPen = (HPEN)::SelectObject(hDCFrameBuffer, hPen);
-	::Draw2DLine(hDCFrameBuffer, f3PreviousProject, f3CurrentProject);
-	::SelectObject(hDCFrameBuffer, hOldPen);
-	::DeleteObject(hPen);
-
-	f3PreviousProject = CGraphicsPipeline::Project(m_ppPolygons[1]->m_pVertices[0].m_xmf3Position);
-	f3CurrentProject = CGraphicsPipeline::Project(m_ppPolygons[1]->m_pVertices[1].m_xmf3Position);
-	hPen = ::CreatePen(PS_SOLID, 0, RGB(0, 0, 255));
-	hOldPen = (HPEN)::SelectObject(hDCFrameBuffer, hPen);
-	::Draw2DLine(hDCFrameBuffer, f3PreviousProject, f3CurrentProject);
-	::SelectObject(hDCFrameBuffer, hOldPen);
-	::DeleteObject(hPen);
-
-	f3PreviousProject = CGraphicsPipeline::Project(m_ppPolygons[2]->m_pVertices[0].m_xmf3Position);
-	f3CurrentProject = CGraphicsPipeline::Project(m_ppPolygons[2]->m_pVertices[1].m_xmf3Position);
-	hPen = ::CreatePen(PS_SOLID, 0, RGB(0, 255, 0));
-	hOldPen = (HPEN)::SelectObject(hDCFrameBuffer, hPen);
-	::Draw2DLine(hDCFrameBuffer, f3PreviousProject, f3CurrentProject);
-	::SelectObject(hDCFrameBuffer, hOldPen);
-	::DeleteObject(hPen);
-}
-
-
-CTankMesh::CTankMesh(float fWidth, float fHeight, float fDepth) : CMesh(36) {
+CTankMesh::CTankMesh(float fWidth, float fHeight, float fDepth) : CMesh(14) {
 	float fx = fWidth * 0.5f, fy = fHeight * 0.5f, fz = fDepth * 0.5f;
 
 	int i = 0;
@@ -576,26 +525,106 @@ CTankMesh::CTankMesh(float fWidth, float fHeight, float fDepth) : CMesh(36) {
 
 	// ¢Æ¢Æ Wheels ¢Æ¢Æ (ÁÂ¿ì 3°³¾¿ ¿¹½Ã)
 	float wheelRadius = fy * 0.2f;
-	float wheelZ = fz * 0.9f;
+
 	for (int j = 0; j < 3; ++j) {
-		float offsetX = -fx + (j + 1) * (fWidth / 4.0f);
-		// Left wheel
+        float offsetZ = -fz + (j + 1) * (fDepth / 4.0f);
+		// ¿Þ  
 		pFace = new CPolygon(4);
-		pFace->SetVertex(0, CVertex(offsetX - wheelRadius, -fy, -wheelZ));
-		pFace->SetVertex(1, CVertex(offsetX + wheelRadius, -fy, -wheelZ));
-		pFace->SetVertex(2, CVertex(offsetX + wheelRadius, -fy + wheelRadius * 2, -wheelZ));
-		pFace->SetVertex(3, CVertex(offsetX - wheelRadius, -fy + wheelRadius * 2, -wheelZ));
+		pFace->SetVertex(0, CVertex(-fx, -fy, offsetZ - wheelRadius));
+		pFace->SetVertex(1, CVertex(-fx, -fy, offsetZ + wheelRadius));
+		pFace->SetVertex(2, CVertex(-fx, -fy + wheelRadius * 2, offsetZ + wheelRadius));
+		pFace->SetVertex(3, CVertex(-fx, -fy + wheelRadius * 2, offsetZ - wheelRadius));
 		SetPolygon(i++, pFace);
 
-		// Right wheel
+		//¿À¸¥ 
 		pFace = new CPolygon(4);
-		pFace->SetVertex(0, CVertex(offsetX - wheelRadius, -fy, +wheelZ));
-		pFace->SetVertex(1, CVertex(offsetX + wheelRadius, -fy, +wheelZ));
-		pFace->SetVertex(2, CVertex(offsetX + wheelRadius, -fy + wheelRadius * 2, +wheelZ));
-		pFace->SetVertex(3, CVertex(offsetX - wheelRadius, -fy + wheelRadius * 2, +wheelZ));
+		pFace->SetVertex(0, CVertex(+fx, -fy, offsetZ - wheelRadius));
+		pFace->SetVertex(1, CVertex(+fx, -fy, offsetZ + wheelRadius));
+		pFace->SetVertex(2, CVertex(+fx, -fy + wheelRadius * 2, offsetZ + wheelRadius));
+		pFace->SetVertex(3, CVertex(+fx, -fy + wheelRadius * 2, offsetZ - wheelRadius));
 		SetPolygon(i++, pFace);
 	}
 
+
 	// ¢Æ¢Æ Bounding Box ¢Æ¢Æ
 	m_xmOOBB = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fx, fy, fz), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+}
+CAxisMesh::CAxisMesh(float fWidth, float fHeight, float fDepth) : CMesh(3)
+{
+	float fHalfWidth = fWidth * 0.5f;
+	float fHalfHeight = fHeight * 0.5f;
+	float fHalfDepth = fDepth * 0.5f;
+
+	CPolygon* pxAxis = new CPolygon(2);
+	pxAxis->SetVertex(0, CVertex(-fHalfWidth, 0.0f, 0.0f));
+	pxAxis->SetVertex(1, CVertex(+fHalfWidth, 0.0f, 0.0f));
+	SetPolygon(0, pxAxis);
+
+	CPolygon* pyAxis = new CPolygon(2);
+	pyAxis->SetVertex(0, CVertex(0.0f, -fHalfWidth, 0.0f));
+	pyAxis->SetVertex(1, CVertex(0.0f, +fHalfWidth, 0.0f));
+	SetPolygon(1, pyAxis);
+
+	CPolygon* pzAxis = new CPolygon(2);
+	pzAxis->SetVertex(0, CVertex(0.0f, 0.0f, -fHalfWidth));
+	pzAxis->SetVertex(1, CVertex(0.0f, 0.0f, +fHalfWidth));
+	SetPolygon(2, pzAxis);
+}
+
+void CAxisMesh::Render(HDC hDCFrameBuffer)
+{
+	XMFLOAT3 f3PreviousProject = CGraphicsPipeline::Project(m_ppPolygons[0]->m_pVertices[0].m_xmf3Position);
+	XMFLOAT3 f3CurrentProject = CGraphicsPipeline::Project(m_ppPolygons[0]->m_pVertices[1].m_xmf3Position);
+	HPEN hPen = ::CreatePen(PS_SOLID, 0, RGB(255, 0, 0));
+	HPEN hOldPen = (HPEN)::SelectObject(hDCFrameBuffer, hPen);
+	::Draw2DLine(hDCFrameBuffer, f3PreviousProject, f3CurrentProject);
+	::SelectObject(hDCFrameBuffer, hOldPen);
+	::DeleteObject(hPen);
+
+	f3PreviousProject = CGraphicsPipeline::Project(m_ppPolygons[1]->m_pVertices[0].m_xmf3Position);
+	f3CurrentProject = CGraphicsPipeline::Project(m_ppPolygons[1]->m_pVertices[1].m_xmf3Position);
+	hPen = ::CreatePen(PS_SOLID, 0, RGB(0, 0, 255));
+	hOldPen = (HPEN)::SelectObject(hDCFrameBuffer, hPen);
+	::Draw2DLine(hDCFrameBuffer, f3PreviousProject, f3CurrentProject);
+	::SelectObject(hDCFrameBuffer, hOldPen);
+	::DeleteObject(hPen);
+
+	f3PreviousProject = CGraphicsPipeline::Project(m_ppPolygons[2]->m_pVertices[0].m_xmf3Position);
+	f3CurrentProject = CGraphicsPipeline::Project(m_ppPolygons[2]->m_pVertices[1].m_xmf3Position);
+	hPen = ::CreatePen(PS_SOLID, 0, RGB(0, 255, 0));
+	hOldPen = (HPEN)::SelectObject(hDCFrameBuffer, hPen);
+	::Draw2DLine(hDCFrameBuffer, f3PreviousProject, f3CurrentProject);
+	::SelectObject(hDCFrameBuffer, hOldPen);
+	::DeleteObject(hPen);
+}
+
+
+
+
+
+CRollerCoasterMesh::CRollerCoasterMesh(float fWidth, float fHeight, float fDepth, int nSegments) : CMesh(nSegments) {
+	float fHalfWidth = fWidth * 0.5f;
+	float fStep = fDepth / nSegments;
+
+	for (int i = 0; i < nSegments; ++i) {
+		float zStart = i * fStep;
+		float zEnd = (i + 1) * fStep;
+
+		float yStart = sinf(zStart) * fHeight;
+		float yEnd = sinf(zEnd) * fHeight;
+
+		CPolygon* pSegment = new CPolygon(4);
+		pSegment->SetVertex(0, CVertex(-fHalfWidth, yStart, zStart));
+		pSegment->SetVertex(1, CVertex(+fHalfWidth, yStart, zStart));
+		pSegment->SetVertex(2, CVertex(+fHalfWidth, yEnd, zEnd));
+		pSegment->SetVertex(3, CVertex(-fHalfWidth, yEnd, zEnd));
+
+		SetPolygon(i, pSegment);
+	}
+
+	m_xmOOBB = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, fDepth * 0.5f), XMFLOAT3(fHalfWidth, fHeight, fDepth * 0.5f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+}
+
+CRollerCoasterMesh::~CRollerCoasterMesh() {
+	// Destructor logic if needed  
 }
