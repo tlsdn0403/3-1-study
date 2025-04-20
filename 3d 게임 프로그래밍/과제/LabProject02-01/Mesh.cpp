@@ -599,32 +599,60 @@ void CAxisMesh::Render(HDC hDCFrameBuffer)
 }
 
 
+//-----------------------------------------------------------------------------------------------------
+//   롤러코스터
+//-----------------------------------------------------------------------------------------------------
+
+CRollerCoasterMesh_Up::CRollerCoasterMesh_Up(float fWidth, float fHeight, float fDepth) : CMesh(4)  
+{	
+
+   // 대각선으로 올라가는 사각형을 정의합니다.  
+   CPolygon* pFace = new CPolygon(4);
+   int i = 0;
+   float 길이 = fWidth * 0.5f;
+   float 넓이 = fDepth * 0.5f;
+   // 사각형의 네 꼭짓점을 설정합니다.  
+   pFace->SetVertex(0, CVertex(0.0, 0.0f, 0.0f));  // Bottom-left  
+   pFace->SetVertex(1, CVertex(+fWidth * 0.5f, fHeight, 0.0f));  // Top-right  
+   pFace->SetVertex(2, CVertex(+fWidth * 0.5f, fHeight, +fDepth * 0.5f));  // Top-left  
+   pFace->SetVertex(3, CVertex(0.0f, 0.0f, +fDepth * 0.5f));  // Bottom-right    
+   SetPolygon(i++, pFace);  
+
+
+   pFace = new CPolygon(4);
+   pFace->SetVertex(0, CVertex(길이, fHeight, +넓이));  // Bottom-left  
+   pFace->SetVertex(1, CVertex(길이+넓이 , fHeight, +넓이));  // Top-right  
+   pFace->SetVertex(2, CVertex(길이+넓이 , fHeight, -길이));  // Top-left  
+   pFace->SetVertex(3, CVertex(길이, fHeight, -길이));  // Bottom-right  
+   SetPolygon(i++, pFace);
+
+
+   pFace = new CPolygon(4);  
+   pFace->SetVertex(0, CVertex(0.0, 0.0f, -길이));  // Bottom-left  
+   pFace->SetVertex(1, CVertex(+fWidth * 0.5f, fHeight, -길이 ));  // Top-right  
+   pFace->SetVertex(2, CVertex(+fWidth * 0.5f, fHeight, -길이 +fDepth * 0.5f));  // Top-left  
+   pFace->SetVertex(3, CVertex(0.0f, 0.0f, -길이 +fDepth * 0.5f));  // Bottom-right  
+   SetPolygon(i++, pFace);
 
 
 
-CRollerCoasterMesh::CRollerCoasterMesh(float fWidth, float fHeight, float fDepth, int nSegments) : CMesh(nSegments) {
-	float fHalfWidth = fWidth * 0.5f;
-	float fStep = fDepth / nSegments;
-
-	for (int i = 0; i < nSegments; ++i) {
-		float zStart = i * fStep;
-		float zEnd = (i + 1) * fStep;
-
-		float yStart = sinf(zStart) * fHeight;
-		float yEnd = sinf(zEnd) * fHeight;
-
-		CPolygon* pSegment = new CPolygon(4);
-		pSegment->SetVertex(0, CVertex(-fHalfWidth, yStart, zStart));
-		pSegment->SetVertex(1, CVertex(+fHalfWidth, yStart, zStart));
-		pSegment->SetVertex(2, CVertex(+fHalfWidth, yEnd, zEnd));
-		pSegment->SetVertex(3, CVertex(-fHalfWidth, yEnd, zEnd));
-
-		SetPolygon(i, pSegment);
-	}
-
-	m_xmOOBB = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, fDepth * 0.5f), XMFLOAT3(fHalfWidth, fHeight, fDepth * 0.5f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+   pFace = new CPolygon(4);
+   pFace->SetVertex(0, CVertex(0.0, 0.0f, -길이));  // Bottom-left  
+   pFace->SetVertex(1, CVertex(-fWidth * 0.5f, 0.0f, -길이));  // Top-right  
+   pFace->SetVertex(2, CVertex(-fWidth * 0.5f, 0.0f, -길이 + fDepth * 0.5f));  // Top-left  
+   pFace->SetVertex(3, CVertex(0.0f, 0.0f, -길이 + fDepth * 0.5f));  // Bottom-right  
+   SetPolygon(i++, pFace);
 }
+CRollerCoasterMesh_Right::CRollerCoasterMesh_Right(float fWidth, float fHeight, float fDepth) : CMesh(1)  
+{  
+	CPolygon* pDiagonalRect = new CPolygon(4);
+	
+	// 사각형의 네 꼭짓점을 설정합니다.  
+	pDiagonalRect->SetVertex(0, CVertex(-fWidth * 0.5f, 0.0f, -fDepth * 0.5f));  // Bottom-left  
+	pDiagonalRect->SetVertex(1, CVertex(+fWidth * 0.5f, 0.0f, -fDepth * 0.5f));  // Top-right  
+	pDiagonalRect->SetVertex(2, CVertex(+fWidth * 0.5f, 0.0f, +fDepth * 0.5f));  // Top-left  
+	pDiagonalRect->SetVertex(3, CVertex(-fWidth * 0.5f, 0.0f, +fDepth * 0.5f));  // Bottom-right  
 
-CRollerCoasterMesh::~CRollerCoasterMesh() {
-	// Destructor logic if needed  
+	// 사각형을 메쉬에 추가합니다.  
+	SetPolygon(0, pDiagonalRect);
 }

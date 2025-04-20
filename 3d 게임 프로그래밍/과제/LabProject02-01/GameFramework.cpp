@@ -72,11 +72,11 @@ void CGameFramework::BuildObjects()
 
 	pCamera->GenerateOrthographicProjectionMatrix(1.01f, 50.0f, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
 
-	CAirplaneMesh* pAirplaneMesh = new CAirplaneMesh(6.0f, 6.0f, 1.0f);
+	
 
-	m_pPlayer = new CAirplanePlayer();
+	m_pPlayer = new CPlayer();
+
 	m_pPlayer->SetPosition(0.0f, 0.0f, 0.0f);
-	m_pPlayer->SetMesh(pAirplaneMesh); 
 	m_pPlayer->SetColor(RGB(0, 0, 255));
 	m_pPlayer->SetCamera(pCamera);
 	m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));  //카메라 오프셋 설정
@@ -84,11 +84,27 @@ void CGameFramework::BuildObjects()
 	{
 	case GAME:
 	{
+		m_pPlayer = new CAirplanePlayer();
+		CAirplaneMesh* pAirplaneMesh = new CAirplaneMesh(6.0f, 6.0f, 1.0f);
+		m_pPlayer->SetMesh(pAirplaneMesh);
+		m_pPlayer->SetPosition(0.0f, 0.0f, 0.0f);
+		m_pPlayer->SetColor(RGB(0, 0, 255));
+		m_pPlayer->SetCamera(pCamera);
+		m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));  //카메라 오프셋 설정
 		m_pScene = new CGameScene(m_pPlayer);
 		m_pScene->BuildObjects();
 		break;
 	}
 	case GAME_1:
+		
+		CTankMesh* pTankMesh = new CTankMesh(2.0f, 2.0f, 2.0f);
+
+		m_pPlayer = new CAirplanePlayer();
+		m_pPlayer->SetPosition(0.0f, 0.0f, 0.0f);
+		m_pPlayer->SetMesh(pTankMesh);
+		m_pPlayer->SetColor(RGB(0, 0, 255));
+		m_pPlayer->SetCamera(pCamera);
+		m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));  //카메라 오프셋 설정
 		m_pScene_1 = new CGameScene_1(m_pPlayer);
 		m_pScene_1->BuildObjects();
 		break;
@@ -318,37 +334,37 @@ void CGameFramework::ChoiceGameMode() // 모드에 따라 화면 출력
 		delete m_pScene_1;
 		m_pScene_1 = nullptr;
 	}
-	if ( m_pPlayer)
-	{
-		switch (pGameState->GetCurrentState())
-		{
-		case TITLE:
-			if (!pStartScene) pStartScene = new StartScene();
-			pStartScene->Render(m_hDCFrameBuffer);
-			break;
-		case MENU:
-			if (!pMenuScene) pMenuScene = new MenuScene();
-			pMenuScene->Render(m_hDCFrameBuffer);
-			break;
-		case GAME:
-		{
-			if (!m_pScene) {
-				m_pScene = new CGameScene(m_pPlayer);
-				m_pScene->BuildObjects(); // 게임 모드로 전환 시 객체 초기화
-			}
-			CCamera* pCamera = m_pPlayer->GetCamera(); // 중괄호로 스코프를 감쌈
-			if (pCamera) m_pScene->Render(m_hDCFrameBuffer, pCamera); // 게임 화면 렌더링
-			break;
-		}
-		case GAME_1:
-			if (!m_pScene_1) {
-				m_pScene_1 = new CGameScene_1(m_pPlayer);
-				m_pScene_1->BuildObjects(); // 게임 모드로 전환 시 객체 초기화
 
-			}
-			CCamera* pCamera = m_pPlayer->GetCamera(); // 중괄호로 스코프를 감쌈
-			if (pCamera) m_pScene_1->Render(m_hDCFrameBuffer, pCamera); // 게임 화면 렌더링
-			break;
+	switch (pGameState->GetCurrentState())
+	{
+	case TITLE:
+		if (!pStartScene) pStartScene = new StartScene();
+		pStartScene->Render(m_hDCFrameBuffer);
+		break;
+	case MENU:
+		if (!pMenuScene) pMenuScene = new MenuScene();
+		pMenuScene->Render(m_hDCFrameBuffer);
+		break;
+	case GAME:
+	{
+		if (!m_pScene) {
+			BuildObjects();
+			m_pScene = new CGameScene(m_pPlayer);
+			m_pScene->BuildObjects(); // 게임 모드로 전환 시 객체 초기화
 		}
+		CCamera* pCamera = m_pPlayer->GetCamera(); // 중괄호로 스코프를 감쌈
+		if (pCamera) m_pScene->Render(m_hDCFrameBuffer, pCamera); // 게임 화면 렌더링
+		break;
+	}
+	case GAME_1:
+		if (!m_pScene_1) {
+			BuildObjects();
+			m_pScene_1 = new CGameScene_1(m_pPlayer);
+			m_pScene_1->BuildObjects(); // 게임 모드로 전환 시 객체 초기화
+
+		}
+		CCamera* pCamera = m_pPlayer->GetCamera(); // 중괄호로 스코프를 감쌈
+		if (pCamera) m_pScene_1->Render(m_hDCFrameBuffer, pCamera); // 게임 화면 렌더링
+		break;
 	}
 }

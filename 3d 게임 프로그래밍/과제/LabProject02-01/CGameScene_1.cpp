@@ -13,7 +13,8 @@ CGameScene_1::~CGameScene_1()
 }
 void CGameScene_1::BuildObjects() {
 	CTankMesh* pCubeMesh = new CTankMesh(4.0f, 4.0f, 4.0f);
-
+	CRollerCoasterMesh_Up* pRailMesh = new CRollerCoasterMesh_Up(20.0f, 4.0f, 4.0f);
+	CRollerCoasterMesh_Right * pRightTurnRailMesh = new CRollerCoasterMesh_Right(4.0f, 10.0f, 20.0f);
 	m_nObjects_1 = 2;
 	m_ppObjects_1 = new CGameObject * [m_nObjects_1];
 
@@ -27,13 +28,12 @@ void CGameScene_1::BuildObjects() {
 	m_ppObjects_1[0]->SetMovingSpeed(0.0f);
 
 	m_ppObjects_1[1] = new CGameObject();
-	m_ppObjects_1[1]->SetMesh(pCubeMesh);
+	m_ppObjects_1[1]->SetMesh(pRailMesh);
 	m_ppObjects_1[1]->SetColor(RGB(0, 0, 255));
-	m_ppObjects_1[1]->SetPosition(+13.5f, 0.0f, +14.0f);
-	m_ppObjects_1[1]->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 1.0f));
-	m_ppObjects_1[1]->SetRotationSpeed(180.0f);
-	m_ppObjects_1[1]->SetMovingDirection(XMFLOAT3(-1.0f, 0.0f, 0.0f));
-	m_ppObjects_1[1]->SetMovingSpeed(0.0f);
+	m_ppObjects_1[1]->SetPosition(0.0f, 0.0f, +0.0f);
+
+
+
 }
 void CGameScene_1::Animate(float fElapsedTime)
 {

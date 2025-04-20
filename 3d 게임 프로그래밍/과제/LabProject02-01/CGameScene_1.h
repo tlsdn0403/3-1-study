@@ -14,7 +14,7 @@ public:
 	void Animate(float fElapsedTime);
 	virtual void ReleaseObjects();
 private:
-	int							m_nObjects_1 = 0;
+	int							m_nObjects_1 = 3;
 	CGameObject** m_ppObjects_1 = NULL;
 	CPlayer* m_pPlayer = NULL;
 

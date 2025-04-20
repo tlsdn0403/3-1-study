@@ -155,3 +155,14 @@ public:
 
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 };
+class CRollerCoasterRail : public CGameObject
+{
+public:
+	CRollerCoasterRail() {}
+	virtual ~CRollerCoasterRail() {}
+
+	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
+	
+private:
+	std::vector<std::pair<XMFLOAT3, XMFLOAT3>> m_vRailSegments;
+};
