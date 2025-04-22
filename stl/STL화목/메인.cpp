@@ -7,10 +7,10 @@
 // 1.Sequence Containers
 //      arrat<T,N>
 //      vector<T> /dynamic(runtime)  array
+//      deque<T> - vector 보다 더 많은 원소를 담을 수 있다.
 //-------------------------------------------------------------------------------------------
 #include<iostream>
-#include<vector>
-#include<algorithm>
+#include<deque>
 #include"save.h"
 #include"STRING.h"
 using namespace std;
@@ -22,11 +22,15 @@ extern bool 관찰; // 관찰하려면 true로
 //----------
 int main()
 //------------------------------------------------------------
-{       
-    vector<int> v{ 1,2,3,4,5 };
-    //[문제] v에서 3을 제거하라.
-    remove(v.begin(), v.end(), 3);
-    for (int n : v)
-        cout << n << " ";
+{     
+   
+    deque<STRING> d{ "1","22","333","4444","55555" };
+    
+    관찰 = true;
+    d.push_front("0");
+    d.push_front("-1");
+    관찰 = false;
+    for (const STRING& s : d)
+        cout << s << endl;
     save("메인.cpp");
 }

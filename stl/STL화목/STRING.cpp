@@ -8,6 +8,7 @@
 #include<memory>
 #include<iostream>
 #include<print>
+#include<algorithm>
 #include"STRING.h"
 
 //관찰을 제어하기 위한 변수 추가
@@ -111,6 +112,13 @@ STRING& STRING::operator=(STRING&& other)
             id, "이동 할당 연산자", len, (void*)this, (void*)p.get());
     }
     return *this; //할당문의 맨뒤에 추가를 해줘야 한다.
+}
+
+
+
+bool STRING::operator==(const STRING& rhs) const
+{
+    return std::equal(&p[0], &p[len], &rhs.p[0]);
 }
 
 
