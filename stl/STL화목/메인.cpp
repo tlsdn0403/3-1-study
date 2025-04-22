@@ -9,9 +9,8 @@
 //      vector<T> /dynamic(runtime)  array
 //-------------------------------------------------------------------------------------------
 #include<iostream>
-#include<fstream>
-#include<array>
 #include<vector>
+#include<algorithm>
 #include"save.h"
 #include"STRING.h"
 using namespace std;
@@ -20,37 +19,14 @@ using namespace std;
 
 extern bool 관찰; // 관찰하려면 true로
 
-//[문제]  "메인.cpp" 파일의 소문자 알파벳 빈도(frequency)를 다음과 같이 출력하라.
-// a -> 10
-// b -> 3
-//.....
-// z -> 0개 
-// 이런식으로
 //----------
 int main()
 //------------------------------------------------------------
-{
-    ifstream file("메인.cpp");
-    if (not file)
-    {
-        return 12345;
-    }
-
-    array<int,26> frequency; // 알파벳 소문자 빈도를 저장할 벡터 초기화
-    char c;
-    while (file.get(c))
-    {
-        if (c >= 'a' && c <= 'z') {
-            frequency[c - 'a'] += 1;
-        }
-    }
-
-    file.close();
-
-    for (int i = 0; i < 26; ++i)
-    {
-        cout << (char)('a' + i) << " -> " << frequency[i] << "개" << endl;
-    }
-   
+{       
+    vector<int> v{ 1,2,3,4,5 };
+    //[문제] v에서 3을 제거하라.
+    remove(v.begin(), v.end(), 3);
+    for (int n : v)
+        cout << n << " ";
     save("메인.cpp");
 }
