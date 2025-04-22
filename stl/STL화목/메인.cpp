@@ -9,6 +9,8 @@
 //      vector<T> /dynamic(runtime)  array
 //-------------------------------------------------------------------------------------------
 #include<iostream>
+#include<fstream>
+#include<array>
 #include<vector>
 #include"save.h"
 #include"STRING.h"
@@ -17,17 +19,38 @@ using namespace std;
 
 
 extern bool 관찰; // 관찰하려면 true로
-//[문제] vector는 어떻게 메모리를 관리하나요???
-// 새로 메모리를 잡는 순간만 화면 출력
+
+//[문제]  "메인.cpp" 파일의 소문자 알파벳 빈도(frequency)를 다음과 같이 출력하라.
+// a -> 10
+// b -> 3
+//.....
+// z -> 0개 
+// 이런식으로
 //----------
 int main()
 //------------------------------------------------------------
 {
-    //이걸 그림시오 예전에는 냈다
+    ifstream file("메인.cpp");
+    if (not file)
+    {
+        return 12345;
+    }
 
-    관찰 = true;
+    array<int,26> frequency; // 알파벳 소문자 빈도를 저장할 벡터 초기화
+    char c;
+    while (file.get(c))
+    {
+        if (c >= 'a' && c <= 'z') {
+            frequency[c - 'a'] += 1;
+        }
+    }
 
-    vector<STRING> v;
-    v.emplace_back( "여긴 인자만 인자만 인자만");//생성할 수 있는 재료만 공급하는 거
+    file.close();
+
+    for (int i = 0; i < 26; ++i)
+    {
+        cout << (char)('a' + i) << " -> " << frequency[i] << "개" << endl;
+    }
+   
     save("메인.cpp");
 }
