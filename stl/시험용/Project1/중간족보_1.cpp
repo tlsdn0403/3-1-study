@@ -111,9 +111,9 @@ int main()
 
 
     ifstream in("몬스터들", ios::binary);
-    if (!in) {
-					cerr << "파일을 열 수 없습니다.\n";
-					return 1;
+    if (not in) {
+		cerr << "파일을 열 수 없습니다.\n";
+		return 1;
     }
 
     vector<Monster> v = { istream_iterator<Monster>{in}, {} };
@@ -165,9 +165,9 @@ int main()
     // [문제 3] v에 있는 모든 Monster 객체의 멤버 s를 오름차순으로 정렬하라. 
     // 제일 마지막 객체의 show()를 호출하라.								(10)
 
-    sort(v.begin(), v.end(), []( Monster& a,  Monster& b) {
-    return a.getS() < b.getS();
-    });
+	for (Monster& monster : v) {
+		sort(monster.getS().begin(), monster.getS().end());
+	}
 
     v.back().show();
 	//--------------------------------------------------------------------------
@@ -210,6 +210,7 @@ int main()
 		  // ++count;
     //   }  
     //}
+
 	int count = count_if(v.begin(), v.end(), [](Monster& m) {
 	string s = m.getS();
 	sort(s.begin(), s.end());
@@ -267,13 +268,13 @@ int main()
 	int numc{};
 	for (auto& m : v) {
 		if (m.getNum() == 123) {
-			m.show();
 			++numc;
 		}
 	}
 	cout << "num이 123인 Monter 객체수 -" << numc << endl;
     // main 함수 내에서 사용
     erase(v,mon);
-    cout << "[문제 6] - num이 123인 Monster 객체를 모두 지운 후 남은 객체 수: " << v.size() << endl;
+	cout << "[문제 6] - num이 123인 Monster 객체를 모두 지운 후 남은 객체 수: " << v.size() << endl;
+
 
 }

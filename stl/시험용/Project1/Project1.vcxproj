@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="소스.cpp" />
     <ClCompile Include="중간족보_1.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
