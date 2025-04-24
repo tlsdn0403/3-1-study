@@ -178,7 +178,6 @@ int main( )
 
     // sort를 사용하여 홀수와 짝수로 분리
     sort(maxValues.begin(), maxValues.end(), [](int a, int b) {
-					// 홀수는 짝수보다 앞에 오도록 정렬
 					if ((a % 2 != 0) && (b % 2 == 0)) return true;
 					if ((a % 2 == 0) && (b % 2 != 0)) return false;
 					return false; // 기존 순서 유지
