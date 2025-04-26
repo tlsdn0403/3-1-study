@@ -62,7 +62,7 @@ void CPlayer::Move(float x, float y, float z)
 
 void CPlayer::Rotate(float fPitch, float fYaw, float fRoll)
 {
-	m_pCamera->Rotate(fPitch, fYaw, fRoll);
+	m_pCamera->OrbitAroundPlayer(this,fPitch, fYaw, fRoll);
 	if (fPitch != 0.0f)
 	{
 		XMMATRIX mtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Right), XMConvertToRadians(fPitch));
@@ -130,7 +130,8 @@ void CPlayer::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-//
+//    비행기 플레이어
+/////////////////////////////////////////////////////////////////////////////////////////////
 CAirplanePlayer::CAirplanePlayer()
 {
 	CCubeMesh* pBulletMesh = new CCubeMesh(1.0f, 4.0f, 1.0f);
@@ -214,4 +215,53 @@ void CAirplanePlayer::FireBullet(CGameObject* pLockedObject)
 			pBulletObject->SetColor(RGB(0, 0, 255));
 		}
 	}
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+//    롤러코스터 카트 플레이어
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+CCartPlayer::CCartPlayer()
+{
+}
+
+CCartPlayer::~CCartPlayer()
+{
+}
+
+void CCartPlayer::Animate(float fElapsedTime)
+{
+	CPlayer::Animate(fElapsedTime);
+
+}
+
+void CCartPlayer::OnUpdateTransform()
+{
+	CPlayer::OnUpdateTransform();
+	//z축 방향을 가르키도록 바꾸어줌
+	m_xmf4x4World = Matrix4x4::Multiply(XMMatrixRotationRollPitchYaw(XMConvertToRadians(0.0f), 0.0f, 0.0f), m_xmf4x4World);
+	//90도를 라디안값으로 바꿔줘야 함
+}
+
+void CCartPlayer::Render(HDC hDCFrameBuffer, CCamera* pCamera)
+{
+	CPlayer::Render(hDCFrameBuffer, pCamera);
+
+
+}
+void CCartPlayer::Move(XMFLOAT3& xmf3Shift, bool bUpdateVelocity)
+{
+	if (bUpdateVelocity)
+	{
+		m_xmf3Velocity = Vector3::Add(m_xmf3Velocity, xmf3Shift);
+	}
+	else
+	{
+		m_xmf3Position = Vector3::Add(xmf3Shift, m_xmf3Position);
+		m_pCamera->Move(xmf3Shift);
+	}
+}
+void CCartPlayer::Move(float x, float y, float z)
+{
+	Move(XMFLOAT3(x, y, z), true);
 }

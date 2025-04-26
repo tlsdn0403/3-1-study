@@ -71,3 +71,19 @@ public:
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 };
 
+class CCartPlayer : public CPlayer
+{
+public:
+	CCartPlayer();
+	virtual ~CCartPlayer();
+
+
+
+	virtual void OnUpdateTransform();//비행기가 y축 방향이 아니라 z축 방향을 향하도록 만들어줌
+	virtual void Animate(float fElapsedTime);
+	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
+	virtual void Move(XMFLOAT3& xmf3Shift, bool bUpdateVelocity);
+	virtual void Move(float x, float y, float z);
+
+};
+

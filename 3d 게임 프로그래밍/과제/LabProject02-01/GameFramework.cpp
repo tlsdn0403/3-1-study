@@ -97,15 +97,17 @@ void CGameFramework::BuildObjects()
 	}
 	case GAME_1:
 		
-		CTankMesh* pTankMesh = new CTankMesh(2.0f, 2.0f, 2.0f);
+		CCartMesh* pTankMesh = new CCartMesh(2.0f, 2.0f, 2.0f);
 
-		m_pPlayer = new CAirplanePlayer();
-		m_pPlayer->SetPosition(0.0f, 0.0f, 0.0f);
+		m_pPlayer = new CCartPlayer();
+		m_pPlayer->SetPosition(-20.0f, 0.0f, 0.0f);
+
 		m_pPlayer->SetMesh(pTankMesh);
 		m_pPlayer->SetColor(RGB(0, 0, 255));
 		m_pPlayer->SetCamera(pCamera);
-		m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));  //카메라 오프셋 설정
+		m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 10.0f, -15.0f));  //카메라 오프셋 설정
 		m_pScene_1 = new CGameScene_1(m_pPlayer);
+		m_pPlayer->Rotate(0.0f, 90.0f, 0.0f);
 		m_pScene_1->BuildObjects();
 		break;
 	}
@@ -164,6 +166,13 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 				pMenuScene->OnMouseClick(LOWORD(lParam), HIWORD(lParam)); // x, y 좌표 전달
 				break;
 			case GAME:
+				break;
+			case GAME_1:
+				m_pScene_1->changeDir(DIR_FORWARD);
+				if(!m_pScene_1->checkMoving())
+					m_pScene_1->changeMovingState(true);
+				else
+					m_pScene_1->changeMovingState(false);
 				break;
 			}
 
@@ -257,22 +266,32 @@ void CGameFramework::ProcessInput()//사용자 입력을 받아드림
 		if (dwDirection) m_pPlayer->Move(dwDirection, 0.15f);
 	}
 
-	if (GetCapture() == m_hWnd)
+	switch (pGameState->GetCurrentState())
 	{
-		SetCursor(NULL);
-		POINT ptCursorPos;
-		GetCursorPos(&ptCursorPos);
-		float cxMouseDelta = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.0f;
-		float cyMouseDelta = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.0f;
-		SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
-		if (cxMouseDelta || cyMouseDelta)
+	case GAME:
+	{
+		if (GetCapture() == m_hWnd)
 		{
-			if (pKeyBuffer[VK_RBUTTON] & 0xF0)
-				m_pPlayer->Rotate(cyMouseDelta, 0.0f, -cxMouseDelta);
-			else
-				m_pPlayer->Rotate(cyMouseDelta, cxMouseDelta, 0.0f);
+			SetCursor(NULL);
+			POINT ptCursorPos;
+			GetCursorPos(&ptCursorPos);
+			float cxMouseDelta = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.0f;
+			float cyMouseDelta = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.0f;
+			SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
+			if (cxMouseDelta || cyMouseDelta)
+			{
+				if (pKeyBuffer[VK_RBUTTON] & 0xF0)
+					m_pPlayer->Rotate(cyMouseDelta, 0.0f, -cxMouseDelta);
+				else
+					m_pPlayer->Rotate(cyMouseDelta, cxMouseDelta, 0.0f);
+			}
 		}
+		break;
 	}
+	case GAME_1:
+		break;
+	}
+	
 
 	m_pPlayer->Update(m_GameTimer.GetTimeElapsed());
 }
@@ -361,7 +380,6 @@ void CGameFramework::ChoiceGameMode() // 모드에 따라 화면 출력
 			BuildObjects();
 			m_pScene_1 = new CGameScene_1(m_pPlayer);
 			m_pScene_1->BuildObjects(); // 게임 모드로 전환 시 객체 초기화
-
 		}
 		CCamera* pCamera = m_pPlayer->GetCamera(); // 중괄호로 스코프를 감쌈
 		if (pCamera) m_pScene_1->Render(m_hDCFrameBuffer, pCamera); // 게임 화면 렌더링

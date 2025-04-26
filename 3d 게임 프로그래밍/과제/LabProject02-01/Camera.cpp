@@ -131,6 +131,42 @@ void CCamera::Rotate(float fPitch, float fYaw, float fRoll)
 	}
 }
 
+//오프셋을 고려해서 카메라가 자전이 아닌 공전을 하도록 만듦
+void CCamera::OrbitAroundPlayer(CPlayer* pPlayer, float fPitch, float fYaw, float fRoll)
+{
+	// 플레이어와 카메라의 상대적 오프셋 
+	XMFLOAT3 xmf3Offset = pPlayer->m_xmf3CameraOffset;
+
+	// 오프셋 벡터를 회전
+	if (fPitch != 0.0f || fYaw != 0.0f || fRoll != 0.0f)
+	{
+		XMMATRIX mtxRotate = XMMatrixIdentity();
+		if (fPitch != 0.0f)
+		{
+			mtxRotate *= XMMatrixRotationAxis(XMLoadFloat3(&pPlayer->m_xmf3Right), XMConvertToRadians(fPitch));
+			m_xmf3Look = Vector3::TransformNormal(m_xmf3Look, mtxRotate);
+			m_xmf3Up = Vector3::TransformNormal(m_xmf3Up, mtxRotate);
+		}
+		if (fYaw != 0.0f)
+		{
+			mtxRotate *= XMMatrixRotationAxis(XMLoadFloat3(&pPlayer->m_xmf3Up), XMConvertToRadians(fYaw));
+			m_xmf3Look = Vector3::TransformNormal(m_xmf3Look, mtxRotate);
+			m_xmf3Up = Vector3::TransformNormal(m_xmf3Up, mtxRotate);
+		}
+		if (fRoll != 0.0f)
+		{
+			mtxRotate *= XMMatrixRotationAxis(XMLoadFloat3(&pPlayer->m_xmf3Look), XMConvertToRadians(fRoll));
+			m_xmf3Look = Vector3::TransformNormal(m_xmf3Look, mtxRotate);
+			m_xmf3Up = Vector3::TransformNormal(m_xmf3Up, mtxRotate);
+		}
+
+		xmf3Offset = Vector3::TransformCoord(xmf3Offset, mtxRotate);
+	}
+
+
+	// 카메라가 항상 플레이어를 바라보도록 방향을 갱신
+	SetLookAt(pPlayer->m_xmf3Position, pPlayer->m_xmf3Up);
+}
 void CCamera::Update(CPlayer* pPlayer, XMFLOAT3& xmf3LookAt, float fTimeElapsed)
 {
 	XMFLOAT4X4 mtxRotate = Matrix4x4::Identity();
