@@ -12,7 +12,7 @@ public:
 	void Animate(float fElapsedTime);
 	bool checkMoving();
 	void changeDir(DWORD d);
-
+	void changeSpeed(float s);
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 	virtual void BuildObjects();
 
@@ -25,6 +25,7 @@ private:
 	CPlayer* m_pPlayer = NULL;
 	bool isMovingCart = false;
 	int dirNum = 0;
+	float speed = 0.1f;
 #ifdef _WITH_DRAW_AXIS
 	CGameObject* m_pWorldAxis = NULL;
 #endif

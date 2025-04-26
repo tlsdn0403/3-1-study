@@ -47,14 +47,23 @@ void CGameScene_1::Animate(float fElapsedTime)
 
 	if (isMovingCart) {
 
-		m_pPlayer->Move(dwDirection, 0.05f);
+		m_pPlayer->Move(dwDirection, speed);
 		if (m_pPlayer->m_xmf3Position.x > 0.0f&& dirNum==0) {
+			changeSpeed(0.05f);
 			dirNum = 1;
-			m_pPlayer->Rotate(-30.0f, 0.0f, 0.0f);
+			m_pPlayer->Rotate(-45.0f, 0.0f, 0.0f);
 		}
-		else if (m_pPlayer->m_xmf3Position.x > 20.0f && dirNum == 1) {
-			dirNum = 2;
+		else if (m_pPlayer->m_xmf3Position.x > 11.5f && dirNum == 1) {
+			
+			m_pPlayer->Rotate(45.0f, 0.0f, 0.0f);
 			m_pPlayer->Rotate(0.0f, 90.0f, 0.0f);
+			dirNum = 2;
+		}
+		else if (m_pPlayer->m_xmf3Position.z < -10.0f && dirNum == 2) {
+			dirNum = 3;
+			m_pPlayer->Rotate(0.0f, 90.0f, 0.0f);
+			m_pPlayer->Rotate(45.0f, 0.0f, 0.0f);
+			changeSpeed(0.25f);
 		}
 	}
 }
@@ -65,6 +74,10 @@ bool CGameScene_1::checkMoving()
 void CGameScene_1::changeDir(DWORD d)
 {
 	dwDirection = d;
+}
+void CGameScene_1::changeSpeed(float s)
+{
+	speed = s;
 }
 void CGameScene_1::ReleaseObjects()
 {

@@ -707,8 +707,8 @@ CRollerCoasterMesh_Up::CRollerCoasterMesh_Up(float fWidth, float fHeight, float 
    
    // 오르막
    pFace->SetVertex(0, CVertex(0.0, 0.0f, 0.0f));  // Bottom-left  
-   pFace->SetVertex(1, CVertex(+길이*2, fHeight, 0.0f));  // Top-right  
-   pFace->SetVertex(2, CVertex(+길이*2, fHeight, +fDepth * 0.5f));  // Top-left  
+   pFace->SetVertex(1, CVertex(+길이, fHeight, 0.0f));  // Top-right  
+   pFace->SetVertex(2, CVertex(+길이, fHeight, +fDepth * 0.5f));  // Top-left  
    pFace->SetVertex(3, CVertex(0.0f, 0.0f, +fDepth * 0.5f));  // Bottom-right    
    SetPolygon(i++, pFace);  
 
@@ -720,7 +720,7 @@ CRollerCoasterMesh_Up::CRollerCoasterMesh_Up(float fWidth, float fHeight, float 
    pFace->SetVertex(3, CVertex(길이, fHeight, -길이));  // Bottom-right  
    SetPolygon(i++, pFace);
 
-
+   //내리막
    pFace = new CPolygon(4);  
    pFace->SetVertex(0, CVertex(0.0, 0.0f, -길이));  // Bottom-left  
    pFace->SetVertex(1, CVertex(+fWidth * 0.5f, fHeight, -길이 ));  // Top-right  

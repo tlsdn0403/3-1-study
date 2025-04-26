@@ -173,7 +173,8 @@ void CGameObject::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 {
 	//바운딩 박스가 카메라 절두체 안에 있으면 랜더하고, 아니면 안한다.
 	//월드 좌표게에서의 프러스텀 컬링을 한다.
-	if (pCamera->IsInFrustum(m_xmOOBB)) CGameObject::Render(hDCFrameBuffer, &m_xmf4x4World, m_pMesh);
+	/*if (pCamera->IsInFrustum(m_xmOOBB))*/ 
+	CGameObject::Render(hDCFrameBuffer, &m_xmf4x4World, m_pMesh);
 }
 
 void CGameObject::GenerateRayForPicking(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, XMVECTOR& xmvPickRayOrigin, XMVECTOR& xmvPickRayDirection)
