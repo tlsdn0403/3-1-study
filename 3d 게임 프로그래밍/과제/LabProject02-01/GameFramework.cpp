@@ -85,7 +85,7 @@ void CGameFramework::BuildObjects()
 	case GAME:
 	{
 		m_pPlayer = new CAirplanePlayer();
-		CAirplaneMesh* pAirplaneMesh = new CAirplaneMesh(6.0f, 6.0f, 1.0f);
+		CTankMesh* pAirplaneMesh = new CTankMesh(3.0f, 2.0f, 2.0f);
 		m_pPlayer->SetMesh(pAirplaneMesh);
 		m_pPlayer->SetPosition(0.0f, 0.0f, 0.0f);
 		m_pPlayer->SetColor(RGB(0, 0, 255));
@@ -105,7 +105,7 @@ void CGameFramework::BuildObjects()
 		m_pPlayer->SetMesh(pTankMesh);
 		m_pPlayer->SetColor(RGB(0, 0, 255));
 		m_pPlayer->SetCamera(pCamera);
-		m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 10.0f, -15.0f));  //카메라 오프셋 설정
+		m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));  //카메라 오프셋 설정
 		m_pScene_1 = new CGameScene_1(m_pPlayer);
 		m_pPlayer->Rotate(0.0f, 90.0f, 0.0f);
 		m_pScene_1->BuildObjects();
@@ -199,7 +199,7 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 		switch (wParam)
 		{
 		case VK_ESCAPE:  //esc 누르면 꺼찜
-			::PostQuitMessage(0);
+			pGameState->CGameState::ChangeGameState(CGameState::MENU);
 			break;
 		case VK_RETURN:
 			break;
@@ -207,12 +207,11 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 			((CAirplanePlayer*)m_pPlayer)->FireBullet(m_pLockedObject);
 			m_pLockedObject = NULL;
 			break;
-		case VK_SHIFT:
-			pGameState->CGameState::ChangeGameState(CGameState::MENU);
-			break;
 		default:
 			if(m_pScene)
 			m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
+			else if (m_pScene_1)
+				m_pScene_1->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
 			break;
 		}
 		break;

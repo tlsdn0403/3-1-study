@@ -13,11 +13,17 @@ public:
 	bool checkMoving();
 	void changeDir(DWORD d);
 	void changeSpeed(float s);
+
+	void moveCart();
+
+	void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
+
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 	virtual void BuildObjects();
 
 	virtual void ReleaseObjects();
 	
+
 private:
 	DWORD dwDirection = 0;
 	int							m_nObjects_1 = 3;

@@ -437,121 +437,136 @@ CAirplaneMesh::CAirplaneMesh(float fWidth, float fHeight, float fDepth) : CMesh(
 
 	m_xmOOBB = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fx, fy, fz), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
 }
-//-----------------------------------------------------------------------------------------------------
-//   탱크
-//-----------------------------------------------------------------------------------------------------
-CTankMesh::CTankMesh(float fWidth, float fHeight, float fDepth) : CMesh(14) {
-	float fx = fWidth * 0.5f, fy = fHeight * 0.5f, fz = fDepth * 0.5f;
+//-----------------------------------------------------------------------------------------------------  
+//   탱크 (디테일 업그레이드)  
+//-----------------------------------------------------------------------------------------------------  
+CTankMesh::CTankMesh(float fWidth, float fHeight, float fDepth) : CMesh(18) {  
+   float fx = fWidth * 0.5f, fy = fHeight * 0.5f, fz = fDepth * 0.5f;  
 
-	int i = 0;
-	CPolygon* pFace;
+   int i = 0;  
+   CPolygon* pFace;  
 
-	// ▒▒ Body (Main box of tank) ▒▒
-	float bodyHeight = fy * 0.6f;
-	float topY = bodyHeight;
-	float bottomY = -bodyHeight;
+   // ▒▒ Body (Main box of tank) ▒▒  
+   float bodyHeight = fy * 0.6f;  
+   float topY = bodyHeight;  
+   float bottomY = -bodyHeight;  
 
-	// Front
-	pFace = new CPolygon(4);
-	pFace->SetVertex(0, CVertex(-fx, bottomY, -fz));
-	pFace->SetVertex(1, CVertex(+fx, bottomY, -fz));
-	pFace->SetVertex(2, CVertex(+fx, topY, -fz));
-	pFace->SetVertex(3, CVertex(-fx, topY, -fz));
-	SetPolygon(i++, pFace);
+   // Front  
+   pFace = new CPolygon(4);  
+   pFace->SetVertex(0, CVertex(-fx, bottomY, -fz));  
+   pFace->SetVertex(1, CVertex(+fx, bottomY, -fz));  
+   pFace->SetVertex(2, CVertex(+fx, topY, -fz));  
+   pFace->SetVertex(3, CVertex(-fx, topY, -fz));  
+   SetPolygon(i++, pFace);  
 
-	// Back
-	pFace = new CPolygon(4);
-	pFace->SetVertex(0, CVertex(-fx, bottomY, +fz));
-	pFace->SetVertex(1, CVertex(+fx, bottomY, +fz));
-	pFace->SetVertex(2, CVertex(+fx, topY, +fz));
-	pFace->SetVertex(3, CVertex(-fx, topY, +fz));
-	SetPolygon(i++, pFace);
+   // Back  
+   pFace = new CPolygon(4);  
+   pFace->SetVertex(0, CVertex(-fx, bottomY, +fz));  
+   pFace->SetVertex(1, CVertex(+fx, bottomY, +fz));  
+   pFace->SetVertex(2, CVertex(+fx, topY, +fz));  
+   pFace->SetVertex(3, CVertex(-fx, topY, +fz));  
+   SetPolygon(i++, pFace);  
 
-	// Left
-	pFace = new CPolygon(4);
-	pFace->SetVertex(0, CVertex(-fx, bottomY, -fz));
-	pFace->SetVertex(1, CVertex(-fx, bottomY, +fz));
-	pFace->SetVertex(2, CVertex(-fx, topY, +fz));
-	pFace->SetVertex(3, CVertex(-fx, topY, -fz));
-	SetPolygon(i++, pFace);
+   // Left  
+   pFace = new CPolygon(4);  
+   pFace->SetVertex(0, CVertex(-fx, bottomY, -fz));  
+   pFace->SetVertex(1, CVertex(-fx, bottomY, +fz));  
+   pFace->SetVertex(2, CVertex(-fx, topY, +fz));  
+   pFace->SetVertex(3, CVertex(-fx, topY, -fz));  
+   SetPolygon(i++, pFace);  
 
-	// Right
-	pFace = new CPolygon(4);
-	pFace->SetVertex(0, CVertex(+fx, bottomY, -fz));
-	pFace->SetVertex(1, CVertex(+fx, bottomY, +fz));
-	pFace->SetVertex(2, CVertex(+fx, topY, +fz));
-	pFace->SetVertex(3, CVertex(+fx, topY, -fz));
-	SetPolygon(i++, pFace);
+   // Right  
+   pFace = new CPolygon(4);  
+   pFace->SetVertex(0, CVertex(+fx, bottomY, -fz));  
+   pFace->SetVertex(1, CVertex(+fx, bottomY, +fz));  
+   pFace->SetVertex(2, CVertex(+fx, topY, +fz));  
+   pFace->SetVertex(3, CVertex(+fx, topY, -fz));  
+   SetPolygon(i++, pFace);  
 
-	// Top
-	pFace = new CPolygon(4);
-	pFace->SetVertex(0, CVertex(-fx, topY, -fz));
-	pFace->SetVertex(1, CVertex(+fx, topY, -fz));
-	pFace->SetVertex(2, CVertex(+fx, topY, +fz));
-	pFace->SetVertex(3, CVertex(-fx, topY, +fz));
-	SetPolygon(i++, pFace);
+   // Top  
+   pFace = new CPolygon(4);  
+   pFace->SetVertex(0, CVertex(-fx, topY, -fz));  
+   pFace->SetVertex(1, CVertex(+fx, topY, -fz));  
+   pFace->SetVertex(2, CVertex(+fx, topY, +fz));  
+   pFace->SetVertex(3, CVertex(-fx, topY, +fz));  
+   SetPolygon(i++, pFace);  
 
-	// Bottom
-	pFace = new CPolygon(4);
-	pFace->SetVertex(0, CVertex(-fx, bottomY, -fz));
-	pFace->SetVertex(1, CVertex(+fx, bottomY, -fz));
-	pFace->SetVertex(2, CVertex(+fx, bottomY, +fz));
-	pFace->SetVertex(3, CVertex(-fx, bottomY, +fz));
-	SetPolygon(i++, pFace);
+   // Bottom  
+   pFace = new CPolygon(4);  
+   pFace->SetVertex(0, CVertex(-fx, bottomY, -fz));  
+   pFace->SetVertex(1, CVertex(+fx, bottomY, -fz));  
+   pFace->SetVertex(2, CVertex(+fx, bottomY, +fz));  
+   pFace->SetVertex(3, CVertex(-fx, bottomY, +fz));  
+   SetPolygon(i++, pFace);  
 
-	// ▒▒ Turret ▒▒
-	float turretWidth = fx * 0.6f;
-	float turretHeight = fy * 0.3f;
-	float turretTop = topY + turretHeight;
+   // ▒▒ Turret (디테일 추가) ▒▒  
+   float turretWidth = fx * 0.6f;  
+   float turretHeight = fy * 0.3f;  
+   float turretTop = topY + turretHeight;  
 
-	// Front
-	pFace = new CPolygon(4);
-	pFace->SetVertex(0, CVertex(-turretWidth, topY, -fz * 0.5f));
-	pFace->SetVertex(1, CVertex(+turretWidth, topY, -fz * 0.5f));
-	pFace->SetVertex(2, CVertex(+turretWidth, turretTop, -fz * 0.5f));
-	pFace->SetVertex(3, CVertex(-turretWidth, turretTop, -fz * 0.5f));
-	SetPolygon(i++, pFace);
+   // Turret Front  
+   pFace = new CPolygon(4);  
+   pFace->SetVertex(0, CVertex(-turretWidth, topY, -fz * 0.5f));  
+   pFace->SetVertex(1, CVertex(+turretWidth, topY, -fz * 0.5f));  
+   pFace->SetVertex(2, CVertex(+turretWidth, turretTop, -fz * 0.5f));  
+   pFace->SetVertex(3, CVertex(-turretWidth, turretTop, -fz * 0.5f));  
+   SetPolygon(i++, pFace);  
 
-	// Other turret faces (Back, Sides, Top) 생략 가능, 필요 시 추가 가능
+   // Turret Back  
+   pFace = new CPolygon(4);  
+   pFace->SetVertex(0, CVertex(-turretWidth, topY, +fz * 0.2f));  
+   pFace->SetVertex(1, CVertex(+turretWidth, topY, +fz * 0.2f));  
+   pFace->SetVertex(2, CVertex(+turretWidth, turretTop, +fz * 0.2f));  
+   pFace->SetVertex(3, CVertex(-turretWidth, turretTop, +fz * 0.2f));  
+   SetPolygon(i++, pFace);  
 
-	// ▒▒ Cannon ▒▒
-	float cannonLength = fz * 1.2f;
-	float cannonWidth = fx * 0.1f;
-	float cannonTopY = topY + turretHeight * 0.5f;
+   // Turret Top  
+   pFace = new CPolygon(4);  
+   pFace->SetVertex(0, CVertex(-turretWidth, turretTop, -fz * 0.5f));  
+   pFace->SetVertex(1, CVertex(+turretWidth, turretTop, -fz * 0.5f));  
+   pFace->SetVertex(2, CVertex(+turretWidth, turretTop, +fz * 0.2f));  
+   pFace->SetVertex(3, CVertex(-turretWidth, turretTop, +fz * 0.2f));  
+   SetPolygon(i++, pFace);  
 
-	pFace = new CPolygon(4);
-	pFace->SetVertex(0, CVertex(-cannonWidth, cannonTopY, -fz * 0.5f));
-	pFace->SetVertex(1, CVertex(+cannonWidth, cannonTopY, -fz * 0.5f));
-	pFace->SetVertex(2, CVertex(+cannonWidth, cannonTopY, -fz * 0.5f - cannonLength));
-	pFace->SetVertex(3, CVertex(-cannonWidth, cannonTopY, -fz * 0.5f - cannonLength));
-	SetPolygon(i++, pFace);
+   // ▒▒ Cannon (포 디테일 추가) ▒▒  
+   float cannonLength = fz * 2.0f;  
+   float cannonWidth = fx * 0.2f;  
+   float cannonTopY = topY + turretHeight * 0.5f;  
 
-	// ▒▒ Wheels ▒▒ (좌우 3개씩 예시)
-	float wheelRadius = fy * 0.2f;
+   pFace = new CPolygon(4);  
+   pFace->SetVertex(0, CVertex(-cannonWidth, cannonTopY, -fz * 0.5f));  
+   pFace->SetVertex(1, CVertex(+cannonWidth, cannonTopY, -fz * 0.5f));  
+   pFace->SetVertex(2, CVertex(+cannonWidth, cannonTopY, -fz * 0.5f - cannonLength));  
+   pFace->SetVertex(3, CVertex(-cannonWidth, cannonTopY, -fz * 0.5f - cannonLength));  
+   SetPolygon(i++, pFace);  
 
-	for (int j = 0; j < 3; ++j) {
-        float offsetZ = -fz + (j + 1) * (fDepth / 4.0f);
-		// 왼  
-		pFace = new CPolygon(4);
-		pFace->SetVertex(0, CVertex(-fx, -fy, offsetZ - wheelRadius));
-		pFace->SetVertex(1, CVertex(-fx, -fy, offsetZ + wheelRadius));
-		pFace->SetVertex(2, CVertex(-fx, -fy + wheelRadius * 2, offsetZ + wheelRadius));
-		pFace->SetVertex(3, CVertex(-fx, -fy + wheelRadius * 2, offsetZ - wheelRadius));
-		SetPolygon(i++, pFace);
+   // ▒▒ Wheels (좌우 4개씩) ▒▒  
+   float wheelRadius = fy * 0.2f;  
 
-		//오른 
-		pFace = new CPolygon(4);
-		pFace->SetVertex(0, CVertex(+fx, -fy, offsetZ - wheelRadius));
-		pFace->SetVertex(1, CVertex(+fx, -fy, offsetZ + wheelRadius));
-		pFace->SetVertex(2, CVertex(+fx, -fy + wheelRadius * 2, offsetZ + wheelRadius));
-		pFace->SetVertex(3, CVertex(+fx, -fy + wheelRadius * 2, offsetZ - wheelRadius));
-		SetPolygon(i++, pFace);
-	}
+   for (int j = 0; j < 4; ++j) {  
+       float offsetZ = -fz + (j + 1) * (fDepth / 5.0f);  
+       // 왼쪽  
+       pFace = new CPolygon(4);  
+       pFace->SetVertex(0, CVertex(-fx, -fy, offsetZ - wheelRadius));  
+       pFace->SetVertex(1, CVertex(-fx, -fy, offsetZ + wheelRadius));  
+       pFace->SetVertex(2, CVertex(-fx, -fy + wheelRadius * 2, offsetZ + wheelRadius));  
+       pFace->SetVertex(3, CVertex(-fx, -fy + wheelRadius * 2, offsetZ - wheelRadius));  
+       SetPolygon(i++, pFace);  
 
+       // 오른쪽  
+       pFace = new CPolygon(4);  
+       pFace->SetVertex(0, CVertex(+fx, -fy, offsetZ - wheelRadius));  
+       pFace->SetVertex(1, CVertex(+fx, -fy, offsetZ + wheelRadius));  
+       pFace->SetVertex(2, CVertex(+fx, -fy + wheelRadius * 2, offsetZ + wheelRadius));  
+       pFace->SetVertex(3, CVertex(+fx, -fy + wheelRadius * 2, offsetZ - wheelRadius));  
+       SetPolygon(i++, pFace);  
+   }  
 
-	// ▒▒ Bounding Box ▒▒
-	m_xmOOBB = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fx, fy, fz), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+   // ▒▒ Bounding Box ▒▒  
+   m_xmOOBB = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fx, fy, fz), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));  
 }
+
+
 //-----------------------------------------------------------------------------------------------------
 //   카트
 //-----------------------------------------------------------------------------------------------------
@@ -695,13 +710,14 @@ void CAxisMesh::Render(HDC hDCFrameBuffer)
 //   롤러코스터
 //-----------------------------------------------------------------------------------------------------
 
-CRollerCoasterMesh_Up::CRollerCoasterMesh_Up(float fWidth, float fHeight, float fDepth) : CMesh(6)  
+CRollerCoasterMesh_Up::CRollerCoasterMesh_Up(float fWidth, float fHeight, float fDepth) : CMesh(12)  
 {	
 
    // 대각선으로 올라가는 사각형을 정의합니다.  
    CPolygon* pFace = new CPolygon(4);
    int i = 0;
    float 길이 = fWidth * 0.5f;
+   float 높이 = fHeight * 0.5f;
    float 넓이 = fDepth * 0.5f;
    // 사각형의 네 꼭짓점을 설정합니다.
    
@@ -732,16 +748,42 @@ CRollerCoasterMesh_Up::CRollerCoasterMesh_Up(float fWidth, float fHeight, float 
    //카메라쪽 평지
    pFace = new CPolygon(4);
    pFace->SetVertex(0, CVertex(0.0, 0.0f, -길이));  // Bottom-left  
-   pFace->SetVertex(1, CVertex(-fWidth * 0.5f, 0.0f, -길이));  // Top-right  
-   pFace->SetVertex(2, CVertex(-fWidth * 0.5f, 0.0f, -길이 + fDepth * 0.5f));  // Top-left  
+   pFace->SetVertex(1, CVertex(-길이, 0.0f, -길이));  // Top-right  
+   pFace->SetVertex(2, CVertex(-길이, 0.0f, -길이 + fDepth * 0.5f));  // Top-left  
    pFace->SetVertex(3, CVertex(0.0f, 0.0f, -길이 + fDepth * 0.5f));  // Bottom-right  
    SetPolygon(i++, pFace);
-
+  
+   
+   //회전 내려감
    pFace = new CPolygon(4);
    pFace->SetVertex(0, CVertex(-길이, 0.0f, -길이));  // Bottom-left  
-   pFace->SetVertex(1, CVertex(-길이*2, fHeight, -길이));  // Top-right  
-   pFace->SetVertex(2, CVertex(-길이*2 , fHeight, -길이 + fDepth * 0.5f));  // Top-left  
-   pFace->SetVertex(3, CVertex(-길이, 0.0f, -길이 + fDepth * 0.5f));  // Bottom-right    
+   pFace->SetVertex(1, CVertex(-길이 * 2, -높이, -길이*2));  // Top-right  
+   pFace->SetVertex(2, CVertex(-길이 * 2, -높이, -길이*2 + 넓이));  // Top-left  
+   pFace->SetVertex(3, CVertex(-길이, 0.0f, -길이 + 넓이));  // Bottom-right  
+   SetPolygon(i++, pFace);
+
+   //살짝 직선
+   pFace = new CPolygon(4);
+   pFace->SetVertex(0, CVertex(-길이*3, -높이, -길이 * 2));  // Bottom-left  
+   pFace->SetVertex(1, CVertex(-길이 * 2, -높이, -길이 * 2));  // Top-right  
+   pFace->SetVertex(2, CVertex(-길이 * 2, -높이, -길이 * 2 + 넓이));  // Top-left  
+   pFace->SetVertex(3, CVertex(-길이*3, -높이, -길이*2 + 넓이));  // Bottom-right  
+   SetPolygon(i++, pFace);
+
+   //회전 올라감
+   pFace = new CPolygon(4);
+   pFace->SetVertex(0, CVertex(-길이*4, 0.0f, -길이));  // Bottom-left  
+   pFace->SetVertex(1, CVertex(-길이 * 3, -높이, -길이 * 2));  // Top-right  
+   pFace->SetVertex(2, CVertex(-길이 * 3,- 높이, -길이 * 2 + 넓이));  // Top-left  
+   pFace->SetVertex(3, CVertex(-길이*4, 0.0f, -길이 + 넓이));  // Bottom-right  
+   SetPolygon(i++, pFace);
+
+
+   pFace = new CPolygon(4);
+   pFace->SetVertex(0, CVertex(-길이 * 4, 0.0f, +넓이));  // Bottom-left  
+   pFace->SetVertex(1, CVertex(-길이 * 4 - 넓이, 0.0f, +넓이));  // Top-right  
+   pFace->SetVertex(2, CVertex(-길이 * 4 - 넓이, 0.0f, -길이));  // Top-left  
+   pFace->SetVertex(3, CVertex(-길이 * 4, 0.0f, -길이));  // Bottom-right  
    SetPolygon(i++, pFace);
 
 
@@ -751,6 +793,27 @@ CRollerCoasterMesh_Up::CRollerCoasterMesh_Up(float fWidth, float fHeight, float 
    pFace->SetVertex(1, CVertex(-길이, 0.0f, 0));  // Top-right  
    pFace->SetVertex(2, CVertex(-길이, 0.0f, 넓이));  // Top-left  
    pFace->SetVertex(3, CVertex(0.0f, 0.0f, 넓이));  // Bottom-right  
+   SetPolygon(i++, pFace);
+
+   pFace = new CPolygon(4);
+   pFace->SetVertex(0, CVertex(-길이, 0.0f, 0));  // Bottom-left  
+   pFace->SetVertex(1, CVertex(-길이*2, 0.0f, 0));  // Top-right  
+   pFace->SetVertex(2, CVertex(-길이*2, 0.0f, 넓이));  // Top-left  
+   pFace->SetVertex(3, CVertex(-길이, 0.0f, 넓이));  // Bottom-right  
+   SetPolygon(i++, pFace);
+
+   pFace = new CPolygon(4);
+   pFace->SetVertex(0, CVertex(-길이 * 3, 0.0f, 0));  // Bottom-left  
+   pFace->SetVertex(1, CVertex(-길이*4, 0.0f, 0));  // Top-right  
+   pFace->SetVertex(2, CVertex(-길이*4, 0.0f, 넓이));  // Top-left  
+   pFace->SetVertex(3, CVertex(-길이 * 3, 0.0f, 넓이));  // Bottom-right  
+   SetPolygon(i++, pFace);
+
+   pFace = new CPolygon(4);
+   pFace->SetVertex(0, CVertex(-길이 * 3, 0.0f, 0));  // Bottom-left  
+   pFace->SetVertex(1, CVertex(-길이 * 2, 0.0f, 0));  // Top-right  
+   pFace->SetVertex(2, CVertex(-길이 * 2, 0.0f, 넓이));  // Top-left  
+   pFace->SetVertex(3, CVertex(-길이 * 3, 0.0f, 넓이));  // Bottom-right  
    SetPolygon(i++, pFace);
 }
 

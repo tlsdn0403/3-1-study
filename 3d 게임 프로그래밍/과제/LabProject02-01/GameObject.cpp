@@ -377,4 +377,6 @@ void CAxisObject::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 void CRollerCoasterRail::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 {
 	CGameObject::Render(hDCFrameBuffer, &m_xmf4x4World, m_pMesh);
+	/*CGraphicsPipeline::SetWorldTransform(&m_xmf4x4World);
+	m_pMesh->Render(hDCFrameBuffer);*/
 }
