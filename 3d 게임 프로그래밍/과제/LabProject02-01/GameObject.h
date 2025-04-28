@@ -123,7 +123,7 @@ public:
 public:
 	BoundingOrientedBox			m_xmOOBBPlayerMoveCheck = BoundingOrientedBox(); //바운딩 박스
 
-	XMFLOAT4  m_pxmf4WallPlanes; //1개의 평면을 나타냄
+	std::array<XMFLOAT4,6>  m_pxmf4WallPlanes; //1개의 평면을 나타냄
 
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 };

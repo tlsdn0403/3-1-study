@@ -128,7 +128,7 @@ void CGameObject::RotateTowardsPlayer(XMFLOAT3 playerPosition)
    XMFLOAT3 upVector = GetUp();  
 
    // LookToLH를 사용하여 회전 행렬 계산  
-   XMFLOAT4X4 rotationMatrix = Matrix4x4::LookToLH(objectPosition, Vector3::ScalarProduct(directionToPlayer, -1.0f), upVector);  
+   XMFLOAT4X4 rotationMatrix = Matrix4x4::LookToLH(objectPosition, directionToPlayer, upVector);  
 
    // 오브젝트의 회전 변환 설정  
    SetRotationTransform(&rotationMatrix);  
@@ -169,7 +169,7 @@ void CGameObject::UpdateBoundingBox()
 
 void CGameObject::OnUpdateTransform()
 {
-	m_xmf4x4World = Matrix4x4::Multiply(XMMatrixRotationRollPitchYaw(0.0f, XMConvertToRadians(90.0f), 0.0f), m_xmf4x4World); 
+	m_xmf4x4World = Matrix4x4::Multiply(XMMatrixRotationRollPitchYaw(0.0f, XMConvertToRadians(180.0f), 0.0f), m_xmf4x4World); 
 
 }
 
