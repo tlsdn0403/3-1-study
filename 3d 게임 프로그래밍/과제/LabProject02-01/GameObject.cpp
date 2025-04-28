@@ -113,6 +113,28 @@ void CGameObject::Rotate(XMFLOAT3& xmf3RotationAxis, float fAngle)
 	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);
 }
 
+void CGameObject::RotateTowardsPlayer(XMFLOAT3 playerPosition)
+{  
+   // 플레이어의 위치를 가져옴  
+
+   // 현재 오브젝트의 위치를 가져옴  
+   XMFLOAT3 objectPosition = GetPosition();  
+
+   // 플레이어를 향한 방향 벡터 계산  
+   XMFLOAT3 directionToPlayer = Vector3::Subtract(playerPosition, objectPosition);  
+   directionToPlayer = Vector3::Normalize(directionToPlayer);  
+
+   // 현재 오브젝트의 "Up" 벡터를 가져옴  
+   XMFLOAT3 upVector = GetUp();  
+
+   // LookToLH를 사용하여 회전 행렬 계산  
+   XMFLOAT4X4 rotationMatrix = Matrix4x4::LookToLH(objectPosition, Vector3::ScalarProduct(directionToPlayer, -1.0f), upVector);  
+
+   // 오브젝트의 회전 변환 설정  
+   SetRotationTransform(&rotationMatrix);  
+}
+
+
 void CGameObject::Move(XMFLOAT3& vDirection, float fSpeed)  //방향벡터 , 속도
 {
 	//월드변환 행렬의 4번째 행이 포지션이니까.
@@ -143,6 +165,14 @@ void CGameObject::UpdateBoundingBox()
 		XMStoreFloat4(&m_xmOOBB.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_xmOOBB.Orientation)));
 	}
 }
+
+
+void CGameObject::OnUpdateTransform()
+{
+	m_xmf4x4World = Matrix4x4::Multiply(XMMatrixRotationRollPitchYaw(0.0f, XMConvertToRadians(90.0f), 0.0f), m_xmf4x4World); 
+
+}
+
 
 void CGameObject::Animate(float fElapsedTime)
 {
@@ -207,15 +237,15 @@ int CGameObject::PickObjectByRayIntersection(XMVECTOR& xmvPickPosition, XMMATRIX
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-CWallsObject::CWallsObject()
+CFloorObject::CFloorObject()
 {
 }
 
-CWallsObject::~CWallsObject()
+CFloorObject::~CFloorObject()
 {
 }
 
-void CWallsObject::Render(HDC hDCFrameBuffer, CCamera* pCamera)
+void CFloorObject::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 {
 	CGameObject::Render(hDCFrameBuffer, &m_xmf4x4World, m_pMesh);
 }

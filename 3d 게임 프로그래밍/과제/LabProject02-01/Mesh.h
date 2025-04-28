@@ -69,14 +69,26 @@ public:
 	CCubeMesh(float fWidth = 4.0f, float fHeight = 4.0f, float fDepth = 4.0f);
 	virtual ~CCubeMesh() { }
 };
-
+class CMissileMesh : public CMesh
+{
+public:
+	CMissileMesh(float fWidth = 4.0f, float fHeight = 4.0f, float fDepth = 4.0f);
+	virtual ~CMissileMesh() {}
+};
 class CWallMesh : public CMesh
 {
 public:
 	CWallMesh(float fWidth = 4.0f, float fHeight = 4.0f, float fDepth = 4.0f, int nSubRects = 20);
 	virtual ~CWallMesh() { }
 };
-
+//-------------------------------------------------------------------------------------
+//¹Ù´Ú
+//-------------------------------------------------------------------------------------
+class CFloorMesh : public CMesh {
+public:
+	CFloorMesh(float fWidth = 4.0f,  float fDepth = 4.0f, int nSubRects = 20);
+	virtual ~CFloorMesh() {}
+};
 class CAirplaneMesh : public CMesh
 {
 public:

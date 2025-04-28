@@ -132,26 +132,25 @@ void CPlayer::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 /////////////////////////////////////////////////////////////////////////////////////////////
 //    비행기 플레이어
 /////////////////////////////////////////////////////////////////////////////////////////////
-CAirplanePlayer::CAirplanePlayer()
+CTankPlayer::CTankPlayer()
 {
-	CCubeMesh* pBulletMesh = new CCubeMesh(1.0f, 4.0f, 1.0f);
+
 	for (int i = 0; i < BULLETS; i++)
 	{
 		m_ppBullets[i] = new CBulletObject(m_fBulletEffectiveRange);
-		m_ppBullets[i]->SetMesh(pBulletMesh);
-		m_ppBullets[i]->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
-		m_ppBullets[i]->SetRotationSpeed(360.0f);
+		m_ppBullets[i]->SetRotationAxis(XMFLOAT3(0.0f, 0.0f, 1.0f));
+		m_ppBullets[i]->SetRotationSpeed(1.0f);
 		m_ppBullets[i]->SetMovingSpeed(120.0f);
 		m_ppBullets[i]->SetActive(false);
 	}
 }
 
-CAirplanePlayer::~CAirplanePlayer()
+CTankPlayer::~CTankPlayer()
 {
 	for (int i = 0; i < BULLETS; i++) if (m_ppBullets[i]) delete m_ppBullets[i];
 }
 
-void CAirplanePlayer::Animate(float fElapsedTime)
+void CTankPlayer::Animate(float fElapsedTime)
 {
 	CPlayer::Animate(fElapsedTime);
 
@@ -161,31 +160,65 @@ void CAirplanePlayer::Animate(float fElapsedTime)
 	}
 }
 
-void CAirplanePlayer::OnUpdateTransform() 
+void CTankPlayer::OnUpdateTransform() 
 {
 	CPlayer::OnUpdateTransform();
 	//z축 방향을 가르키도록 바꾸어줌
-	m_xmf4x4World = Matrix4x4::Multiply(XMMatrixRotationRollPitchYaw(XMConvertToRadians(90.0f), 0.0f, 0.0f), m_xmf4x4World); //x축으로 90도 회전 . 회전행렬을 월드변환 왼쪽에다 둠
+	m_xmf4x4World = Matrix4x4::Multiply(XMMatrixRotationRollPitchYaw(0.0f, XMConvertToRadians(180.0f), 0.0f), m_xmf4x4World); //x축으로 90도 회전 . 회전행렬을 월드변환 왼쪽에다 둠
+        // 기존 코드에서 미사일 발사 위치와 방향을 수정하여 정확한 방향으로 발사되도록 변경합니다.
+      
 	//90도를 라디안값으로 바꿔줘야 함
 }
 
-void CAirplanePlayer::Render(HDC hDCFrameBuffer, CCamera* pCamera)
+void CTankPlayer::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 {
 	CPlayer::Render(hDCFrameBuffer, pCamera);
 
 	for (int i = 0; i < BULLETS; i++) if (m_ppBullets[i]->m_bActive) m_ppBullets[i]->Render(hDCFrameBuffer, pCamera);
 }
 
-void CAirplanePlayer::FireBullet(CGameObject* pLockedObject)
+//void CAirplanePlayer::FireBullet(CGameObject* pLockedObject)
+//{
+///*
+//	if (pLockedObject) 
+//	{
+//		LookAt(pLockedObject->GetPosition(), XMFLOAT3(0.0f, 1.0f, 0.0f));
+//		OnUpdateTransform();
+//	}
+//*/
+//
+//	CBulletObject* pBulletObject = NULL;
+//	for (int i = 0; i < BULLETS; i++)
+//	{
+//		if (!m_ppBullets[i]->m_bActive)
+//		{
+//			pBulletObject = m_ppBullets[i];
+//			break;
+//		}
+//	}
+//
+//	if (pBulletObject)
+//	{
+//		XMFLOAT3 xmf3Position = GetPosition();
+//		XMFLOAT3 xmf3Direction = GetUp();
+//		XMFLOAT3 xmf3FirePosition = Vector3::Add(xmf3Position, Vector3::ScalarProduct(xmf3Direction, 6.0f, false));
+//
+//		pBulletObject->m_xmf4x4World = m_xmf4x4World;
+//
+//		pBulletObject->SetFirePosition(xmf3FirePosition);
+//		pBulletObject->SetMovingDirection(xmf3Direction);
+//		pBulletObject->SetColor(RGB(255, 0, 0));
+//		pBulletObject->SetActive(true);
+//
+//		if (pLockedObject)
+//		{
+//			pBulletObject->m_pLockedObject = pLockedObject;
+//			pBulletObject->SetColor(RGB(0, 0, 255));
+//		}
+//	}
+//}
+void CTankPlayer::FireBullet(CGameObject* pLockedObject)
 {
-/*
-	if (pLockedObject) 
-	{
-		LookAt(pLockedObject->GetPosition(), XMFLOAT3(0.0f, 1.0f, 0.0f));
-		OnUpdateTransform();
-	}
-*/
-
 	CBulletObject* pBulletObject = NULL;
 	for (int i = 0; i < BULLETS; i++)
 	{
@@ -199,7 +232,7 @@ void CAirplanePlayer::FireBullet(CGameObject* pLockedObject)
 	if (pBulletObject)
 	{
 		XMFLOAT3 xmf3Position = GetPosition();
-		XMFLOAT3 xmf3Direction = GetUp();
+		XMFLOAT3 xmf3Direction = Vector3::ScalarProduct(GetLook(), -1.0f); // 방향 반전
 		XMFLOAT3 xmf3FirePosition = Vector3::Add(xmf3Position, Vector3::ScalarProduct(xmf3Direction, 6.0f, false));
 
 		pBulletObject->m_xmf4x4World = m_xmf4x4World;
@@ -208,6 +241,11 @@ void CAirplanePlayer::FireBullet(CGameObject* pLockedObject)
 		pBulletObject->SetMovingDirection(xmf3Direction);
 		pBulletObject->SetColor(RGB(255, 0, 0));
 		pBulletObject->SetActive(true);
+
+
+
+		CMissileMesh* pBulletMesh = new CMissileMesh(2.0f, 2.0f, 4.0f);
+		pBulletObject->SetMesh(pBulletMesh);
 
 		if (pLockedObject)
 		{

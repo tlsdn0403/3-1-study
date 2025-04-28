@@ -52,6 +52,9 @@ public:
 	void SetRotationSpeed(float fSpeed) { m_fRotationSpeed = fSpeed; }
 
 
+;
+
+
 	void MoveStrafe(float fDistance = 1.0f);
 	void MoveUp(float fDistance = 1.0f);
 	void MoveForward(float fDistance = 1.0f);
@@ -62,7 +65,7 @@ public:
 	//게임 객체를 x-축, y-축, z-축을 기준으로 회전한다.
 	void Rotate(float fPitch = 10.0f, float fYaw = 10.0f, float fRoll = 10.0f);
 	void Rotate(XMFLOAT3& xmf3Axis, float fAngle);
-
+	void RotateTowardsPlayer(XMFLOAT3 playerPosition);
 	XMFLOAT3 GetPosition();
 	XMFLOAT3 GetLook();
 	XMFLOAT3 GetUp();
@@ -75,7 +78,8 @@ public:
 
 	void Render(HDC hDCFrameBuffer, XMFLOAT4X4* pxmf4x4World, CMesh* pMesh);
 
-	virtual void OnUpdateTransform() { }
+	//모델 -> 월드 변환 
+	virtual void OnUpdateTransform();
 
 	virtual void Animate(float fElapsedTime);
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
@@ -110,19 +114,20 @@ public:
 	static void PrepareExplosion();
 };
 
-class CWallsObject : public CGameObject //6개의 평면과 바운딩 박스를 가지고 있다.
+class CFloorObject : public CGameObject //6개의 평면과 바운딩 박스를 가지고 있다.
 {
 public:
-	CWallsObject();
-	virtual ~CWallsObject();
+	CFloorObject();
+	virtual ~CFloorObject();
 
 public:
 	BoundingOrientedBox			m_xmOOBBPlayerMoveCheck = BoundingOrientedBox(); //바운딩 박스
 
-	std::array<XMFLOAT4, 6> m_pxmf4WallPlanes; //6개의 평면을 나타냄
+	XMFLOAT4  m_pxmf4WallPlanes; //1개의 평면을 나타냄
 
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 };
+
 
 class CBulletObject : public CGameObject
 {
@@ -155,6 +160,10 @@ public:
 
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 };
+
+//-------------------------------------------------------------------------------------
+//  롤러코스터
+//-------------------------------------------------------------------------------------
 class CRollerCoasterRail : public CGameObject
 {
 public:
@@ -166,3 +175,7 @@ public:
 private:
 	std::vector<std::pair<XMFLOAT3, XMFLOAT3>> m_vRailSegments;
 };
+
+//-------------------------------------------------------------------------------------
+//  탱크
+//-------------------------------------------------------------------------------------

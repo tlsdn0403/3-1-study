@@ -84,7 +84,7 @@ void CGameFramework::BuildObjects()
 	{
 	case GAME:
 	{
-		m_pPlayer = new CAirplanePlayer();
+		m_pPlayer = new CTankPlayer();
 		CTankMesh* pAirplaneMesh = new CTankMesh(3.0f, 2.0f, 2.0f);
 		m_pPlayer->SetMesh(pAirplaneMesh);
 		m_pPlayer->SetPosition(0.0f, 0.0f, 0.0f);
@@ -93,6 +93,7 @@ void CGameFramework::BuildObjects()
 		m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));  //카메라 오프셋 설정
 		m_pScene = new CGameScene(m_pPlayer);
 		m_pScene->BuildObjects();
+		m_pScene->RotateTanksToFacePlayer();
 		break;
 	}
 	case GAME_1:
@@ -204,7 +205,7 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 		case VK_RETURN:
 			break;
 		case VK_CONTROL:  //컨트롤 키 누름
-			((CAirplanePlayer*)m_pPlayer)->FireBullet(m_pLockedObject);
+			((CTankPlayer*)m_pPlayer)->FireBullet(m_pLockedObject);
 			m_pLockedObject = NULL;
 			break;
 		default:
@@ -304,7 +305,10 @@ void CGameFramework::AnimateObjects()
 	case GAME:
 	{
 		if (m_pPlayer) m_pPlayer->Animate(fTimeElapsed); //플레이어를 애니메이트 한다
-		if (m_pScene) m_pScene->Animate(fTimeElapsed);  //씬을 애니메이트 한다.
+		if (m_pScene) {
+			m_pScene->Animate(fTimeElapsed);  //씬을 애니메이트 한다.
+
+		}
 		break;
 	}
 	case GAME_1:

@@ -52,7 +52,7 @@ private:
 	int							m_nObjects = 0;
 	CGameObject					**m_ppObjects = NULL;
 
-	CWallsObject*				m_pWallsObject = NULL;
+	CFloorObject*				m_pFloorObject = NULL;
 
 	CPlayer*					m_pPlayer = NULL;
 
@@ -71,7 +71,7 @@ public:
 	virtual void ReleaseObjects();
 
 
-
+	void RotateTanksToFacePlayer();
 	void CheckObjectByObjectCollisions();
 	void CheckObjectByWallCollisions();
 	void CheckPlayerByWallCollision();

@@ -190,8 +190,87 @@ CCubeMesh::CCubeMesh(float fWidth, float fHeight, float fDepth) : CMesh(6)
 	//중심 , 크기 , 0,0,0,1은 회전이 전혀 없는 쿼터니언을 의미함
 	m_xmOOBB = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fHalfWidth, fHalfHeight, fHalfDepth), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)); 
 }
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// 오른쪽 면이 그려지지 않는 문제를 해결하기 위해 CMissileMesh 생성자에서 오른쪽 면을 추가합니다.  
+// CMissileMesh 생성자에서 다각형 개수를 8로 수정했지만, 실제로는 9개의 다각형을 설정하고 있습니다.  
+// 아래 코드에서 `SetPolygon` 호출이 9번 이루어지고 있습니다.  
+// 이는 메모리 초과 및 런타임 오류를 유발할 수 있습니다.  
+
+CMissileMesh::CMissileMesh(float fWidth, float fHeight, float fDepth) : CMesh(8) // 다각형 개수를 8로 수정  
+{  
+ float fx = fWidth * 0.5f, fy = fHeight * 0.5f, fz = fDepth * 0.5f;  
+
+ int i = 0;  
+ CPolygon* pFace;  
+
+ // ▒▒ Body (Cylindrical main body of missile) ▒▒  
+ pFace = new CPolygon(6);  
+ pFace->SetVertex(0, CVertex(-fx, -fy, -fz));  
+ pFace->SetVertex(1, CVertex(+fx, -fy, -fz));  
+ pFace->SetVertex(2, CVertex(+fx, +fy, -fz));  
+ pFace->SetVertex(3, CVertex(-fx, +fy, -fz));  
+ pFace->SetVertex(4, CVertex(0.0f, +fy * 1.2f, -fz * 1.2f));  
+ pFace->SetVertex(5, CVertex(0.0f, -fy * 1.2f, -fz * 1.2f));  
+ SetPolygon(i++, pFace);  
+
+ pFace = new CPolygon(6);  
+ pFace->SetVertex(0, CVertex(-fx, -fy, +fz));  
+ pFace->SetVertex(1, CVertex(+fx, -fy, +fz));  
+ pFace->SetVertex(2, CVertex(+fx, +fy, +fz));  
+ pFace->SetVertex(3, CVertex(-fx, +fy, +fz));  
+ pFace->SetVertex(4, CVertex(0.0f, +fy * 1.2f, +fz * 1.2f));  
+ pFace->SetVertex(5, CVertex(0.0f, -fy * 1.2f, +fz * 1.2f));  
+ SetPolygon(i++, pFace);  
+
+ // ▒▒ Nose (Pointed tip of missile) ▒▒  
+ pFace = new CPolygon(3);  
+ pFace->SetVertex(0, CVertex(-fx, +fy, +fz));  
+ pFace->SetVertex(1, CVertex(+fx, +fy, +fz));  
+ pFace->SetVertex(2, CVertex(0.0f, +fy * 1.5f, +fz * 1.5f));  
+ SetPolygon(i++, pFace);  
+
+ // ▒▒ Fins (Stabilizing fins at the back) ▒▒  
+ float finWidth = fx * 0.5f;  
+ float finHeight = fy * 0.5f;  
+
+ pFace = new CPolygon(3);  
+ pFace->SetVertex(0, CVertex(-finWidth, -fy, -fz));  
+ pFace->SetVertex(1, CVertex(+finWidth, -fy, -fz));  
+ pFace->SetVertex(2, CVertex(0.0f, -fy - finHeight, -fz));  
+ SetPolygon(i++, pFace);  
+
+ pFace = new CPolygon(3);  
+ pFace->SetVertex(0, CVertex(-finWidth, -fy, +fz));  
+ pFace->SetVertex(1, CVertex(+finWidth, -fy, +fz));  
+ pFace->SetVertex(2, CVertex(0.0f, -fy - finHeight, +fz));  
+ SetPolygon(i++, pFace);  
+
+ // ▒▒ Side Fins (Additional fins for style) ▒▒  
+ pFace = new CPolygon(3);  
+ pFace->SetVertex(0, CVertex(-fx, 0.0f, -fz));  
+ pFace->SetVertex(1, CVertex(-fx, 0.0f, +fz));  
+ pFace->SetVertex(2, CVertex(-fx * 1.2f, 0.0f, 0.0f));  
+ SetPolygon(i++, pFace);  
+
+ pFace = new CPolygon(3);  
+ pFace->SetVertex(0, CVertex(+fx, 0.0f, -fz));  
+ pFace->SetVertex(1, CVertex(+fx, 0.0f, +fz));  
+ pFace->SetVertex(2, CVertex(+fx * 1.2f, 0.0f, 0.0f));  
+ SetPolygon(i++, pFace);  
+
+ // ▒▒ Right Side (추가된 면) ▒▒  
+ pFace = new CPolygon(4);  
+ pFace->SetVertex(0, CVertex(-fx, -fy, -fz));  
+ pFace->SetVertex(1, CVertex(-fx, +fy, -fz));  
+ pFace->SetVertex(2, CVertex(-fx, +fy, +fz));  
+ pFace->SetVertex(3, CVertex(-fx, -fy, +fz));  
+ SetPolygon(i++, pFace);  
+
+ // ▒▒ Bounding Box ▒▒  
+ m_xmOOBB = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fx, fy, fz), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));  
+}  
+
 //
 CWallMesh::CWallMesh(float fWidth, float fHeight, float fDepth, int nSubRects) : CMesh((4 * nSubRects * nSubRects) + 2)
 {
@@ -275,7 +354,27 @@ CWallMesh::CWallMesh(float fWidth, float fHeight, float fDepth, int nSubRects) :
 
 	m_xmOOBB = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fHalfWidth, fHalfHeight, fHalfDepth), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
 }
+CFloorMesh::CFloorMesh(float fWidth, float fDepth, int nSubRects) : CMesh(nSubRects* nSubRects)
+{
+	float fHalfWidth = fWidth * 0.5f;
+	float fHalfDepth = fDepth * 0.5f;
+	float fCellWidth = fWidth * (1.0f / nSubRects);
+	float fCellDepth = fDepth * (1.0f / nSubRects);
 
+	int k = 0;
+	for (int i = 0; i < nSubRects; i++) {
+		for (int j = 0; j < nSubRects; j++) {
+			CPolygon* pCell = new CPolygon(4);
+			pCell->SetVertex(0, CVertex(-fHalfWidth + (i * fCellWidth), 0.0f, -fHalfDepth + (j * fCellDepth)));
+			pCell->SetVertex(1, CVertex(-fHalfWidth + ((i + 1) * fCellWidth), 0.0f, -fHalfDepth + (j * fCellDepth)));
+			pCell->SetVertex(2, CVertex(-fHalfWidth + ((i + 1) * fCellWidth), 0.0f, -fHalfDepth + ((j + 1) * fCellDepth)));
+			pCell->SetVertex(3, CVertex(-fHalfWidth + (i * fCellWidth), 0.0f, -fHalfDepth + ((j + 1) * fCellDepth)));
+			SetPolygon(k++, pCell);
+		}
+	}
+
+	m_xmOOBB = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fHalfWidth, 0.0f, fHalfDepth), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 CAirplaneMesh::CAirplaneMesh(float fWidth, float fHeight, float fDepth) : CMesh(24)
