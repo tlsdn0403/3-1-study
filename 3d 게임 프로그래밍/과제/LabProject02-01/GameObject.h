@@ -2,8 +2,9 @@
 
 #include "Mesh.h"
 #include "Camera.h"
+#include "GameObject.h"
 #include<array>
-
+#define BULLETS_1					3
 class CGameObject
 {
 public:
@@ -33,6 +34,8 @@ public:
 	XMFLOAT3					m_xmf3RotationAxis = XMFLOAT3(0.0f, 1.0f, 0.0f); //회전축
 	float						m_fRotationSpeed = 0.0f; //회전 각도(스피드)
 
+	CBulletObject* m_pBullets[BULLETS_1];
+
 public:
 	void SetActive(bool bActive) { m_bActive = bActive; }
 	void SetMesh(CMesh *pMesh) { m_pMesh = pMesh; if (pMesh) pMesh->AddRef(); }
@@ -52,7 +55,7 @@ public:
 	void SetRotationSpeed(float fSpeed) { m_fRotationSpeed = fSpeed; }
 
 
-;
+;	void FireBullet(CGameObject* pLockedObject);
 
 
 	void MoveStrafe(float fDistance = 1.0f);
@@ -87,6 +90,28 @@ public:
 	void GenerateRayForPicking(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, XMVECTOR& xmvPickRayOrigin, XMVECTOR& xmvPickRayDirection);
 	int PickObjectByRayIntersection(XMVECTOR& xmPickPosition, XMMATRIX& xmmtxView, float* pfHitDistance);
 };
+class CBulletObject : public CGameObject
+{
+public:
+	CBulletObject(float fEffectiveRange);
+	virtual ~CBulletObject();
+
+public:
+	virtual void Animate(float fElapsedTime);
+
+	float						m_fBulletEffectiveRange = 50.0f;
+	float						m_fMovingDistance = 0.0f;
+	float						m_fRotationAngle = 0.0f;
+	XMFLOAT3					m_xmf3FirePosition = XMFLOAT3(0.0f, 0.0f, 1.0f);
+
+	float						m_fElapsedTimeAfterFire = 0.0f;
+	float						m_fLockingDelayTime = 0.3f;
+	float						m_fLockingTime = 4.0f;
+	CGameObject* m_pLockedObject = NULL;
+
+	void SetFirePosition(XMFLOAT3 xmf3FirePosition);
+	void Reset();
+};
 
 class CExplosiveObject : public CGameObject //게임 오브젝트에서 파생시킴
 {
@@ -95,7 +120,7 @@ public:
 	virtual ~CExplosiveObject();
 
 	bool						m_bBlowingUp = false;
-
+	
 
 	std::array<XMFLOAT4X4, EXPLOSION_DEBRISES> m_pxmf4x4Transforms;
 
@@ -110,6 +135,11 @@ public:
 public:
 	static CMesh*				m_pExplosionMesh;
 	static XMFLOAT3				m_pxmf3SphereVectors[EXPLOSION_DEBRISES]; //이 작은 오브젝트를 모든 방향으로 발사시킴
+
+
+
+
+
 
 	static void PrepareExplosion();
 };
@@ -129,28 +159,7 @@ public:
 };
 
 
-class CBulletObject : public CGameObject
-{
-public:
-	CBulletObject(float fEffectiveRange);
-	virtual ~CBulletObject();
 
-public:
-	virtual void Animate(float fElapsedTime);
-
-	float						m_fBulletEffectiveRange = 50.0f;
-	float						m_fMovingDistance = 0.0f;
-	float						m_fRotationAngle = 0.0f;
-	XMFLOAT3					m_xmf3FirePosition = XMFLOAT3(0.0f, 0.0f, 1.0f);
-
-	float						m_fElapsedTimeAfterFire = 0.0f;
-	float						m_fLockingDelayTime = 0.3f;
-	float						m_fLockingTime = 4.0f;
-	CGameObject*				m_pLockedObject = NULL;
-
-	void SetFirePosition(XMFLOAT3 xmf3FirePosition);
-	void Reset();
-};
 
 class CAxisObject : public CGameObject
 {

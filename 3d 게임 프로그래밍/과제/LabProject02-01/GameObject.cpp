@@ -113,25 +113,28 @@ void CGameObject::Rotate(XMFLOAT3& xmf3RotationAxis, float fAngle)
 	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);
 }
 
+
 void CGameObject::RotateTowardsPlayer(XMFLOAT3 playerPosition)
-{  
-   // 플레이어의 위치를 가져옴  
+{
+	// 오브젝트의 위치
+	XMFLOAT3 objectPosition = GetPosition();
 
-   // 현재 오브젝트의 위치를 가져옴  
-   XMFLOAT3 objectPosition = GetPosition();  
+	// 플레이어를 향한 방향 벡터 계산
+	XMFLOAT3 directionToPlayer = Vector3::Subtract(playerPosition, objectPosition);
+	directionToPlayer = Vector3::Normalize(directionToPlayer);
 
-   // 플레이어를 향한 방향 벡터 계산  
-   XMFLOAT3 directionToPlayer = Vector3::Subtract(playerPosition, objectPosition);  
-   directionToPlayer = Vector3::Normalize(directionToPlayer);  
+	
+	directionToPlayer.x = -directionToPlayer.x; // x축 방향 반전
+	
 
-   // 현재 오브젝트의 "Up" 벡터를 가져옴  
-   XMFLOAT3 upVector = GetUp();  
+	// 업벡터를 y축으로
+	XMFLOAT3 upVector = XMFLOAT3(0.0f, 1.0f, 0.0f);
 
-   // LookToLH를 사용하여 회전 행렬 계산  
-   XMFLOAT4X4 rotationMatrix = Matrix4x4::LookToLH(objectPosition, directionToPlayer, upVector);  
+	// LookToLH를 사용하여 회전 행렬 계산
+	XMFLOAT4X4 rotationMatrix = Matrix4x4::LookToLH(objectPosition, directionToPlayer, upVector);
 
-   // 오브젝트의 회전 변환 설정  
-   SetRotationTransform(&rotationMatrix);  
+	// 오브젝트의 회전 변환 설정
+	SetRotationTransform(&rotationMatrix);
 }
 
 
@@ -169,7 +172,7 @@ void CGameObject::UpdateBoundingBox()
 
 void CGameObject::OnUpdateTransform()
 {
-	m_xmf4x4World = Matrix4x4::Multiply(XMMatrixRotationRollPitchYaw(0.0f, XMConvertToRadians(180.0f), 0.0f), m_xmf4x4World); 
+	m_xmf4x4World = Matrix4x4::Multiply(XMMatrixRotationRollPitchYaw(0.0f, XMConvertToRadians(0.0f), 0.0f), m_xmf4x4World); 
 
 }
 
@@ -234,7 +237,43 @@ int CGameObject::PickObjectByRayIntersection(XMVECTOR& xmvPickPosition, XMMATRIX
 	}
 	return(nIntersected);
 }
+void  CGameObject::FireBullet(CGameObject* pLockedObject)
+{
+	CBulletObject* pBulletObject = NULL;
+	for (int i = 0; i < BULLETS_1; i++)
+	{
+		if (!m_pBullets[i]->m_bActive)
+		{
+			pBulletObject = m_pBullets[i];
+			break;
+		}
+	}
 
+	if (pBulletObject)
+	{
+		XMFLOAT3 xmf3Position = GetPosition();
+		XMFLOAT3 xmf3Direction = Vector3::ScalarProduct(GetLook(), 1.0f); // 방향 반전
+		XMFLOAT3 xmf3FirePosition = Vector3::Add(xmf3Position, Vector3::ScalarProduct(xmf3Direction, 6.0f, false));
+
+		pBulletObject->m_xmf4x4World = m_xmf4x4World;
+
+		pBulletObject->SetFirePosition(xmf3FirePosition);
+		pBulletObject->SetMovingDirection(xmf3Direction);
+		pBulletObject->SetColor(RGB(255, 0, 0));
+		pBulletObject->SetActive(true);
+
+
+
+		CMissileMesh* pBulletMesh = new CMissileMesh(2.0f, 2.0f, 4.0f);
+		pBulletObject->SetMesh(pBulletMesh);
+
+		if (pLockedObject)
+		{
+			pBulletObject->m_pLockedObject = pLockedObject;
+			pBulletObject->SetColor(RGB(0, 0, 255));
+		}
+	}
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 CFloorObject::CFloorObject()

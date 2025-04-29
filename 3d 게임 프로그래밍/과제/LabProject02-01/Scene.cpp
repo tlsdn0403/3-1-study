@@ -544,7 +544,10 @@ void CGameScene::Animate(float fElapsedTime)
 {
 	m_pFloorObject->Animate(fElapsedTime);  //벽을 애니메이트 함
 
-	for (int i = 0; i < m_nObjects; i++) m_ppObjects[i]->Animate(fElapsedTime); //큐브들을 애니메이트 함. 각각의 오브젝트들은 위치가 바뀔 것임.
+	for (int i = 0; i < m_nObjects; i++) {
+		m_ppObjects[i]->Animate(fElapsedTime); //큐브들을 애니메이트 함. 각각의 오브젝트들은 위치가 바뀔 것임.
+		m_ppObjects[i]
+	}
 	RotateTanksToFacePlayer();
 
 
