@@ -28,6 +28,8 @@ private:
 	CGameState* pGameState = new CGameState();;
 	StartScene*					pStartScene = NULL;
 	MenuScene* pMenuScene = NULL;
+	WinScene* pWinScene = nullptr;
+	LossScene* pLossScene =nullptr;
 	CGameScene*						m_pScene = NULL;
 	CGameScene_1*					m_pScene_1 = nullptr;
 

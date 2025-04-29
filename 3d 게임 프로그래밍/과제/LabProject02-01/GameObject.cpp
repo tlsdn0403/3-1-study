@@ -20,11 +20,18 @@ XMVECTOR RandomUnitVectorOnSphere()
 		if (!XMVector3Greater(XMVector3LengthSq(v), xmvOne)) return(XMVector3Normalize(v));
 	}
 }
-
-
+//CGameObject::CGameObject()
+//{
+//
+//}
+CGameObject::CGameObject()
+{
+	
+}
 CGameObject::~CGameObject(void)
 {
 	if (m_pMesh) m_pMesh->Release();
+	for (int i = 0; i < BULLETS_1; i++) if (m_pBullets) delete m_pBullets;
 }
 
 void CGameObject::SetPosition(float x, float y, float z)
@@ -182,8 +189,12 @@ void CGameObject::Animate(float fElapsedTime)
 	//각각의 오브젝트를 회전을 시키고 이동을 시킨다.
 	if (m_fRotationSpeed != 0.0f) Rotate(m_xmf3RotationAxis, m_fRotationSpeed * fElapsedTime);
 	if (m_fMovingSpeed != 0.0f) Move(m_xmf3MovingDirection, m_fMovingSpeed * fElapsedTime);
-
+	AutoFire(fElapsedTime); // 자동 발사 추가  
 	UpdateBoundingBox();
+	for (int i = 0; i < BULLETS_1; i++)
+	{	
+		if (m_pBullets && m_pBullets->m_bActive) m_pBullets->Animate(fElapsedTime);
+	}
 }
 
 void CGameObject::Render(HDC hDCFrameBuffer, XMFLOAT4X4* pxmf4x4World, CMesh* pMesh)
@@ -200,6 +211,8 @@ void CGameObject::Render(HDC hDCFrameBuffer, XMFLOAT4X4* pxmf4x4World, CMesh* pM
 		::SelectObject(hDCFrameBuffer, hOldPen);
 		::DeleteObject(hPen);
 	}
+
+
 }
 
 void CGameObject::Render(HDC hDCFrameBuffer, CCamera* pCamera)
@@ -208,6 +221,10 @@ void CGameObject::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 	//월드 좌표게에서의 프러스텀 컬링을 한다.
 	/*if (pCamera->IsInFrustum(m_xmOOBB))*/ 
 	CGameObject::Render(hDCFrameBuffer, &m_xmf4x4World, m_pMesh);
+
+		if (m_pBullets && m_pBullets->m_bActive)
+			m_pBullets->Render(hDCFrameBuffer, pCamera);
+
 }
 
 void CGameObject::GenerateRayForPicking(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, XMVECTOR& xmvPickRayOrigin, XMVECTOR& xmvPickRayDirection)
@@ -240,15 +257,15 @@ int CGameObject::PickObjectByRayIntersection(XMVECTOR& xmvPickPosition, XMMATRIX
 void  CGameObject::FireBullet()
 {
 	CBulletObject* pBulletObject = NULL;
-	for (int i = 0; i < BULLETS_1; i++)
-	{
-		if (!m_pBullets[i]->m_bActive)
-		{
-			pBulletObject = m_pBullets[i];
-			break;
-		}
-	}
 
+
+        if (m_pBullets && !m_pBullets->m_bActive)
+		{
+			pBulletObject = m_pBullets;
+
+		}
+	
+	
 	if (pBulletObject)
 	{
 		XMFLOAT3 xmf3Position = GetPosition();
@@ -264,12 +281,49 @@ void  CGameObject::FireBullet()
 
 
 
-		CMissileMesh* pBulletMesh = new CMissileMesh(2.0f, 2.0f, 4.0f);
+		CMissileMesh* pBulletMesh = new CMissileMesh(1.0f, 1.0f, 1.0f);
 		pBulletObject->SetMesh(pBulletMesh);
 
 
 	}
 }
+
+void CGameObject::AutoFire(float fElapsedTime)  
+{  
+  static float fFireCooldown = 0.0f; // 쿨다운 시간  
+  static float fInitialDelay = 2.0f; // 초기 지연 시간  
+
+  if (fInitialDelay > 0.0f)  
+  {  
+      fInitialDelay -= fElapsedTime;  
+      return; // 초기 지연 시간 동안 발사하지 않음  
+  }  
+
+  fFireCooldown -= fElapsedTime;  
+
+  if (fFireCooldown <= 0.0f)  
+  {  
+      FireBullet(); // 총알 발사  
+      fFireCooldown = 1.0f; // 쿨다운 초기화 (1초)  
+  }  
+}
+void CGameObject::InitializeBullets()
+{
+
+		{
+			m_pBullets = new CBulletObject(m_fBulletEffectiveRange);
+			XMFLOAT3 xmf3Position = GetPosition();
+
+			m_pBullets->SetPosition(xmf3Position);
+			m_pBullets->SetRotationAxis(XMFLOAT3(0.0f, 0.0f, 1.0f));
+			m_pBullets->SetRotationSpeed(1.0f);
+			m_pBullets->SetMovingSpeed(30.0f);
+			m_pBullets->SetActive(false);
+		}
+
+}
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 CFloorObject::CFloorObject()
@@ -321,10 +375,13 @@ void CExplosiveObject::Animate(float fElapsedTime)
 				m_pxmf4x4Transforms[i]._43 = xmf3Position.z + m_pxmf3SphereVectors[i].z * m_fExplosionSpeed * m_fElapsedTimes;
 				m_pxmf4x4Transforms[i] = Matrix4x4::Multiply(Matrix4x4::RotationAxis(m_pxmf3SphereVectors[i], m_fExplosionRotation * m_fElapsedTimes), m_pxmf4x4Transforms[i]);
 			}
+
 		}
 		else
 		{
+
 			m_bBlowingUp = false;
+			blowed = true;
 			m_fElapsedTimes = 0.0f;
 		}
 	}
@@ -444,4 +501,52 @@ void CRollerCoasterRail::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 	CGameObject::Render(hDCFrameBuffer, &m_xmf4x4World, m_pMesh);
 	/*CGraphicsPipeline::SetWorldTransform(&m_xmf4x4World);
 	m_pMesh->Render(hDCFrameBuffer);*/
+}
+
+
+
+CShieldObject::CShieldObject(float fShieldDuration, float fShieldRadius)
+	: m_fShieldDuration(fShieldDuration), m_fShieldRadius(fShieldRadius)
+{
+	m_bActive = false;
+}
+
+CShieldObject::~CShieldObject()
+{
+}
+
+void CShieldObject::ActivateShield()
+{
+	m_bActive = true;
+	m_fElapsedTime = 0.0f;
+}
+
+void CShieldObject::DeactivateShield()
+{
+	m_bActive = false;
+}
+
+void CShieldObject::Animate(float fElapsedTime)
+{
+	if (m_bActive)
+	{
+		m_fElapsedTime += fElapsedTime;
+		if (m_fElapsedTime >= m_fShieldDuration)
+		{
+			DeactivateShield();
+		}
+	}
+}
+
+void CShieldObject::Render(HDC hDCFrameBuffer, CCamera* pCamera)
+{
+	if (m_bActive)
+	{
+		// 쉴드 렌더링 로직 추가 (예: 원형으로 표시)  
+		Ellipse(hDCFrameBuffer,
+			static_cast<int>(m_xmf4x4World._41 - m_fShieldRadius),
+			static_cast<int>(m_xmf4x4World._42 - m_fShieldRadius),
+			static_cast<int>(m_xmf4x4World._41 + m_fShieldRadius),
+			static_cast<int>(m_xmf4x4World._42 + m_fShieldRadius));
+	}
 }

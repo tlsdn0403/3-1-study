@@ -150,7 +150,12 @@ int main( )
 	sort(tests.begin(), tests.end());
 	tests.back().show();
 
-
+	//쇼트는 tests.begin에서 정렬할 타입 정보를 알 수 있다.
+	//타입정보를 아는 순간
+	// 1.less<type>{};  기본정렬에 사용할 함수객체를 이용하여 정렬한다
+	// 2. bool operator<( const type& , const type& rhs) 이용해서 정렬한다
+	// 3. bool 값을 리턴하고 test 객체에 정의되여있는 operator <(const type& rhs)로 정렬한다
+	// 1,2,3 다 없으면 컴파일 오류가 난다.
 
 
 	//-------------------------------------------------------------------------
@@ -205,24 +210,22 @@ int main( )
 	long long totalLength = 0;
 	long long count = 0;
 
-	for (int i = minValue; i < maxValue; ++i) {
+	for (int i = numeric_limits<int>::min(); i < numeric_limits<int>::max(); ++i) {
 		totalLength += to_string(i).length();
 		++count;
-
-		// maxValue를 포함하기 위해 마지막 루프 처리
-		if (i == maxValue - 1) {
-			totalLength += to_string(maxValue).length();
-			++count;
-			break;
-		}
 	}
 
-	// 평균 계산
-	double averageLength = static_cast<double>(totalLength) / count;
+	totalLength += to_string(numeric_limits<int>::max()).length();
+	++count;
 
-	// 소수점 2자리까지 출력
-	cout << "평균 글자 수: "<< averageLength << endl;
+	//// 평균 계산
+	//double averageLength = static_cast<double>(totalLength) / count;
 
+	//// 소수점 2자리까지 출력
+	//cout << "평균 글자 수: "<< averageLength << endl;
+
+	cout << " 합계 -" << totalLength << endl;
+	printf("평균 - %.2f\n", (double)totalLength / count);
 	return 0;
 
 

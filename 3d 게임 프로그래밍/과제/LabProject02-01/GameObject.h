@@ -4,17 +4,19 @@
 #include "Camera.h"
 #include "GameObject.h"
 #include<array>
-#define BULLETS_1					3
+#define BULLETS_1					1
 
 class CBulletObject; // 전방 선언
 class CGameObject
 {
 public:
-	CGameObject() { }
+	CGameObject();
 	virtual ~CGameObject();
 
 public:
-	bool						m_bActive = true;
+
+
+	bool						m_bActive = false;
 
 	CMesh*						m_pMesh = NULL;
 
@@ -35,8 +37,8 @@ public:
 
 	XMFLOAT3					m_xmf3RotationAxis = XMFLOAT3(0.0f, 1.0f, 0.0f); //회전축
 	float						m_fRotationSpeed = 0.0f; //회전 각도(스피드)
-
-	CBulletObject* m_pBullets[BULLETS_1];
+	float						m_fBulletEffectiveRange = 150.0f;
+	CBulletObject* m_pBullets;
 
 public:
 	void SetActive(bool bActive) { m_bActive = bActive; }
@@ -45,7 +47,9 @@ public:
 	void SetColor(DWORD dwColor) { m_dwColor = dwColor; }
 
 	void SetRotationTransform(XMFLOAT4X4 *pmxf4x4Transform);
-
+	CBulletObject* GetBullets() {
+		return m_pBullets;
+	}
 	void SetPosition(float x, float y, float z);
 	void SetPosition(XMFLOAT3& xmf3Position);
 
@@ -56,9 +60,9 @@ public:
 	void SetRotationAxis(XMFLOAT3& xmf3RotationAxis) { m_xmf3RotationAxis = Vector3::Normalize(xmf3RotationAxis); }
 	void SetRotationSpeed(float fSpeed) { m_fRotationSpeed = fSpeed; }
 
-
+	void InitializeBullets();
 ;	void FireBullet();
-
+void AutoFire(float fElapsedTime);
 
 	void MoveStrafe(float fDistance = 1.0f);
 	void MoveUp(float fDistance = 1.0f);
@@ -96,6 +100,8 @@ class CBulletObject : public CGameObject
 {
 public:
 	CBulletObject(float fEffectiveRange);
+
+
 	virtual ~CBulletObject();
 
 public:
@@ -122,7 +128,7 @@ public:
 	virtual ~CExplosiveObject();
 
 	bool						m_bBlowingUp = false;
-	
+	bool	blowed = false;
 
 	std::array<XMFLOAT4X4, EXPLOSION_DEBRISES> m_pxmf4x4Transforms;
 
@@ -190,3 +196,22 @@ private:
 //-------------------------------------------------------------------------------------
 //  탱크
 //-------------------------------------------------------------------------------------
+class CShieldObject : public CGameObject
+{
+public:
+	CShieldObject(float fShieldDuration, float fShieldRadius);
+	virtual ~CShieldObject();
+
+public:
+	float m_fShieldDuration = 5.0f; // 쉴드 지속 시간  
+	float m_fElapsedTime = 0.0f;   // 쉴드 활성화 후 경과 시간  
+	float m_fShieldRadius = 10.0f; // 쉴드 반경  
+
+	bool m_bActive = false; // 쉴드 활성화 여부  
+
+	void ActivateShield();
+	void DeactivateShield();
+	virtual void Animate(float fElapsedTime);
+	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
+};
+

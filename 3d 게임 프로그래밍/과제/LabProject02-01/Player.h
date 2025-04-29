@@ -29,6 +29,8 @@ public:
 
 	CCamera*					m_pCamera = NULL;
 
+	bool   m_bShieldActive = false;
+
 public:
 	void SetPosition(float x, float y, float z);
 	void SetRotation(float x, float y, float z);
@@ -61,10 +63,24 @@ public:
 	CTankPlayer();
 	virtual ~CTankPlayer();
 
+
+	float m_fShieldDuration = 0.0;
+	float m_fShieldElapsedTime = 0.0;
+
+
+
 	float						m_fBulletEffectiveRange = 150.0f;
+
+
 	CBulletObject*				m_ppBullets[BULLETS];
 
 	void FireBullet(CGameObject* pLockedObject);
+
+	void ActivateShield(float fDuration);
+	void UpdateShield(float fElapsedTime);
+	void RenderShield(HDC hDCFrameBuffer, CCamera* pCamera);
+
+
 
 	virtual void OnUpdateTransform();//비행기가 y축 방향이 아니라 z축 방향을 향하도록 만들어줌
 	virtual void Animate(float fElapsedTime);

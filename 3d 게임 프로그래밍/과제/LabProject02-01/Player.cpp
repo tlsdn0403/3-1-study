@@ -130,7 +130,7 @@ void CPlayer::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-//    비행기 플레이어
+//    탱크 플레이어
 /////////////////////////////////////////////////////////////////////////////////////////////
 CTankPlayer::CTankPlayer()
 {
@@ -150,15 +150,15 @@ CTankPlayer::~CTankPlayer()
 	for (int i = 0; i < BULLETS; i++) if (m_ppBullets[i]) delete m_ppBullets[i];
 }
 
-void CTankPlayer::Animate(float fElapsedTime)
-{
-	CPlayer::Animate(fElapsedTime);
-
-	for (int i = 0; i < BULLETS; i++)
-	{
-		if (m_ppBullets[i]->m_bActive) m_ppBullets[i]->Animate(fElapsedTime);
-	}
-}
+//void CTankPlayer::Animate(float fElapsedTime)
+//{
+//	CPlayer::Animate(fElapsedTime);
+//
+//	for (int i = 0; i < BULLETS; i++)
+//	{
+//		if (m_ppBullets[i]->m_bActive) m_ppBullets[i]->Animate(fElapsedTime);
+//	}
+//}
 
 void CTankPlayer::OnUpdateTransform() 
 {
@@ -173,7 +173,7 @@ void CTankPlayer::OnUpdateTransform()
 void CTankPlayer::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 {
 	CPlayer::Render(hDCFrameBuffer, pCamera);
-
+	RenderShield(hDCFrameBuffer, pCamera);
 	for (int i = 0; i < BULLETS; i++) if (m_ppBullets[i]->m_bActive) m_ppBullets[i]->Render(hDCFrameBuffer, pCamera);
 }
 
@@ -254,6 +254,61 @@ void CTankPlayer::FireBullet(CGameObject* pLockedObject)
 		}
 	}
 }
+
+void CTankPlayer::ActivateShield(float fDuration)  
+{  
+   m_bShieldActive = true;  
+   m_fShieldDuration = fDuration;  
+   m_fShieldElapsedTime = 0.0f;  
+}  
+
+void CTankPlayer::UpdateShield(float fElapsedTime)  
+{  
+   if (m_bShieldActive)  
+   {  
+       m_fShieldElapsedTime += fElapsedTime;  
+       if (m_fShieldElapsedTime >= m_fShieldDuration)  
+       {  
+           m_bShieldActive = false;  
+       }  
+   }  
+}  
+
+void CTankPlayer::RenderShield(HDC hDCFrameBuffer, CCamera* pCamera)  
+{  
+
+     if (m_bShieldActive)  
+     {  
+         // 쉴드의 위치를 캐릭터의 현재 위치로 설정
+         XMFLOAT3 shieldPosition = GetPosition();  
+
+         // 쉴드 메쉬 생성 및 위치 설정
+         CCubeMesh* shieldMesh = new CCubeMesh(4.0f, 4.0f, 4.0f);  
+         XMFLOAT4X4 shieldWorldMatrix = Matrix4x4::Identity();  
+         shieldWorldMatrix._41 = shieldPosition.x;  
+         shieldWorldMatrix._42 = shieldPosition.y;  
+         shieldWorldMatrix._43 = shieldPosition.z;  
+
+         // 쉴드 렌더링
+         shieldMesh->Render(hDCFrameBuffer);  
+
+         // 메모리 해제
+         delete shieldMesh;  
+     }  
+}  
+
+void CTankPlayer::Animate(float fElapsedTime)  
+{  
+   CPlayer::Animate(fElapsedTime);  
+
+   UpdateShield(fElapsedTime);  
+
+   for (int i = 0; i < BULLETS; i++)  
+   {  
+       if (m_ppBullets[i]->m_bActive) m_ppBullets[i]->Animate(fElapsedTime);  
+   }  
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 //    롤러코스터 카트 플레이어

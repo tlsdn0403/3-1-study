@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "GameFramework.h"
 
-enum GameState { TITLE, MENU, GAME, GAME_1 };
+enum GameState { TITLE, MENU, GAME, GAME_1, WIN,LOSS};
 void CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 {
 	::srand(timeGetTime());
@@ -169,13 +169,18 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 			case GAME:
 				break;
 			case GAME_1:
+			{
 				m_pScene_1->changeDir(DIR_FORWARD);
-				if(!m_pScene_1->checkMoving())
+				if (!m_pScene_1->checkMoving())
 					m_pScene_1->changeMovingState(true);
 				else
 					m_pScene_1->changeMovingState(false);
 				break;
 			}
+			case WIN:
+				pWinScene->OnMouseClick(LOWORD(lParam), HIWORD(lParam)); // x, y 좌표 전달
+			}
+
 
 		}
 			
@@ -191,34 +196,37 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 	}
 }
 
-void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
-{
-	if (m_pScene) m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam); //null이 아닌 경우
-	switch (nMessageID)
-	{
-	case WM_KEYDOWN:
-		switch (wParam)
-		{
-		case VK_ESCAPE:  //esc 누르면 꺼찜
-			pGameState->CGameState::ChangeGameState(CGameState::MENU);
-			break;
-		case VK_RETURN:
-			break;
-		case VK_CONTROL:  //컨트롤 키 누름
-			((CTankPlayer*)m_pPlayer)->FireBullet(m_pLockedObject);
-			m_pLockedObject = NULL;
-			break;
-		default:
-			if(m_pScene)
-			m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
-			else if (m_pScene_1)
-				m_pScene_1->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
-			break;
-		}
-		break;
-	default:
-		break;
-	}
+void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)  
+{  
+if (m_pScene) m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam); //null이 아닌 경우  
+switch (nMessageID)  
+{  
+case WM_KEYDOWN:  
+	switch (wParam)  
+	{  
+	case VK_ESCAPE:  //esc 누르면 꺼찜  
+		pGameState->CGameState::ChangeGameState(CGameState::MENU);  
+		break;  
+	case VK_RETURN:  
+		break;  
+	case 'A':  //컨트롤 키 누름  
+		((CTankPlayer*)m_pPlayer)->FireBullet(m_pLockedObject);  
+		m_pLockedObject = NULL;  
+		break;  
+	case 'S':  // 'S' 키 누름  
+		((CTankPlayer*)m_pPlayer)->ActivateShield(1.0);
+		break;  
+	default:  
+		if(m_pScene)  
+		m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);  
+		else if (m_pScene_1)  
+			m_pScene_1->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);  
+		break;  
+	}  
+	break;  
+default:  
+	break;  
+}  
 }
 
 LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
@@ -268,7 +276,8 @@ void CGameFramework::ProcessInput()//사용자 입력을 받아드림
 
 	switch (pGameState->GetCurrentState())
 	{
-	case GAME:
+	/*case GAME:
+           
 	{
 		if (GetCapture() == m_hWnd)
 		{
@@ -284,6 +293,23 @@ void CGameFramework::ProcessInput()//사용자 입력을 받아드림
 					m_pPlayer->Rotate(cyMouseDelta, 0.0f, -cxMouseDelta);
 				else
 					m_pPlayer->Rotate(cyMouseDelta, cxMouseDelta, 0.0f);
+			}
+		}
+		break;
+	}*/
+	case GAME:
+	{
+		if (GetCapture() == m_hWnd)
+		{
+			SetCursor(NULL);
+			POINT ptCursorPos;
+			GetCursorPos(&ptCursorPos);
+			float cxMouseDelta = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.0f;
+			SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
+			if (cxMouseDelta)
+			{
+				// y축 회전만 허용
+				m_pPlayer->Rotate(0.0f, cxMouseDelta, 0.0f);
 			}
 		}
 		break;
@@ -346,12 +372,12 @@ void CGameFramework::FrameAdvance() //매 프레임 마다 이 함수의 과정을 반복한다.
 
 void CGameFramework::ChoiceGameMode() // 모드에 따라 화면 출력
 {
-	if (pGameState->GetCurrentState() == GAME_1 && m_pScene) {
+	if (pGameState->GetCurrentState() != GAME && m_pScene) {
 		m_pScene->ReleaseObjects();
 		delete m_pScene;
 		m_pScene = nullptr;
 	}
-	if (pGameState->GetCurrentState() == GAME && m_pScene_1) {
+	if (pGameState->GetCurrentState() != GAME_1 && m_pScene_1) {
 		m_pScene_1->ReleaseObjects();
 		delete m_pScene_1;
 		m_pScene_1 = nullptr;
@@ -364,6 +390,7 @@ void CGameFramework::ChoiceGameMode() // 모드에 따라 화면 출력
 		pStartScene->Render(m_hDCFrameBuffer);
 		break;
 	case MENU:
+
 		if (!pMenuScene) pMenuScene = new MenuScene();
 		pMenuScene->Render(m_hDCFrameBuffer);
 		break;
@@ -379,13 +406,36 @@ void CGameFramework::ChoiceGameMode() // 모드에 따라 화면 출력
 		break;
 	}
 	case GAME_1:
+	{
 		if (!m_pScene_1) {
 			BuildObjects();
 			m_pScene_1 = new CGameScene_1(m_pPlayer);
 			m_pScene_1->BuildObjects(); // 게임 모드로 전환 시 객체 초기화
 		}
+		
 		CCamera* pCamera = m_pPlayer->GetCamera(); // 중괄호로 스코프를 감쌈
 		if (pCamera) m_pScene_1->Render(m_hDCFrameBuffer, pCamera); // 게임 화면 렌더링
 		break;
 	}
+		
+
+	case WIN:
+	{
+		if (!pWinScene) pWinScene = new WinScene();
+		pWinScene->Render(m_hDCFrameBuffer);
+		break;
+		break;
+	}
+	case LOSS:
+	{
+		if (!pLossScene) pLossScene = new LossScene();
+		pLossScene->Render(m_hDCFrameBuffer);
+		
+		break;
+	}
+
+
+	}
+
+	
 }

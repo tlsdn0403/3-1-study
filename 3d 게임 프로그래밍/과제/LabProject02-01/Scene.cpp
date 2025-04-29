@@ -148,7 +148,37 @@ void StartScene::OnMouseClick(int x, int y)
 		isExploding = true; // 폭발 효과 활성화  
 	}
 }
+//--------------------------------------------------------------------------------------------------------------------------------
+//                           승리씬
+//--------------------------------------------------------------------------------------------------------------------------------
 
+void WinScene::Render(HDC hDCFrameBuffer) {  
+   // "You Win!" 텍스트를 화면 중앙에 출력  
+   const int centerX = FRAMEBUFFER_WIDTH / 2;  
+   const int centerY = FRAMEBUFFER_HEIGHT / 2;  
+   TextOutW(hDCFrameBuffer, centerX - 50, centerY - 10, L"You Win!", wcslen(L"You Win!"));  
+}  
+
+void WinScene::OnMouseClick(int x, int y) {  
+   // 클릭 시 메뉴로 돌아가기  
+   CGameState::ChangeGameState(CGameState::MENU);  
+}
+
+//--------------------------------------------------------------------------------------------------------------------------------
+//                           패배씬
+//--------------------------------------------------------------------------------------------------------------------------------
+
+void LossScene::Render(HDC hDCFrameBuffer) {
+	// "You Win!" 텍스트를 화면 중앙에 출력  
+	const int centerX = FRAMEBUFFER_WIDTH / 2;
+	const int centerY = FRAMEBUFFER_HEIGHT / 2;
+	TextOutW(hDCFrameBuffer, centerX - 50, centerY - 10, L"You Loss!", wcslen(L"You Loss!"));
+}
+
+void LossScene::OnMouseClick(int x, int y) {
+	// 클릭 시 메뉴로 돌아가기  
+	CGameState::ChangeGameState(CGameState::MENU);
+}
 
 //--------------------------------------------------------------------------------------------------------------------------------
 //                           메뉴
@@ -232,26 +262,69 @@ void CGameScene::BuildObjects()
 	m_pFloorObject->m_pxmf4WallPlanes[5] = XMFLOAT4(0.0f, 0.0f, -1.0f, fHalfDepth);
 	m_pFloorObject->m_xmOOBBPlayerMoveCheck = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fHalfWidth, fHalfHeight, fHalfDepth * 0.05f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
 
-	CTankMesh* pCubeMesh = new CTankMesh(4.0f, 4.0f, 4.0f);
 
+
+	m_pObstacle = new CGameObject * [MAX_OBJECTS];
+	CCubeMesh* Cm = new CCubeMesh(10.0f, 10.0f, 5.0f);
+
+
+	m_pObstacle[0] = new CGameObject();
+	m_pObstacle[0]->SetMesh(Cm);
+	m_pObstacle[0]->SetColor(RGB(255, 0, 0));
+	m_pObstacle[0]->SetPosition(-0.0f, 5.0f, -40.0f);
+	m_pObstacle[0]->OnUpdateTransform();
+
+	m_pObstacle[1] = new CGameObject();
+	m_pObstacle[1]->SetMesh(Cm);
+	m_pObstacle[1]->SetColor(RGB(255, 0, 0));
+	m_pObstacle[1]->SetPosition(-0.0f, 5.0f, 40.0f);
+	m_pObstacle[1]->OnUpdateTransform();
+
+	m_pObstacle[2] = new CGameObject();
+	m_pObstacle[2]->SetMesh(Cm);
+	m_pObstacle[2]->SetColor(RGB(255, 0, 0));
+	m_pObstacle[2]->SetPosition(-20.0f, 5.0f, 30.0f);
+	m_pObstacle[2]->OnUpdateTransform();
+
+	m_pObstacle[3] = new CGameObject();
+	m_pObstacle[3]->SetMesh(Cm);
+	m_pObstacle[3]->SetColor(RGB(255, 0, 0));
+	m_pObstacle[3]->SetPosition(20.0f, 5.0f, 30.0f);
+	m_pObstacle[3]->OnUpdateTransform();
+
+	m_pObstacle[4] = new CGameObject();
+	m_pObstacle[4]->SetMesh(Cm);
+	m_pObstacle[4]->SetColor(RGB(255, 0, 0));
+	m_pObstacle[4]->SetPosition(-20.0f, 5.0f, -30.0f);
+	m_pObstacle[4]->OnUpdateTransform();
+
+	m_pObstacle[5] = new CGameObject();
+	m_pObstacle[5]->SetMesh(Cm);
+	m_pObstacle[5]->SetColor(RGB(255, 0, 0));
+	m_pObstacle[5]->SetPosition(20.0f, 5.0f, -30.0f);
+	m_pObstacle[5]->OnUpdateTransform();
+
+	CTankMesh* pCubeMesh = new CTankMesh(4.0f, 4.0f, 4.0f);
 	m_nObjects = 10;
 	m_ppObjects = new CGameObject * [m_nObjects];
+
+
 
 	m_ppObjects[0] = new CExplosiveObject();
  
 	m_ppObjects[0]->SetMesh(pCubeMesh);
 	m_ppObjects[0]->SetColor(RGB(255, 0, 0));
-	m_ppObjects[0]->SetPosition(-13.5f, 0.0f, -14.0f);
+	m_ppObjects[0]->SetPosition(-13.5f, 0.0f, -77.0f);
 	m_ppObjects[0]->SetMovingDirection(XMFLOAT3(1.0f, 0.0f, 0.0f));
 	m_ppObjects[0]->SetMovingSpeed(10.5f);
 	m_ppObjects[0]->OnUpdateTransform();
-
+	
  
 
 	m_ppObjects[1] = new CExplosiveObject();
 	m_ppObjects[1]->SetMesh(pCubeMesh);
 	m_ppObjects[1]->SetColor(RGB(0, 0, 255));
-	m_ppObjects[1]->SetPosition(+13.5f, 0.0f, -14.0f);
+	m_ppObjects[1]->SetPosition(+13.5f, 0.0f, -74.0f);
 	m_ppObjects[1]->SetMovingDirection(XMFLOAT3(-1.0f, 0.0f, 0.0f));
 	m_ppObjects[1]->SetMovingSpeed(8.8f);
 	m_ppObjects[1]->OnUpdateTransform();
@@ -259,7 +332,7 @@ void CGameScene::BuildObjects()
 	m_ppObjects[2] = new CExplosiveObject();
 	m_ppObjects[2]->SetMesh(pCubeMesh);
 	m_ppObjects[2]->SetColor(RGB(0, 255, 0));
-	m_ppObjects[2]->SetPosition(0.0f, 0.0f, 20.0f);
+	m_ppObjects[2]->SetPosition(0.0f, 0.0f, 93.0f);
 	m_ppObjects[2]->SetMovingDirection(XMFLOAT3(1.0f, 0.0f, 0.0f));
 	m_ppObjects[2]->SetMovingSpeed(5.2f);
 	m_ppObjects[2]->OnUpdateTransform();
@@ -267,58 +340,61 @@ void CGameScene::BuildObjects()
 	m_ppObjects[3] = new CExplosiveObject();
 	m_ppObjects[3]->SetMesh(pCubeMesh);
 	m_ppObjects[3]->SetColor(RGB(0, 255, 255));
-	m_ppObjects[3]->SetPosition(5.0f, 0.0f, 0.0f);
-	m_ppObjects[3]->SetMovingDirection(XMFLOAT3(0.0f, 0.0f, 1.0f));
+	m_ppObjects[3]->SetPosition(5.0f, 0.0f, -93.0f);
+	m_ppObjects[3]->SetMovingDirection(XMFLOAT3(1.0f, 0.0f, 0.0f));
 	m_ppObjects[3]->SetMovingSpeed(20.4f);
 	m_ppObjects[3]->OnUpdateTransform();
 
 	m_ppObjects[4] = new CExplosiveObject();
 	m_ppObjects[4]->SetMesh(pCubeMesh);
 	m_ppObjects[4]->SetColor(RGB(128, 0, 255));
-	m_ppObjects[4]->SetPosition(10.0f, 0.0f, 0.0f);
-	m_ppObjects[4]->SetMovingDirection(XMFLOAT3(0.0f, 0.0f, 1.0f));
+	m_ppObjects[4]->SetPosition(10.0f, 0.0f, 83.0f);
+	m_ppObjects[4]->SetMovingDirection(XMFLOAT3(1.0f, 0.0f, 0.0f));
 	m_ppObjects[4]->SetMovingSpeed(6.4f);
 	m_ppObjects[4]->OnUpdateTransform();
 
 	m_ppObjects[5] = new CExplosiveObject();
 	m_ppObjects[5]->SetMesh(pCubeMesh);
 	m_ppObjects[5]->SetColor(RGB(255, 0, 255));
-	m_ppObjects[5]->SetPosition(-10.0f, 0.0f, -10.0f);
-	m_ppObjects[5]->SetMovingDirection(XMFLOAT3(1.0f, 0.0f, 1.0f));
+	m_ppObjects[5]->SetPosition(-10.0f, 0.0f, -100.0f);
+	m_ppObjects[5]->SetMovingDirection(XMFLOAT3(1.0f, 0.0f, 0.0f));
 	m_ppObjects[5]->SetMovingSpeed(8.9f);
 	m_ppObjects[5]->OnUpdateTransform();
 
 	m_ppObjects[6] = new CExplosiveObject();
 	m_ppObjects[6]->SetMesh(pCubeMesh);
 	m_ppObjects[6]->SetColor(RGB(255, 0, 255));
-	m_ppObjects[6]->SetPosition(-10.0f, 0.0f, -10.0f);
-	m_ppObjects[6]->SetMovingDirection(XMFLOAT3(1.0f, 0.0f, 1.0f));
+	m_ppObjects[6]->SetPosition(-10.0f, 0.0f, -87.0f);
+	m_ppObjects[6]->SetMovingDirection(XMFLOAT3(1.0f, 0.0f, 0.0f));
 	m_ppObjects[6]->OnUpdateTransform();
 	m_ppObjects[6]->SetMovingSpeed(9.7f);
 
 	m_ppObjects[7] = new CExplosiveObject();
 	m_ppObjects[7]->SetMesh(pCubeMesh);
 	m_ppObjects[7]->SetColor(RGB(255, 0, 128));
-	m_ppObjects[7]->SetPosition(-10.0f, 0.0f, -20.0f);
-	m_ppObjects[7]->SetMovingDirection(XMFLOAT3(-1.0f, 0.0f, 1.0f));
+	m_ppObjects[7]->SetPosition(-10.0f, 0.0f, 92.0f);
+	m_ppObjects[7]->SetMovingDirection(XMFLOAT3(-1.0f, 0.0f, 0.0f));
 	m_ppObjects[7]->SetMovingSpeed(15.6f);
 	m_ppObjects[7]->OnUpdateTransform();
 
 	m_ppObjects[8] = new CExplosiveObject();
 	m_ppObjects[8]->SetMesh(pCubeMesh);
 	m_ppObjects[8]->SetColor(RGB(128, 0, 255));
-	m_ppObjects[8]->SetPosition(-15.0f, 0.0f, -30.0f);
-	m_ppObjects[8]->SetMovingDirection(XMFLOAT3(0.0f, 0.0f, -1.0f));
+	m_ppObjects[8]->SetPosition(-15.0f, 0.0f, 77.0f);
+	m_ppObjects[8]->SetMovingDirection(XMFLOAT3(1.0f, 0.0f, 0.0f));
 	m_ppObjects[8]->SetMovingSpeed(15.0f);
 	m_ppObjects[8]->OnUpdateTransform();
 
 	m_ppObjects[9] = new CExplosiveObject();
 	m_ppObjects[9]->SetMesh(pCubeMesh);
 	m_ppObjects[9]->SetColor(RGB(255, 64, 64));
-	m_ppObjects[9]->SetPosition(+15.0f, 0.0f, 0.0f);
-	m_ppObjects[9]->SetMovingDirection(XMFLOAT3(-0.0f, 0.0f, -1.0f));
+	m_ppObjects[9]->SetPosition(+15.0f, 0.0f, 80.0f);
+	m_ppObjects[9]->SetMovingDirection(XMFLOAT3(1.0f, 0.0f, 0.0f));
 	m_ppObjects[9]->SetMovingSpeed(15.0f);
 	m_ppObjects[9]->OnUpdateTransform();
+	for (int i = 0; i < 10; ++i) {
+		m_ppObjects[i]->InitializeBullets();
+	}
 
 
 #ifdef _WITH_DRAW_AXIS
@@ -375,13 +451,15 @@ void CGameScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM 
 			pExplosiveObject->m_bBlowingUp = true;
 			break;
 		}
-		case 'A':
+		case 'W':
 			for (int i = 0; i < m_nObjects; i++)
 			{
 				CExplosiveObject* pExplosiveObject = (CExplosiveObject*)m_ppObjects[i];
 				pExplosiveObject->m_bBlowingUp = true;
 			}
 			break;
+		case'S':
+			
 		default:
 			break;
 		}
@@ -453,6 +531,9 @@ void CGameScene::CheckObjectByObjectCollisions()
 		}
 	}
 }
+
+
+
 
 void CGameScene::CheckObjectByWallCollisions()
 {
@@ -539,6 +620,100 @@ void CGameScene::CheckObjectByBulletCollisions()
 		}
 	}
 }
+void CGameScene::CheckTankIsBlowed()
+{
+	for (int i = 0; i < m_nObjects; i++)
+	{
+		CExplosiveObject* pExplosiveObject = (CExplosiveObject*)m_ppObjects[i];
+
+			if (pExplosiveObject->blowed)
+			{
+				// 탱크 매시 오브젝트를 삭제  
+				delete m_ppObjects[i];
+				m_ppObjects[i] = nullptr;
+
+				// 오브젝트 배열을 재정렬  
+				for (int k = i; k < m_nObjects - 1; k++)
+				{
+					m_ppObjects[k] = m_ppObjects[k + 1];
+				}
+				m_ppObjects[m_nObjects - 1] = nullptr;
+				m_nObjects--;
+
+				break;
+			}
+	}
+	if(m_nObjects== 0)
+	CGameState::ChangeGameState(CGameState::WIN); // 게임 상태로 변경  
+}
+	
+
+
+void CGameScene::CheckPlayerByBulletCollisions()  
+{  
+    CBulletObject* ppBullets;  
+    for (int i = 0; i < m_nObjects; i++)  
+    {  
+        ppBullets = m_ppObjects[i]->GetBullets(); // 적 탱크의 총알 배열 가져오기  
+        for (int j = 0; j < 1; j++)  
+        {  
+            if (ppBullets != nullptr && ppBullets->m_bActive)  
+            {  
+                if (ppBullets->m_xmOOBB.Intersects(m_pPlayer->m_xmOOBB))  
+                {  
+                    if (m_pPlayer->m_bShieldActive)  
+                    {  
+                       ppBullets->Reset(); // 방어막 활성화 상태면 총알 제거  
+                    }  
+                    else  
+                    {
+						if (m_pPlayer->m_xmOOBB.Contains(ppBullets->m_xmOOBB) && ppBullets->m_bActive)
+							++colNum;
+						if(colNum>10)
+							CGameState::ChangeGameState(CGameState::LOSS); // 게임 상태 변경  
+                        return; // 상태 변경 후 함수 종료  
+                    }  
+                }  
+            }  
+        }  
+    }  
+}
+//
+// 벽이 총알을 막아줌
+//
+void CGameScene::CheckBulletByWallCollisions()
+{
+   CBulletObject** ppBullets = ((CTankPlayer*)m_pPlayer)->m_ppBullets;
+
+   // 플레이어의 총알과 벽의 충돌 검사
+   for (int i = 0; i < BULLETS; i++)
+   {
+	   for (int k = 0; k < 6; k++) {
+		   if (ppBullets[i] && ppBullets[i]->m_bActive && ppBullets[i]->m_xmOOBB.Intersects(m_pObstacle[k]->m_xmOOBB)) // nullptr 체크 추가
+		   {
+
+			   ppBullets[i]->Reset(); // 벽에 충돌한 총알은 비활성화
+		   }
+	   }
+   }
+
+   // 적 탱크의 총알과 벽의 충돌 검사
+   for (int i = 0; i < m_nObjects; i++)
+   {
+       CBulletObject* ppEnemyBullets = m_ppObjects[i]->GetBullets();
+       for (int j = 0; j < BULLETS_1; j++) // BULLETS로 루프 수정
+       {
+		   for (int k = 0; k < 6; k++) {
+			   if (ppEnemyBullets && ppEnemyBullets->m_bActive && ppEnemyBullets->m_xmOOBB.Intersects(m_pObstacle[k]->m_xmOOBB)) // nullptr 체크 추가
+			   {
+
+				   ppEnemyBullets->Reset(); // 벽에 충돌한 총알은 비활성화
+
+			   }
+		   }
+       }
+   }
+}
 
 void CGameScene::Animate(float fElapsedTime)
 {
@@ -547,6 +722,9 @@ void CGameScene::Animate(float fElapsedTime)
 	for (int i = 0; i < m_nObjects; i++) {
 		m_ppObjects[i]->Animate(fElapsedTime); //큐브들을 애니메이트 함. 각각의 오브젝트들은 위치가 바뀔 것임.
 		m_ppObjects[i]->FireBullet();
+	}
+	for (int i = 0; i < 6; ++i) {
+		m_pObstacle[i]->Animate(fElapsedTime);
 	}
 	RotateTanksToFacePlayer();
 
@@ -562,6 +740,12 @@ void CGameScene::Animate(float fElapsedTime)
 	CheckObjectByObjectCollisions(); //오브젝트랑 오브젝트
 
 	CheckObjectByBulletCollisions(); //오브젝트랑 총알
+
+	CheckBulletByWallCollisions();
+
+	CheckPlayerByBulletCollisions();
+
+	CheckTankIsBlowed();
 }
 
 void CGameScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
@@ -573,6 +757,9 @@ void CGameScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 	m_pFloorObject->Render(hDCFrameBuffer, pCamera);
 	for (int i = 0; i < m_nObjects; i++) m_ppObjects[i]->Render(hDCFrameBuffer, pCamera);
 
+	for(int i =0 ; i<6; ++i)
+	m_pObstacle[i]->Render(hDCFrameBuffer, pCamera);
+
 	if (m_pPlayer) m_pPlayer->Render(hDCFrameBuffer, pCamera);
 
 //UI
@@ -582,5 +769,6 @@ void CGameScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 	m_pWorldAxis->Render(hDCFrameBuffer, pCamera);
 #endif
 }
+
 
 

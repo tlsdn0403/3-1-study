@@ -5,7 +5,7 @@
 #include "Player.h"
 class CGameState {
 public:
-	static enum GameState { TITLE, MENU, GAME , GAME_1};
+	static enum GameState { TITLE, MENU, GAME , GAME_1, WIN,LOSS};
 	GameState GetCurrentState() const { return CurrentState; }
 	static GameState CurrentState;
 	static void ChangeGameState(GameState state);
@@ -18,7 +18,24 @@ public:
 	{
 	}
 };
+class WinScene {
+public:
+	virtual void Render(HDC hDCFrameBuffer);
+	void OnMouseClick(int x, int y);
+	bool isExploding = false;
+	float angle = 0.0f;
+private:
 
+};
+class LossScene {
+public:
+	virtual void Render(HDC hDCFrameBuffer);
+	void OnMouseClick(int x, int y);
+	bool isExploding = false;
+	float angle = 0.0f;
+private:
+
+};
 class StartScene {
 public:
 	virtual void Render(HDC hDCFrameBuffer);
@@ -40,18 +57,18 @@ public:
 	void OnMouseClick(int x, int y);
 };
 
-
+#define MAX_OBJECTS       6
 class CGameScene
 {
 public:
 	CGameScene(CPlayer *pPlayer);
 	virtual ~CGameScene();
 
-
+	int colNum = 0;
 private:
 	int							m_nObjects = 0;
 	CGameObject					**m_ppObjects = NULL;
-
+	CGameObject**                m_pObstacle = NULL;
 	CFloorObject*				m_pFloorObject = NULL;
 
 	CPlayer*					m_pPlayer = NULL;
@@ -77,7 +94,9 @@ public:
 	void CheckPlayerByWallCollision();
 	void CheckObjectByBulletCollisions();
 	void FireBullet();
-
+	void CheckTankIsBlowed();
+	void CheckPlayerByBulletCollisions();
+	void CheckBulletByWallCollisions();
 	virtual void Animate(float fElapsedTime);
 	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 
