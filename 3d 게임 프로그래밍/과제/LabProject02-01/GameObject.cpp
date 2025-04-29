@@ -237,7 +237,7 @@ int CGameObject::PickObjectByRayIntersection(XMVECTOR& xmvPickPosition, XMMATRIX
 	}
 	return(nIntersected);
 }
-void  CGameObject::FireBullet(CGameObject* pLockedObject)
+void  CGameObject::FireBullet()
 {
 	CBulletObject* pBulletObject = NULL;
 	for (int i = 0; i < BULLETS_1; i++)
@@ -267,11 +267,7 @@ void  CGameObject::FireBullet(CGameObject* pLockedObject)
 		CMissileMesh* pBulletMesh = new CMissileMesh(2.0f, 2.0f, 4.0f);
 		pBulletObject->SetMesh(pBulletMesh);
 
-		if (pLockedObject)
-		{
-			pBulletObject->m_pLockedObject = pLockedObject;
-			pBulletObject->SetColor(RGB(0, 0, 255));
-		}
+
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////

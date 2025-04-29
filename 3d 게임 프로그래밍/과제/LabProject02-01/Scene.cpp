@@ -546,7 +546,7 @@ void CGameScene::Animate(float fElapsedTime)
 
 	for (int i = 0; i < m_nObjects; i++) {
 		m_ppObjects[i]->Animate(fElapsedTime); //큐브들을 애니메이트 함. 각각의 오브젝트들은 위치가 바뀔 것임.
-		m_ppObjects[i]
+		m_ppObjects[i]->FireBullet();
 	}
 	RotateTanksToFacePlayer();
 

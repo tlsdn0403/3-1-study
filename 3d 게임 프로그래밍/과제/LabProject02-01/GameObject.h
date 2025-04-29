@@ -5,6 +5,8 @@
 #include "GameObject.h"
 #include<array>
 #define BULLETS_1					3
+
+class CBulletObject; // 전방 선언
 class CGameObject
 {
 public:
@@ -55,7 +57,7 @@ public:
 	void SetRotationSpeed(float fSpeed) { m_fRotationSpeed = fSpeed; }
 
 
-;	void FireBullet(CGameObject* pLockedObject);
+;	void FireBullet();
 
 
 	void MoveStrafe(float fDistance = 1.0f);
