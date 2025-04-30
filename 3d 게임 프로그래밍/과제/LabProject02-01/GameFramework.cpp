@@ -179,6 +179,8 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 			}
 			case WIN:
 				pWinScene->OnMouseClick(LOWORD(lParam), HIWORD(lParam)); // x, y 좌표 전달
+			case LOSS:
+				pLossScene->OnMouseClick(LOWORD(lParam), HIWORD(lParam)); // x, y 좌표 전달
 			}
 
 
