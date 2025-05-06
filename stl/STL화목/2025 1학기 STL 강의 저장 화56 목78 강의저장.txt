@@ -53337,3 +53337,857 @@ int main()
     관찰 = false;
     save("메인.cpp");
 }
+
+==============================================
+저장한 시간 :2025-05-01 오후 3:34:03 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<deque>
+#include<list>
+#include<algorithm>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    vector<int> v;
+    cout << "최대 개수 -" << v.max_size() << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-01 오후 3:41:15 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<deque>
+#include<list>
+#include<algorithm>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+class Test {
+    char x[1'000'000];
+};
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    {
+        vector<Test> v;
+        try{
+            while (true) {
+                v.emplace_back();
+            }
+        }
+        catch (...) {
+            cout << "최대 원소 수 -" << v.size() << endl;
+        }
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-01 오후 3:42:37 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<deque>
+#include<list>
+#include<algorithm>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+class Test {
+    char x[1'000'000];
+};
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    //{
+    //    //벡터 : -27310
+    //    vector<Test> v;
+    //    try{
+    //        while (true) {
+    //            v.emplace_back();
+    //        }
+    //    }
+    //    catch (...) {
+    //        cout << "최대 원소 수 -" << v.size() << endl;
+    //    }
+    //}
+    {
+        //벡터 : -27310
+        deque<Test> d;
+        try {
+            while (true) {
+                d.emplace_back();
+            }
+        }
+        catch (...) {
+            cout << "최대 원소 수 -" << d.size() << endl;
+        }
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-01 오후 3:44:50 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<deque>
+#include<list>
+#include<algorithm>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+class Test {
+    char x[1'000'000];
+};
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    {
+        //벡터 : -27310
+        vector<Test> v;
+        try{
+            while (true) {
+                v.emplace_back();
+            }
+        }
+        catch (...) {
+            cout << "최대 원소 수 -" << v.size() << endl;
+        }
+    }
+    {
+        //덱 : -최대 원소 수 -49074
+        deque<Test> d;
+        try {
+            while (true) {
+                d.emplace_back();
+            }
+        }
+        catch (...) {
+            cout << "최대 원소 수 -" << d.size() << endl;
+        }
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-01 오후 3:46:37 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<deque>
+#include<list>
+#include<algorithm>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+class Test {
+    char x[1'000'000];
+};
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    vector<Test> v;
+    {
+        //벡터 : -27310
+        
+        try{
+            while (true) {
+                v.emplace_back();
+            }
+        }
+        catch (...) {
+            cout << "최대 원소 수 -" << v.size() << endl;
+        }
+    }
+    {
+        //덱 : -최대 원소 수 -49074
+        deque<Test> d;
+        try {
+            while (true) {
+                d.emplace_back();
+            }
+        }
+        catch (...) {
+            cout << "최대 원소 수 -" << d.size() << endl;
+        }
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-01 오후 3:48:00 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<deque>
+#include<list>
+#include<algorithm>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+class Test {
+    char x[1'000'000];
+};
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    list<int> cont{ 1,2,3,4,5,6,7,8,9,10 };
+
+    //[문제 ] cont의 모든 원소를 출력하라.
+    for (const int& num : cont) {
+        cout << num << " " ;
+    }
+    cout << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-01 오후 3:51:35 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<deque>
+#include<list>
+#include<algorithm>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+class Test {
+    char x[1'000'000];
+};
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    list<int> cont{ 1,2,3,4,5,6,7,8,9,10 };
+
+    //[문제 ] cont의 두번째 원소부터 끝까지를 출력하라.
+    auto it = cont.begin();
+    for (int num : cont | std::views::drop(1)) {
+        cout << num << " " ;
+    }
+    cout << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-01 오후 4:02:44 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<deque>
+#include<list>
+#include<algorithm>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+class Test {
+    char x[1'000'000];
+};
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    list<int> cont{ 1,2,3,4,5,6,7,8,9,10 };
+
+    //[문제 ] cont의 두번째 원소부터 끝까지를 출력하라.
+    //list<int>::iterator
+    auto beg = cont.begin(); //이렇게 써도 누구도 너한테 뭐라고하지 않는다.
+    ++beg;
+    for (auto i = beg; i != cont.end(); ++i)// <로 비교하면 안된다 . 주소값은 뒤에게 더 작을 수 있다. c에서는 아무런 문제 없지만 c++ 에서는 ++i 해야된다.
+    {
+        cout << *i << " ";
+    }
+    cout << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-01 오후 4:07:39 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<deque>
+#include<list>
+#include<algorithm>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+class Test {
+    char x[1'000'000];
+};
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    list<int> cont{ 1,2,3,4,5,6,7,8,9,10 };
+
+    //[문제 ] cont의 원소를 거꾸로 출력하라
+    for (auto i = cont.end(); i != cont.begin(); --i) {
+        cout << *i << " ";
+    }
+    cout << endl;
+    cout << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-01 오후 4:08:00 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<deque>
+#include<list>
+#include<algorithm>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+class Test {
+    char x[1'000'000];
+};
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    list<int> cont{ 1,2,3,4,5,6,7,8,9,10 };
+
+    //[문제 ] cont의 원소를 거꾸로 출력하라
+    for (auto i = --cont.end(); i != cont.begin(); --i) {
+        cout << *i << " ";
+    }
+    cout << endl;
+    cout << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-01 오후 4:08:34 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<deque>
+#include<list>
+#include<algorithm>
+#include<ranges>
+#include<unordered_set>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+class Test {
+    char x[1'000'000];
+};
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    unordered_set<int> cont{ 1,2,3,4,5,6,7,8,9,10 };
+
+    //[문제 ] cont의 원소를 거꾸로 출력하라
+    for (auto i = --cont.end(); i != cont.begin(); --i) {
+        cout << *i << " ";
+    }
+    cout << endl;
+    cout << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-01 오후 4:09:03 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<deque>
+#include<list>
+#include<algorithm>
+#include<ranges>
+#include<unordered_set>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+class Test {
+    char x[1'000'000];
+};
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    unordered_set<int> cont{ 1,2,3,4,5,6,7,8,9,10 };
+
+    //[문제 ] cont의 원소를 거꾸로 출력하라
+    for (auto i = --cont.end(); i != -- cont.begin(); --i) {
+        cout << *i << " ";
+    }
+
+    cout << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-01 오후 4:38:26 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+class Test {
+    char x[1'000'000];
+};
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    //[문제] "메인.cpp"의 단어를 list에 저장하라.
+    //찾을 단어를 물어봐서 없으면 없다 , 있으면 list의 몇 번째 단어인지 출력해 주자.
+
+    list<STRING> 단어들;
+    ifstream in("메인.cpp");
+    if (not in) {
+        return 123123;
+    }
+
+    STRING s;
+    while (in >> s) {
+        단어들.push_back(s); 
+    }
+    for (const STRING& 단어 : 단어들)
+        cout << 단어 << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-01 오후 4:39:29 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+class Test {
+    char x[1'000'000];
+};
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    //[문제] "메인.cpp"의 단어를 list에 저장하라.
+    //찾을 단어를 물어봐서 없으면 없다 , 있으면 list의 몇 번째 단어인지 출력해 주자.
+
+    list<STRING> 단어들;
+    ifstream in("메인.cpp");
+    if (not in) {
+        return 123123;
+    }
+
+    STRING s;
+    while (in >> s) {
+        단어들.push_back(s); 
+    }
+    for (const STRING& 단어 : 단어들)
+        cout << 단어 << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-01 오후 4:40:25 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+class Test {
+    char x[1'000'000];
+};
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    //[문제] "메인.cpp"의 단어를 list에 저장하라.
+    //찾을 단어를 물어봐서 없으면 없다 , 있으면 list의 몇 번째 단어인지 출력해 주자.
+
+    list<STRING> 단어들;
+    ifstream in("메인.cpp");
+    if (not in) {
+        return 123123;
+    }
+
+    STRING s;
+    while (in >> s) {
+        단어들.push_back(s); 
+    }
+    for (const STRING& 단어 : 단어들)
+        cout << 단어 << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-01 오후 4:40:56 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+class Test {
+    char x[1'000'000];
+};
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    //[문제] "메인.cpp"의 단어를 list에 저장하라.
+    //찾을 단어를 물어봐서 없으면 없다 , 있으면 list의 몇 번째 단어인지 출력해 주자.
+
+    list<STRING> 단어들;
+    ifstream in("메인.cpp");
+    if (not in) {
+        return 123123;
+    }
+
+    STRING s;
+    in >> s;
+    cout << s;
+  /*  while (in >> s) {
+        단어들.push_back(s); 
+    }
+    for (const STRING& 단어 : 단어들)
+        cout << 단어 << endl;*/
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-01 오후 4:47:21 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  3월 29일 화요일      (9주 1일차 강의) 
+// 5월 6일(화) -> 6월 19(예정)
+//-------------------------------------------------------------------------------------------
+// STL Container -Containers are objects that store other objects -> 다른 객체를 담을 수 있는 객체 
+// 1.Sequence Containers
+//      arrat<T,N>
+//      vector<T> - pish_back() 동작이 O(1)시간
+//      deque<T> - push_front()/push_back() O(1)
+//      list<T> -  node 기반 임의의 위치에 삽입이 O(1)
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+class Test {
+    char x[1'000'000];
+};
+
+extern bool 관찰; // 관찰하려면 true로
+
+//----------
+int main()
+//------------------------------------------------------------
+{
+    //[문제] "메인.cpp"의 단어를 list에 저장하라.
+    //찾을 단어를 물어봐서 없으면 없다 , 있으면 list의 몇 번째 단어인지 출력해 주자.
+
+    list<STRING> 단어들;
+    ifstream in("메인.cpp");
+    if (not in) {
+        return 123123;
+    }
+
+    STRING s;
+    in >> s;
+    cout << s;
+   /* while (in >> s) {
+        단어들.push_back(s); 
+    }
+    for (const STRING& 단어 : 단어들)
+        cout << 단어 << endl;*/
+    save("메인.cpp");
+}

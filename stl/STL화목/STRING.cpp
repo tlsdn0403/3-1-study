@@ -4,11 +4,13 @@
 //
 //                                                        2025.4.8 시작
 // 2025. 4. 10    이동생성과 이동할당연산자 코딩
+// 2025. 5.  1    >> 연산자  코딩
 //-------------------------------------------------------------------------
 #include<memory>
 #include<iostream>
 #include<print>
 #include<algorithm>
+#include<string>
 #include"STRING.h"
 
 //관찰을 제어하기 위한 변수 추가
@@ -118,7 +120,9 @@ STRING& STRING::operator=(STRING&& other)
 
 bool STRING::operator==(const STRING& rhs) const
 {
-    return std::equal(&p[0], &p[len], &rhs.p[0]);
+
+
+    return std::equal(&p[0], &p[len], &rhs.p[0], &rhs.p[rhs.len]);
 }
 
 
@@ -128,11 +132,25 @@ size_t STRING::size()const
      return len;
 }
 
-std::ostream& operator<<(std::ostream& os, const STRING& str) {
+std::ostream& operator<<(std::ostream& os, const STRING& str)
+{
      for (int i = 0; i < str.len; ++i) {
          os << str.p[i];
      }
      return os;
+}
+
+std::istream& operator>>(std::istream& is, STRING& str)
+{
+    std::string s; //얘는 자원이 아니다 , 자원은 영속성이 있어야 한다. 
+    is >> s;
+    str.len = s.length();
+    str.p.release();
+    str.p = std::make_unique<char[]>(str.len);
+
+
+    memcpy(str.p.get(), s.data(), str.len);
+    return is;
 }
 
 size_t STRING::gid{};                               //2025.04.08

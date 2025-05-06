@@ -3,6 +3,7 @@
 //            STL의 container로 동작할 수 있게 코딩해 나간다
 //
 //                                                        2025.4.8 시작
+//  >> 연산자                                             2025.05.01 
 //-------------------------------------------------------------------------
 #pragma once
 #include<memory>
@@ -24,7 +25,7 @@ public:
  
 
 
-    //이동생성과 이동할당연산자                               //2025. 4. 10
+    //이동생성과 이동할당연산자                         //2025. 4. 10
     STRING(STRING&&);                                   //&& ->rvalue reference   여기 넘겨진 인자는 이동달할 것이다.
     STRING& operator=(STRING&&);
 
@@ -47,6 +48,9 @@ private:
     size_t id;                                //2025.04.08
 
     friend std::ostream& operator<<(std::ostream& os, const STRING& str);
+    // 2025. 5. 1 추가
+    friend std::istream& operator>>(std::istream& is, STRING& str);
+
 
     static size_t gid;     //글로벌 한 id                           //2025.04.08
 
