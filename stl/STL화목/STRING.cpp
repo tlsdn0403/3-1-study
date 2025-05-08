@@ -5,6 +5,7 @@
 //                                                        2025.4.8 시작
 // 2025. 4. 10    이동생성과 이동할당연산자 코딩
 // 2025. 5.  1    >> 연산자  코딩
+// 2025. 5.  8    >  연산자  코딩
 //-------------------------------------------------------------------------
 #include<memory>
 #include<iostream>
@@ -117,14 +118,16 @@ STRING& STRING::operator=(STRING&& other)
 }
 
 
-
 bool STRING::operator==(const STRING& rhs) const
 {
-
-
     return std::equal(&p[0], &p[len], &rhs.p[0], &rhs.p[rhs.len]);
 }
 
+bool STRING::operator<(const STRING& rhs) const //2025. 5. 8  
+{
+    return std::lexicographical_compare(p.get(), p.get() + len,
+        rhs.p.get(), rhs.p.get() + rhs.len);
+}
 
 
 size_t STRING::size()const
