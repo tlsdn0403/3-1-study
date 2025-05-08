@@ -166,8 +166,6 @@ void CTankPlayer::OnUpdateTransform()
 	//z축 방향을 가르키도록 바꾸어줌
 	m_xmf4x4World = Matrix4x4::Multiply(XMMatrixRotationRollPitchYaw(0.0f, XMConvertToRadians(0.0f), 0.0f), m_xmf4x4World); 
         // 기존 코드에서 미사일 발사 위치와 방향을 수정하여 정확한 방향으로 발사되도록 변경합니다.
-      
-	//90도를 라디안값으로 바꿔줘야 함
 }
 
 void CTankPlayer::Render(HDC hDCFrameBuffer, CCamera* pCamera)
