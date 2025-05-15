@@ -25,11 +25,12 @@ public:
     STRING_Iterator(char* p): p{p}{}
 
     //반복자라면 최소한 다음 기능을 제공해야 함
-    char operator*()const {
+    char& operator*()const {
         return *p;
     }
-    char* operator++() {
-        return ++p;
+    STRING_Iterator& operator++() {
+        ++p;
+        return *this;
     }
     
     //관계 연산자들
@@ -41,6 +42,16 @@ public:
     }
     bool operator>(const STRING_Iterator& rhs) const {
         return p > rhs.p; 
+    }
+
+    STRING_Iterator& operator--() {
+        --p;
+        return *this;
+    }
+    STRING_Iterator operator--(int) {
+        STRING_Iterator temp = *this;
+        --p;
+        return temp;
     }
     STRING_Iterator operator++(int) {
         STRING_Iterator temp = *this;
