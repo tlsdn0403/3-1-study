@@ -55144,3 +55144,1247 @@ int main()
     f(v);
     save("메인.cpp");
 }
+
+==============================================
+저장한 시간 :2025-05-13 오후 1:37:26 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<string>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    std::string s{ "2025 5 13" };
+
+    cout << s << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-13 오후 1:39:12 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<string>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    std::string s{ "2025 5 13" }; // 캐릭터를 컨티구어스하게 관리하고 있는 자료구조구나 라고 이해해도 전혀 문제가 없다
+
+    cout << s << endl;
+
+    for (char c : s)
+        cout << c << " ";
+    cout << endl;
+    //강조하는 바는 s라고 하는 객체가 단독 객체로 생각해도 되지만 , s는 개별적인 원소들을 여러개를 관리할 수 있는 자료구조야, 각각의 원소에 접근을 하는 코딩을 하는 것이 전혀 문제가 없을거야
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-13 오후 1:52:30 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<string>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    STRING s{ "2025 5 13" }; 
+
+    cout << s << endl;
+
+    //// syntactic sugar 컴파일러는 이문장을 언능 번역한다
+    //for (char c : s)  //범위기반의 for 루프를 쓰려면 범위를 알려줘야 한다. s로 부터 범위가 뭔지 전혀 모르겠다 라는 뜻
+    //    cout << c << " ";
+
+    //이런식으로 바뀐다.
+    for (auto i = s.begin(); i != s.end(); ++i)
+        cout << *i << " ";
+
+    cout << endl;
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-13 오후 1:52:47 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<string>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    STRING s{ "2025 5 13" }; 
+
+    cout << s << endl;
+
+    //// syntactic sugar 컴파일러는 이문장을 언능 번역한다
+    for (char c : s)  //범위기반의 for 루프를 쓰려면 범위를 알려줘야 한다. s로 부터 범위가 뭔지 전혀 모르겠다 라는 뜻
+        cout << c << " ";
+
+
+    cout << endl;
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-13 오후 2:10:37 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    // 반복자는 포인터를 일반화한 것이다. 어떻게 모니터를 가르킬 수 있겠냐?
+
+    //ostream_iterator<char> p; //출력 스트림을 이터레이션 할 수 있는 객체야. 글자 단위로 포인터를 움직이면서 돌아다닐꺼야, 출력스트림이 무엇인지 빠졌다.
+
+    //어떤 스트림을 가르킬 것인지 지정을 해줘야 한다.
+    ostream_iterator<char> p{ cout }; //cout 대신에 아웃 파일을 가르키면 파일에다가 막 쓴다.
+
+    *p = 'A';
+    ++p;
+    *p = 'B';
+    ++p;
+    *p = 'C';
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-13 오후 2:10:56 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    // 반복자는 포인터를 일반화한 것이다. 어떻게 모니터를 가르킬 수 있겠냐?
+
+    //ostream_iterator<char> p; //출력 스트림을 이터레이션 할 수 있는 객체야. 글자 단위로 포인터를 움직이면서 돌아다닐꺼야, 출력스트림이 무엇인지 빠졌다.
+
+    //어떤 스트림을 가르킬 것인지 지정을 해줘야 한다.
+    ostream_iterator<char> p{ cout }; //cout 대신에 아웃 파일을 가르키면 파일에다가 막 쓴다.
+
+    *p = 'A';
+    ++p;
+    *p = 'B';
+    ++p;
+    *p = 'C';
+    ++p;
+    *p = '\n';
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-13 오후 2:15:30 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    // 반복자는 포인터를 일반화한 것이다. 어떻게 모니터를 가르킬 수 있겠냐?
+
+    //ostream_iterator<char> p; //출력 스트림을 이터레이션 할 수 있는 객체야. 글자 단위로 포인터를 움직이면서 돌아다닐꺼야, 출력스트림이 무엇인지 빠졌다.
+
+    //어떤 스트림을 가르킬 것인지 지정을 해줘야 한다.
+
+    ostream_iterator<char> p{ cout }; //cout 대신에 아웃 파일을 가르키면 파일에다가 막 쓴다.
+
+    p.operator*() = 'A';  //이걸 코딩해놨기 때문에 가능하다?
+   /* ++p;*/ //커서는 알아서 전진동작을 하기 떄문에 없어도 잘 찍힌다
+    *p = 'B';
+    *p = 'C';
+    *p = '\n';
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-13 오후 2:32:24 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    std::string s{ "2025 5 13" };
+
+    //s의 글자를 거꾸로 출력하시오
+
+    for (auto i = s.rbegin(); i != s.rend(); ++i) {
+        cout << *i << " ";
+    }
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-13 오후 2:32:45 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    std::string s{ "2025 5 13" };
+
+    //s의 글자를 거꾸로 출력하시오
+
+    for (auto i = s.rbegin(); i != s.rend(); ++i) {
+        cout << *i;
+    }
+    cout << endl;
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-13 오후 3:02:25 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    STRING s{ "2025 5 13" };
+
+    // s를 거꾸로 출력하시오
+
+    for (auto i = s.rbegin(); i != s.rend(); ++i) {
+        cout << *i;
+    }
+    cout << endl;
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-13 오후 3:09:33 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include<array>
+#include<vector>
+#include<deque>
+#include<list>
+#include<forward_list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+void f(array<int, 2>::iterator i)
+{
+    // 어떤 종류
+    cout<<" array의 반복자 -" << typeid(i).name() << endl;
+}
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    //[문제] 반복자는 종류(6 category)가 있다.
+    //함수 f는 반복자를 인자로 받아 어떤 종류의 반복자인지 화면에 출력하는 함수이다.
+    //다음 코드가 문제없이 실행되게 하자.
+
+
+    array<int, 2> a;
+
+    f(a.begin());
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-13 오후 3:12:33 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include<array>
+#include<vector>
+#include<deque>
+#include<list>
+#include<forward_list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class iterator>
+void f(iterator i)
+{
+    // 어떤 종류
+    cout<<" 반복자 -" << typeid(i).name() << endl;
+}
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    //[문제] 반복자는 종류(6 category)가 있다.
+    //함수 f는 반복자를 인자로 받아 어떤 종류의 반복자인지 화면에 출력하는 함수이다.
+    //다음 코드가 문제없이 실행되게 하자.
+
+
+    array<int, 2> a;
+
+    f(a.begin());
+
+    vector<char> v;
+    f(v.begin());
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-13 오후 3:13:41 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include<array>
+#include<vector>
+#include<deque>
+#include<list>
+#include<forward_list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class iterator>
+void f(iterator i)
+{
+    // 어떤 종류
+    cout<<" 반복자 -" << typeid(iterator).name() << endl;
+}
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    //[문제] 반복자는 종류(6 category)가 있다.
+    //함수 f는 반복자를 인자로 받아 어떤 종류의 반복자인지 화면에 출력하는 함수이다.
+    //다음 코드가 문제없이 실행되게 하자.
+
+
+    array<int, 2> a;
+
+    f(a.begin());
+
+    vector<char> v;
+    f(v.begin());
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-13 오후 3:14:51 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include<array>
+#include<vector>
+#include<deque>
+#include<list>
+#include<forward_list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class iterator>
+void f(iterator i)
+{
+    // 어떤 종류
+    cout<<" 반복자 -" << typeid(iterator).name() << endl;
+}
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    //[문제] 반복자는 종류(6 category)가 있다.
+    //함수 f는 반복자를 인자로 받아 어떤 종류의 반복자인지 화면에 출력하는 함수이다.
+    //다음 코드가 문제없이 실행되게 하자.
+
+
+    array<int, 2> a;
+
+    f(a.begin());
+
+    vector<char> v;
+    f(v.begin());
+    int b = 3;
+    f(b);
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-13 오후 3:16:59 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include<array>
+#include<vector>
+#include<deque>
+#include<list>
+#include<forward_list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class iterator>
+void f(iterator i)
+{
+    // 어떤 종류
+    cout<<" 반복자 -" << typeid(iterator::iterator_category).name() << endl;
+}
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    //[문제] 반복자는 종류(6 category)가 있다.
+    //함수 f는 반복자를 인자로 받아 어떤 종류의 반복자인지 화면에 출력하는 함수이다.
+    //다음 코드가 문제없이 실행되게 하자.
+
+
+    array<int, 2> a;
+
+    f(a.begin());
+
+    vector<char> v;
+    f(v.begin());
+ /*   int b = 3;
+    f(b);*/
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-13 오후 3:18:43 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include<array>
+#include<vector>
+#include<deque>
+#include<list>
+#include<forward_list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class iterator>
+void f(iterator i)
+{
+    // 어떤 종류
+    cout<<" 반복자 -" << typeid(iterator::iterator_category).name() << endl;
+}
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    //[문제] 반복자는 종류(6 category)가 있다.
+    //함수 f는 반복자를 인자로 받아 어떤 종류의 반복자인지 화면에 출력하는 함수이다.
+    //다음 코드가 문제없이 실행되게 하자.
+
+
+    array<int, 2> a;
+
+    f(a.begin());
+
+    vector<char> v;
+    f(v.begin());
+
+    f(deque<STRING>::iterator{});
+    f(list<int>{}.rbegin());
+    f(forward_list<int>::const_iterator{});
+
+
+ /*   int b = 3;
+    f(b);*/
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-13 오후 3:19:32 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include<array>
+#include<vector>
+#include<deque>
+#include<list>
+#include<forward_list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class iterator>
+void f(iterator i)
+{
+    // 어떤 종류
+    cout<<" 반복자 -" << typeid(iterator::iterator_category).name() << endl;
+}
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    //[문제] 반복자는 종류(6 category)가 있다.
+    //함수 f는 반복자를 인자로 받아 어떤 종류의 반복자인지 화면에 출력하는 함수이다.
+    //다음 코드가 문제없이 실행되게 하자.
+
+
+    array<int, 2> a;
+
+    f(a.begin());
+
+    vector<char> v;
+    f(v.begin());
+
+    f(deque<STRING>::iterator{});
+    f(list<int>{}.rbegin());
+    f(forward_list<int>::const_iterator{});
+
+    f(ostream_iterator<char>{cout});
+
+ /*   int b = 3;
+    f(b);*/
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-15 오후 3:38:34 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include<array>
+#include<vector>
+#include<deque>
+#include<list>
+#include<forward_list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class iterator>
+void f(iterator i)
+{
+    // 어떤 종류
+    cout<<" 반복자 -" << typeid(iterator::iterator_category).name() << endl;
+}
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    //[문제] 반복자는 종류(6 category)가 있다.
+    //함수 f는 반복자를 인자로 받아 어떤 종류의 반복자인지 화면에 출력하는 함수이다.
+    //다음 코드가 문제없이 실행되게 하자.
+
+
+    array<int, 2> a;
+
+    f(a.begin()); //타입과 넘어온 객체의 복사본
+
+    vector<char> v;
+    f(v.begin());
+
+    f(deque<STRING>::iterator{});
+    f(list<int>{}.rbegin());
+    f(forward_list<int>::const_iterator{});
+
+    f(ostream_iterator<char>{cout});
+
+ /*   int b = 3;
+    f(b);*/
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-15 오후 3:42:29 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include<array>
+#include<vector>
+#include<deque>
+#include<list>
+#include<forward_list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class iterator>
+void f(iterator i)
+{
+    // 어떤 종류
+    cout<<" 반복자 -" << typeid(iterator::iterator_category).name() << endl;
+}
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    //[문제] 반복자는 종류(6 category)가 있다.
+    //함수 f는 반복자를 인자로 받아 어떤 종류의 반복자인지 화면에 출력하는 함수이다.
+    //다음 코드가 문제없이 실행되게 하자.
+    
+    f(istream_iterator<char>{cin}); //입력 반복자
+    f(ostream_iterator<char>{cout}); //출력 반복자
+    
+    f(forward_list<int>{}.begin()); //begin()이란 함수를 호출하면 반복자를 리턴한다.
+    f(list<STRING>::iterator{}); //iterator라고 하는 타입의 객체를 넘기면 반복자
+
+    f(deque<int>::reverse_iterator{}); 
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-15 오후 4:04:49 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include<array>
+#include<vector>
+#include<deque>
+#include<list>
+#include<forward_list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class iterator>
+void f(iterator i)
+{
+    using category = typename std::iterator_traits<iterator>::iterator_category;
+    cout << " 반복자 - " << typeid(category).name() << endl;
+    /*cout<<" 반복자 -" << typeid(iterator::iterator_category).name() << endl;*/
+}
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    int* p;
+
+    f(p);
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-15 오후 4:14:26 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include<array>
+#include<vector>
+#include<deque>
+#include<list>
+#include<forward_list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class 반복자>
+void f(반복자 i)
+{
+    
+    cout<<typeid(iterator_traits< 반복자>::iterator_category).name() << endl;
+}
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    int* p;
+
+    f(p);
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-15 오후 4:16:24 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include<array>
+#include<vector>
+#include<deque>
+#include<list>
+#include<forward_list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class 반복자>
+void f(반복자 i)
+{
+    
+    cout<<typeid(iterator_traits< 반복자>::iterator_category).name() << endl;
+}
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    // vector는 진짜 메모리가 contiguous 
+    // deque는 contiguous 아니다.
+    // 그런데
+
+    f(vector<int>{}.begin());
+    f(deque<int>{}.begin());
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-15 오후 4:26:09 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include<array>
+#include<vector>
+#include<deque>
+#include<list>
+#include<forward_list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class 반복자>
+void f(반복자 i)
+{
+    cout<<typeid(iterator_traits< 반복자>::iterator_category).name() << endl;
+
+    // 벡터는 c++20의 concept을 이용하여 contiguous임을 판정한다.
+    cout << "벡터의 반복자 -" << typeid(반복자::iterator_concept).name() << endl;
+}
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    // vector는 진짜 메모리가 contiguous 
+
+
+    f(vector<int>{}.begin());
+
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-15 오후 4:26:39 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<iterator>
+#include<string>
+#include<array>
+#include<vector>
+#include<deque>
+#include<list>
+#include<forward_list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class 반복자>
+void f(반복자 i)
+{
+    cout<<typeid(iterator_traits< 반복자>::iterator_category).name() << endl;
+
+    // 벡터는 c++20의 concept을 이용하여 contiguous임을 판정한다.
+    cout << "벡터의 반복자 -" << typeid(반복자::iterator_concept).name() << endl;
+}
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    // vector는 진짜 메모리가 contiguous 
+
+
+    f(array<int,2>{}.begin());
+
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-15 오후 4:33:30 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<concepts>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+
+    cout<<boolalpha<<contiguous_iterator<vector<int>::iterator><<endl;  //컨셉은 bool값으로 응답하게 되어있다.
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-15 오후 4:34:24 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<concepts>
+#include<deque>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+
+    cout<<boolalpha<<contiguous_iterator<deque<int>::iterator><<endl;  //컨셉은 bool값으로 응답하게 되어있다.
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-15 오후 4:34:44 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 13일 화요일      (11주 1일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  iterator - Iterators are a generalization of pointers that 
+// allow a C++ program to work with different data structures in a uniform manner
+// 
+// 반복자는 클래스로 코딩해야 합니다.
+// 
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<concepts>
+#include<deque>
+#include<array>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+
+    cout<<boolalpha<<contiguous_iterator<array<int,1>::iterator><<endl;  //컨셉은 bool값으로 응답하게 되어있다.
+
+    save("메인.cpp");
+}

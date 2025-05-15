@@ -6,6 +6,7 @@
 // 2025. 4. 10    이동생성과 이동할당연산자 코딩
 // 2025. 5.  1    >> 연산자  코딩
 // 2025. 5.  8    >  연산자  코딩
+// 2025. 5. 13    begin , end 코딩
 //-------------------------------------------------------------------------
 #include<memory>
 #include<iostream>
@@ -135,6 +136,29 @@ size_t STRING::size()const
      return len;
 }
 
+//반복자는 컨테이너가 제공을 하는 것임 , 자료구조야 너 원소 첫 위치가 어딨어??? 
+
+STRING_Iterator STRING::begin() const
+{
+    return STRING_Iterator{ p.get() };     //return &p[0]
+}
+STRING_Iterator STRING::end() const
+{
+    return STRING_Iterator{ p.get() + len };  //return &p[len] 
+}
+
+
+STRING_Reverse_Iterator STRING::rbegin() const
+{
+    return STRING_Reverse_Iterator{ p.get() + len };  //이건 그냥 명확하게 쓰기 위해서 한 것이다.
+}
+STRING_Reverse_Iterator STRING::rend() const
+{
+    return  p.get();     
+}
+
+
+
 std::ostream& operator<<(std::ostream& os, const STRING& str)
 {
      for (int i = 0; i < str.len; ++i) {
@@ -142,7 +166,6 @@ std::ostream& operator<<(std::ostream& os, const STRING& str)
      }
      return os;
 }
-
 std::istream& operator>>(std::istream& is, STRING& str)
 {
     std::string s; //얘는 자원이 아니다 , 자원은 영속성이 있어야 한다. 
