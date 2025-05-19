@@ -6,12 +6,49 @@
 #include "GameFramework.h"
 
 enum GameState { TITLE, MENU, GAME, GAME_1, WIN,LOSS};
+
+CGameFramework::CGameFramework()
+{
+	m_pdxgiFactory = NULL;
+	m_pdxgiSwapChain = NULL;
+	m_pd3dDevice = NULL;
+	m_pd3dCommandAllocator = NULL;
+	m_pd3dCommandQueue = NULL;
+	m_pd3dPipelineState = NULL;
+	m_pd3dCommandList = NULL;
+	for (int i = 0; i < m_nSwapChainBuffers; i++) m_ppd3dRenderTargetBuffers[i] = NULL;
+	m_pd3dRtvDescriptorHeap = NULL;
+	m_nRtvDescriptorIncrementSize = 0;
+	m_pd3dDepthStencilBuffer = NULL;
+	m_pd3dDsvDescriptorHeap = NULL;
+	m_nDsvDescriptorIncrementSize = 0;
+	m_nSwapChainBufferIndex = 0;
+	m_hFenceEvent = NULL;
+	m_pd3dFence = NULL;
+	m_nFenceValue = 0;
+	m_nWndClientWidth = FRAMEBUFFER_WIDTH;
+	m_nWndClientHeight = FRAMEBUFFER_HEIGHT;
+
+}
+
+CGameFramework::~CGameFramework()
+{
+}
+
 void CGameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd)
 {
 	::srand(timeGetTime());
 
 	m_hInstance = hInstance;
 	m_hWnd = hMainWnd;
+
+	//Direct3D 디바이스, 명령 큐와 명령 리스트, 스왑 체인 등을 생성하는 함수를 호출한다. 
+	CreateDirect3DDevice();
+	CreateCommandQueueAndList();
+	CreateSwapChain();
+	CreateRtvAndDsvDescriptorHeaps();
+	CreateRenderTargetViews();
+	CreateDepthStencilView();
 
 	BuildFrameBuffer(); 
 
@@ -26,6 +63,30 @@ void CGameFramework::OnDestroy()
 
 	if (m_hBitmapFrameBuffer) ::DeleteObject(m_hBitmapFrameBuffer);
 	if (m_hDCFrameBuffer) ::DeleteDC(m_hDCFrameBuffer);
+}
+
+void CGameFramework::CreateSwapChain()
+{
+}
+
+void CGameFramework::CreateRtvAndDsvDescriptorHeaps()
+{
+}
+
+void CGameFramework::CreateDirect3DDevice()
+{
+}
+
+void CGameFramework::CreateCommandQueueAndList()
+{
+}
+
+void CGameFramework::CreateRenderTargetViews()
+{
+}
+
+void CGameFramework::CreateDepthStencilView()
+{
 }
 
 void CGameFramework::BuildFrameBuffer()

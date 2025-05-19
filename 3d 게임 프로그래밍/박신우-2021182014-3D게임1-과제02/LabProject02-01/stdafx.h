@@ -28,8 +28,24 @@
 #include<string>
 #include<iostream>
 
+
+#include <wrl.h>
+#include <shellapi.h>
+#include <d3d12.h>
+#include <dxgi1_4.h>
+#include <D3Dcompiler.h>
+
+#include <DXGIDebug.h>
+using Microsoft::WRL::ComPtr;
+
+
 using namespace DirectX;
 using namespace DirectX::PackedVector;
+
+#pragma comment(lib, "d3dcompiler.lib")
+#pragma comment(lib, "d3d12.lib")
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "dxguid.lib")
 
 #define FRAMEBUFFER_WIDTH		640
 #define FRAMEBUFFER_HEIGHT		480
