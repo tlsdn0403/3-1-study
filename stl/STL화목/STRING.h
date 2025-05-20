@@ -8,6 +8,7 @@
 //  begin() , end()                                       2025. 5.13
 //  역방향 반복자는 반드시 클래스로 제공                  2025. 5.13
 //  반복자도 당연히 클래스로 코딩해야 함                  2025. 5.15
+//  랜덤반복자가 되려면 이런 연산들을 지원                2025. 5.20
 //-------------------------------------------------------------------------
 #pragma once
 #include<memory>
@@ -22,10 +23,12 @@ public:
     using reference = char&;
     using iterator_category = std::random_access_iterator_tag;
 public:
+    STRING_Iterator() = default;
     STRING_Iterator(char* p): p{p}{}
 
     //반복자라면 최소한 다음 기능을 제공해야 함
-    char& operator*()const {
+
+    char& operator*()const { //살아있도록 location 으로 만들어줌 char&
         return *p;
     }
     STRING_Iterator& operator++() {
@@ -33,6 +36,8 @@ public:
         return *this;
     }
     
+    
+
     //관계 연산자들
     bool operator==(const STRING_Iterator& rhs)const {
         return p == rhs.p;
@@ -44,29 +49,30 @@ public:
         return p > rhs.p; 
     }
 
-    STRING_Iterator& operator--() {
-        --p;
-        return *this;
-    }
-    STRING_Iterator operator--(int) {
-        STRING_Iterator temp = *this;
-        --p;
-        return temp;
-    }
-    STRING_Iterator operator++(int) {
-        STRING_Iterator temp = *this;
-        ++p;
-        return temp;
-    }
-    STRING_Iterator operator+(difference_type n) const { return STRING_Iterator(p + n); }
-    STRING_Iterator operator-(difference_type n) const { return STRING_Iterator(p - n); }
+    
+    
+    
+    
 
+    //랜덤반복자가 되고 싶다. - 2025. 5. 20
     difference_type operator-(const STRING_Iterator& rhs) const {
         return p - rhs.p;
     }
+    STRING_Iterator operator--() {
+        return --p;
+    }
+    STRING_Iterator operator+(difference_type n) const {
+        return p + n; 
+    }
+    STRING_Iterator operator-(difference_type n) const {
+        return p - n; 
+    }
+    auto operator<=>(const STRING_Iterator& rhs)const {
+        return p <=> rhs.p;
+    }
 
 private:
-    char* p;
+    char* p{}; //이렇게 하면 디폴트 생성시에 디폴트 값이 생성된다.
 };
 
 
