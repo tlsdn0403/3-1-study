@@ -18,7 +18,7 @@ public:
 
 	void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 
-	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
+	virtual void Render(HDC hDCFrameBuffer, CCamera_1* pCamera);
 	virtual void BuildObjects();
 
 	virtual void ReleaseObjects();
@@ -27,7 +27,7 @@ public:
 private:
 	DWORD dwDirection = 0;
 	int							m_nObjects_1 = 3;
-	CGameObject** m_ppObjects_1 = NULL;
+	CGameObject_1** m_ppObjects_1 = NULL;
 	CPlayer* m_pPlayer = NULL;
 	bool isMovingCart = false;
 	int dirNum = 0;

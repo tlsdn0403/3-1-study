@@ -12,6 +12,27 @@ public:
 	XMFLOAT3					m_xmf3Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
 };
 
+class CDiffusedVertex : public CVertex
+{
+protected:
+	//정점의 색상이다.
+	XMFLOAT4 m_xmf4Diffuse;
+public:
+	CDiffusedVertex() {
+		m_xmf3Position = XMFLOAT3(0.0f, 0.0f, 0.0f); m_xmf4Diffuse =
+			XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	}
+	CDiffusedVertex(float x, float y, float z, XMFLOAT4 xmf4Diffuse) {
+		m_xmf3Position =
+			XMFLOAT3(x, y, z); m_xmf4Diffuse = xmf4Diffuse;
+	}
+	CDiffusedVertex(XMFLOAT3 xmf3Position, XMFLOAT4 xmf4Diffuse) {
+		m_xmf3Position =
+			xmf3Position; m_xmf4Diffuse = xmf4Diffuse;
+	}
+	~CDiffusedVertex() {}
+};
+
 class CPolygon
 {
 public:
@@ -30,6 +51,7 @@ class CMesh
 public:
 	CMesh() { }
 	CMesh(int nPolygons);
+	CMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList);
 	virtual ~CMesh();
 
 private:
@@ -44,10 +66,21 @@ public:
 	//참조값이 0이되면 메쉬를 소멸시킨다.
 	void Release() { m_nReferences--; if (m_nReferences <= 0) delete this; }
 
+	void ReleaseUploadBuffers();
+
 protected:
 	//메쉬를 구성하는 다각형(면)들의 리스트이다. 
 	int							m_nPolygons = 0;
 	CPolygon					**m_ppPolygons = NULL;
+
+	ID3D12Resource* m_pd3dVertexBuffer = NULL;
+	ID3D12Resource* m_pd3dVertexUploadBuffer = NULL;
+	D3D12_VERTEX_BUFFER_VIEW m_d3dVertexBufferView;
+	D3D12_PRIMITIVE_TOPOLOGY m_d3dPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	UINT m_nSlot = 0;
+	UINT m_nVertices = 0;
+	UINT m_nStride = 0;
+	UINT m_nOffset = 0;
 
 public:
 	//모든 바운딩 박스는 기본적으로 Mesh가 가지고 있다. 메쉬가 가지고 있는 바운딩 박스는 모델 좌표계이다.
@@ -59,9 +92,20 @@ public:
 	//메쉬를 렌더링한다. 
 	virtual void Render(HDC hDCFrameBuffer);
 
+	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList);
+
 	BOOL RayIntersectionByTriangle(XMVECTOR& xmRayOrigin, XMVECTOR& xmRayDirection, XMVECTOR v0, XMVECTOR v1, XMVECTOR v2, float* pfNearHitDistance);
 	int CheckRayIntersection(XMVECTOR& xmvPickRayOrigin, XMVECTOR& xmvPickRayDirection, float* pfNearHitDistance);
 };
+
+class CTriangleMesh : public CMesh
+{
+public:
+	CTriangleMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList);
+	virtual ~CTriangleMesh() {}
+};
+
+
 
 class CCubeMesh : public CMesh
 {

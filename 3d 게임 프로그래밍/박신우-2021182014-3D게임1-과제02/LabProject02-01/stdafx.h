@@ -47,8 +47,8 @@ using namespace DirectX::PackedVector;
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
 
-#define FRAMEBUFFER_WIDTH		640
-#define FRAMEBUFFER_HEIGHT		480
+#define FRAME_BUFFER_WIDTH		640
+#define FRAME_BUFFER_HEIGHT		480
 
 #define DIR_FORWARD				0x01
 #define DIR_BACKWARD			0x02
@@ -67,6 +67,13 @@ using namespace DirectX::PackedVector;
 
 inline bool IsZero(float fValue) { return((fabsf(fValue) < EPSILON)); }
 inline bool IsEqual(float fA, float fB) { return(::IsZero(fA - fB)); }
+
+
+extern ID3D12Resource* CreateBufferResource(ID3D12Device* pd3dDevice,
+	ID3D12GraphicsCommandList* pd3dCommandList, void* pData, UINT nBytes, D3D12_HEAP_TYPE
+	d3dHeapType = D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATES d3dResourceStates =
+	D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, ID3D12Resource** ppd3dUploadBuffer =
+	NULL);
 
 namespace Vector3
 {
@@ -180,6 +187,18 @@ namespace Vector3
 	{
 		return(TransformCoord(xmf3Vector, XMLoadFloat4x4(&xmmtx4x4Matrix)));
 	}
+
+
+	// 각도(도 단위) 반환 오버로드
+	inline float AngleDegree(XMVECTOR& xmvVector1, XMVECTOR& xmvVector2)
+	{
+		XMVECTOR xmvAngle = XMVector3AngleBetweenNormals(xmvVector1, xmvVector2);
+		return(XMConvertToDegrees(acosf(XMVectorGetX(xmvAngle))));
+	}
+	inline float AngleDegree(XMFLOAT3& xmf3Vector1, XMFLOAT3& xmf3Vector2)
+	{
+		return(AngleDegree(XMLoadFloat3(&xmf3Vector1), XMLoadFloat3(&xmf3Vector2)));
+	}
 }
 
 namespace Vector4
@@ -187,11 +206,55 @@ namespace Vector4
 	inline XMFLOAT4 Add(XMFLOAT4& xmf4Vector1, XMFLOAT4& xmf4Vector2)
 	{
 		XMFLOAT4 xmf4Result;
-		XMStoreFloat4(&xmf4Result, XMLoadFloat4(&xmf4Vector1) + XMLoadFloat4(&xmf4Vector2));
+		XMStoreFloat4(&xmf4Result, XMLoadFloat4(&xmf4Vector1) +
+			XMLoadFloat4(&xmf4Vector2));
 		return(xmf4Result);
 	}
-}
+	inline XMFLOAT4 Multiply(XMFLOAT4& xmf4Vector1, XMFLOAT4& xmf4Vector2)
+	{
+		XMFLOAT4 xmf4Result;
+		XMStoreFloat4(&xmf4Result, XMLoadFloat4(&xmf4Vector1) *
+			XMLoadFloat4(&xmf4Vector2));
+		return(xmf4Result);
+	}
+	inline XMFLOAT4 Multiply(float fScalar, XMFLOAT4& xmf4Vector)
+	{
+		XMFLOAT4 xmf4Result;
+		XMStoreFloat4(&xmf4Result, fScalar * XMLoadFloat4(&xmf4Vector));
+		return(xmf4Result);
+	}
+	// 이동 변환 행렬
+	inline XMFLOAT4X4 Translate(float x, float y, float z)
+	{
+		XMFLOAT4X4 xmmtx4x4Result;
+		XMStoreFloat4x4(&xmmtx4x4Result, XMMatrixTranslation(x, y, z));
+		return(xmmtx4x4Result);
+	}
 
+	// 회전 변환 행렬 (Yaw, Pitch, Roll)
+	inline XMFLOAT4X4 RotationYawPitchRoll(float fPitch, float fYaw, float fRoll)
+	{
+		XMFLOAT4X4 xmmtx4x4Result;
+		XMStoreFloat4x4(&xmmtx4x4Result, XMMatrixRotationRollPitchYaw(XMConvertToRadians(fPitch), XMConvertToRadians(fYaw), XMConvertToRadians(fRoll)));
+		return(xmmtx4x4Result);
+	}
+
+	// 임의 축 회전 변환 행렬
+	inline XMFLOAT4X4 RotationAxis(XMFLOAT3& xmf3Axis, float fAngle)
+	{
+		XMFLOAT4X4 xmmtx4x4Result;
+		XMStoreFloat4x4(&xmmtx4x4Result, XMMatrixRotationAxis(XMLoadFloat3(&xmf3Axis), XMConvertToRadians(fAngle)));
+		return(xmmtx4x4Result);
+	}
+
+	// LookToLH (시선 방향으로 보는 뷰 행렬)
+	inline XMFLOAT4X4 LookToLH(XMFLOAT3& xmf3EyePosition, XMFLOAT3& xmf3LookTo, XMFLOAT3& xmf3UpDirection)
+	{
+		XMFLOAT4X4 xmmtx4x4Result;
+		XMStoreFloat4x4(&xmmtx4x4Result, XMMatrixLookToLH(XMLoadFloat3(&xmf3EyePosition), XMLoadFloat3(&xmf3LookTo), XMLoadFloat3(&xmf3UpDirection)));
+		return(xmmtx4x4Result);
+	}
+}
 namespace Matrix4x4
 {
 	inline XMFLOAT4X4 Identity()
@@ -285,7 +348,6 @@ namespace Matrix4x4
 		return(xmmtx4x4Result);
 	}
 }
-
 namespace Triangle
 {
 	inline bool Intersect(XMFLOAT3& xmf3RayPosition, XMFLOAT3& xmf3RayDirection, XMFLOAT3& v0, XMFLOAT3& v1, XMFLOAT3& v2, float& fHitDistance)

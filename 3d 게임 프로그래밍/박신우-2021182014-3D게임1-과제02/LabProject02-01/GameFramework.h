@@ -48,13 +48,11 @@ private:
 
 
 	ID3D12Fence* m_pd3dFence;//펜스 인터페이스 포인터
-	UINT64 m_nFenceValue; //펜스의 값
+	UINT64 m_nFenceValues[m_nSwapChainBuffers];//펜스의 값
 	HANDLE m_hFenceEvent; //이벤트 핸들이다
 
 
-	D3D12_VIEWPORT m_d3dViewport;//뷰포트 
-	D3D12_RECT m_d3dScissorRect; //씨저 사각형
-	
+	CCamera* m_pCamera = NULL;
 
 
 	bool						m_bActive = true;
@@ -72,11 +70,13 @@ private:
 	MenuScene* pMenuScene = NULL;
 	WinScene* pWinScene = nullptr;
 	LossScene* pLossScene =nullptr;
-	CGameScene*						m_pScene = NULL;
+
+	CScene* m_pScene = NULL;
+	CGameScene_2*						m_pScene_2 = NULL;
 	CGameScene_1*					m_pScene_1 = nullptr;
 
 
-	CGameObject*				m_pLockedObject = NULL;
+	CGameObject_1*				m_pLockedObject = NULL;
 
 	CGameTimer					m_GameTimer;
 
@@ -122,6 +122,9 @@ public:
 
 
 	void ChoiceGameMode();
+
+
+	void MoveToNextFrame();
 
 };
 

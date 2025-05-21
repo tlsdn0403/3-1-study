@@ -25,9 +25,15 @@ CGameFramework::CGameFramework()
 	m_nSwapChainBufferIndex = 0;
 	m_hFenceEvent = NULL;
 	m_pd3dFence = NULL;
-	m_nFenceValue = 0;
-	m_nWndClientWidth = FRAMEBUFFER_WIDTH;
-	m_nWndClientHeight = FRAMEBUFFER_HEIGHT;
+
+	for (int i = 0; i < m_nSwapChainBuffers; ++i) {
+		m_nFenceValues[i] = 0;
+	}
+	m_pScene_2 = NULL;
+
+
+	m_nWndClientWidth = FRAME_BUFFER_WIDTH;
+	m_nWndClientHeight = FRAME_BUFFER_HEIGHT;
 
 }
 
@@ -202,20 +208,14 @@ void CGameFramework::CreateDirect3DDevice()
 	//다중 샘플의 품질 수준이 1보다 크면 다중 샘플링을 활성화한다. 
 	hResult = m_pd3dDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence),
 		(void**)&m_pd3dFence);
-	m_nFenceValue = 0;
+	
+	for (int i = 0; i < m_nSwapChainBuffers; ++i) {
+		m_nFenceValues[i] = 0;
+	}
 	//펜스를 생성하고 펜스 값을 0으로 설정한다.
 	m_hFenceEvent = ::CreateEvent(NULL, FALSE, FALSE, NULL);
 	/*펜스와 동기화를 위한 이벤트 객체를 생성한다(이벤트 객체의 초기값을 FALSE이다). 이벤트가 실행되면(Signal) 이
    벤트의 값을 자동적으로 FALSE가 되도록 생성한다.*/
-	m_d3dViewport.TopLeftX = 0;
-	m_d3dViewport.TopLeftY = 0;
-	m_d3dViewport.Width = static_cast<float>(m_nWndClientWidth);
-	m_d3dViewport.Height = static_cast<float>(m_nWndClientHeight);
-	m_d3dViewport.MinDepth = 0.0f;
-	m_d3dViewport.MaxDepth = 1.0f;
-	//뷰포트를 주 윈도우의 클라이언트 영역 전체로 설정한다.
-	m_d3dScissorRect = { 0, 0, m_nWndClientWidth, m_nWndClientHeight };
-	//씨저 사각형을 주 윈도우의 클라이언트 영역 전체로 설정한다.
 	if (pd3dAdapter) pd3dAdapter->Release();
 }
 
@@ -326,13 +326,36 @@ void CGameFramework::PresentFrameBuffer()
 
 void CGameFramework::BuildObjects()
 {
-	
-	CCamera* pCamera = new CCamera();
-	pCamera->SetViewport(0, 0, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
+	m_pd3dCommandList->Reset(m_pd3dCommandAllocator, NULL);
+	//카메라 객체를 생성하여 뷰포트, 씨저 사각형, 투영 변환 행렬, 카메라 변환 행렬을 생성하고 설정한다.
+	m_pCamera = new CCamera();
+	m_pCamera->SetViewport(0, 0, m_nWndClientWidth, m_nWndClientHeight, 0.0f, 1.0f);
+	m_pCamera->SetScissorRect(0, 0, m_nWndClientWidth, m_nWndClientHeight);
+	m_pCamera->GenerateProjectionMatrix(1.0f, 500.0f, float(m_nWndClientWidth) /
+		float(m_nWndClientHeight), 90.0f);
+	m_pCamera->GenerateViewMatrix(XMFLOAT3(0.0f, 0.0f, -2.0f), XMFLOAT3(0.0f, 0.0f, 0.0f),
+		XMFLOAT3(0.0f, 1.0f, 0.0f));
+	//씬 객체를 생성하고 씬에 포함될 게임 객체들을 생성한다.
+	m_pScene = new CScene();
+	m_pScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList);
+	//씬 객체를 생성하기 위하여 필요한 그래픽 명령 리스트들을 명령 큐에 추가한다.
+	m_pd3dCommandList->Close();
+	ID3D12CommandList* ppd3dCommandLists[] = { m_pd3dCommandList };
+	m_pd3dCommandQueue->ExecuteCommandLists(1, ppd3dCommandLists);
+	//그래픽 명령 리스트들이 모두 실행될 때까지 기다린다.
+	WaitForGpuComplete();
+	//그래픽 리소스들을 생성하는 과정에 생성된 업로드 버퍼들을 소멸시킨다.
+	if (m_pScene) m_pScene->ReleaseUploadBuffers();
+	m_GameTimer.Reset();
+
+
+
+	CCamera_1* pCamera = new CCamera_1();
+	pCamera->SetViewport(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
 	pCamera->GeneratePerspectiveProjectionMatrix(1.01f, 500.0f, 60.0f);
 	pCamera->SetFOVAngle(60.0f);
 
-	pCamera->GenerateOrthographicProjectionMatrix(1.01f, 50.0f, FRAMEBUFFER_WIDTH, FRAMEBUFFER_HEIGHT);
+	pCamera->GenerateOrthographicProjectionMatrix(1.01f, 50.0f, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
 
 	
 
@@ -353,9 +376,10 @@ void CGameFramework::BuildObjects()
 		m_pPlayer->SetColor(RGB(0, 0, 255));
 		m_pPlayer->SetCamera(pCamera);
 		m_pPlayer->SetCameraOffset(XMFLOAT3(0.0f, 5.0f, -15.0f));  //카메라 오프셋 설정
-		m_pScene = new CGameScene(m_pPlayer);
-		m_pScene->BuildObjects();
-		m_pScene->RotateTanksToFacePlayer();
+
+
+		m_pScene_2->BuildObjects();
+		m_pScene_2->RotateTanksToFacePlayer();
 		break;
 	}
 	case GAME_1:
@@ -379,10 +403,10 @@ void CGameFramework::BuildObjects()
 
 void CGameFramework::ReleaseObjects()
 {
-	if (m_pScene)
+	if (m_pScene_2)
 	{
-		m_pScene->ReleaseObjects();
-		delete m_pScene;
+		m_pScene_2->ReleaseObjects();
+		delete m_pScene_2;
 	}
 	if (m_pScene_1)
 	{
@@ -395,7 +419,7 @@ void CGameFramework::ReleaseObjects()
 void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
 	
-	if (m_pScene) m_pScene->OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
+	if (m_pScene_2) m_pScene_2->OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
 
 	switch (nMessageID)
 	{
@@ -412,7 +436,7 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 			case MENU:
 				break;
 			case GAME:
-				m_pLockedObject = m_pScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera); //씬에 있는 어떤 오브젝트를 클릭을 했는지 찾아내겠다.
+				m_pLockedObject = m_pScene_2->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera); //씬에 있는 어떤 오브젝트를 클릭을 했는지 찾아내겠다.
 				if (m_pLockedObject)m_pLockedObject->SetColor(RGB(0, 0, 0));
 				break;
 			}
@@ -462,7 +486,7 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 
 void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)  
 {  
-if (m_pScene) m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam); //null이 아닌 경우  
+if (m_pScene_2) m_pScene_2->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam); //null이 아닌 경우  
 switch (nMessageID)  
 {  
 case WM_KEYDOWN:  
@@ -481,8 +505,8 @@ case WM_KEYDOWN:
 		((CTankPlayer*)m_pPlayer)->ActivateShield(1.0);
 		break;  
 	default:  
-		if(m_pScene)  
-		m_pScene->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);  
+		if(m_pScene_2)  
+		m_pScene_2->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);  
 		else if (m_pScene_1)  
 			m_pScene_1->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);  
 		break;  
@@ -544,27 +568,6 @@ void CGameFramework::ProcessInput()//사용자 입력을 받아드림
 
 	switch (pGameState->GetCurrentState())
 	{
-	/*case GAME:
-           
-	{
-		if (GetCapture() == m_hWnd)
-		{
-			SetCursor(NULL);
-			POINT ptCursorPos;
-			GetCursorPos(&ptCursorPos);
-			float cxMouseDelta = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.0f;
-			float cyMouseDelta = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.0f;
-			SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
-			if (cxMouseDelta || cyMouseDelta)
-			{
-				if (pKeyBuffer[VK_RBUTTON] & 0xF0)
-					m_pPlayer->Rotate(cyMouseDelta, 0.0f, -cxMouseDelta);
-				else
-					m_pPlayer->Rotate(cyMouseDelta, cxMouseDelta, 0.0f);
-			}
-		}
-		break;
-	}*/
 	case GAME:
 	{
 		if (GetCapture() == m_hWnd)
@@ -599,8 +602,8 @@ void CGameFramework::AnimateObjects()
 	case GAME:
 	{
 		if (m_pPlayer) m_pPlayer->Animate(fTimeElapsed); //플레이어를 애니메이트 한다
-		if (m_pScene) {
-			m_pScene->Animate(fTimeElapsed);  //씬을 애니메이트 한다.
+		if (m_pScene_2) {
+			m_pScene_2->Animate(fTimeElapsed);  //씬을 애니메이트 한다.
 
 		}
 		break;
@@ -620,8 +623,12 @@ void CGameFramework::FrameAdvance() //매 프레임 마다 이 함수의 과정을 반복한다.
 
 	AnimateObjects(); //씬에 있는 오브젝트를 애니메이트 함
 
+
 	HRESULT hResult = m_pd3dCommandAllocator->Reset();
 	hResult = m_pd3dCommandList->Reset(m_pd3dCommandAllocator, NULL);
+
+
+
 	//명령 할당자와 명령 리스트를 리셋한다.
 	D3D12_RESOURCE_BARRIER d3dResourceBarrier;
 	::ZeroMemory(&d3dResourceBarrier, sizeof(D3D12_RESOURCE_BARRIER));
@@ -633,79 +640,64 @@ void CGameFramework::FrameAdvance() //매 프레임 마다 이 함수의 과정을 반복한다.
 	d3dResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	d3dResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	m_pd3dCommandList->ResourceBarrier(1, &d3dResourceBarrier);
-	/*현재 렌더 타겟에 대한 프리젠트가 끝나기를 기다린다. 프리젠트가 끝나면 렌더 타겟 버퍼의 상태는 프리젠트 상태
-   (D3D12_RESOURCE_STATE_PRESENT)에서 렌더 타겟 상태(D3D12_RESOURCE_STATE_RENDER_TARGET)로 바
-   뀔 것이다.*/
-	m_pd3dCommandList->RSSetViewports(1, &m_d3dViewport);
-	m_pd3dCommandList->RSSetScissorRects(1, &m_d3dScissorRect);
+
 	//뷰포트와 씨저 사각형을 설정한다.
-	D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle =
-		m_pd3dRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	d3dRtvCPUDescriptorHandle.ptr += (m_nSwapChainBufferIndex *
-		m_nRtvDescriptorIncrementSize);
-	//현재의 렌더 타겟에 해당하는 서술자의 CPU 주소(핸들)를 계산한다.
+	D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = m_pd3dRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	d3dRtvCPUDescriptorHandle.ptr += (m_nSwapChainBufferIndex * m_nRtvDescriptorIncrementSize); 	//현재의 렌더 타겟에 해당하는 서술자의 CPU 주소(핸들)를 계산한다.
+
 	float pfClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f };
-	m_pd3dCommandList->ClearRenderTargetView(d3dRtvCPUDescriptorHandle,
-		pfClearColor/*Colors::Azure*/, 0, NULL);
-	//원하는 색상으로 렌더 타겟(뷰)을 지운다.
-	D3D12_CPU_DESCRIPTOR_HANDLE d3dDsvCPUDescriptorHandle =
-		m_pd3dDsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	m_pd3dCommandList->ClearRenderTargetView(d3dRtvCPUDescriptorHandle, pfClearColor, 0, NULL);
+
+	D3D12_CPU_DESCRIPTOR_HANDLE d3dDsvCPUDescriptorHandle = m_pd3dDsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	//깊이-스텐실 서술자의 CPU 주소를 계산한다.
-	m_pd3dCommandList->ClearDepthStencilView(d3dDsvCPUDescriptorHandle,
-		D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
-	//원하는 값으로 깊이-스텐실(뷰)을 지운다.
-	m_pd3dCommandList->OMSetRenderTargets(1, &d3dRtvCPUDescriptorHandle, TRUE,
-		&d3dDsvCPUDescriptorHandle);
+	m_pd3dCommandList->ClearDepthStencilView(d3dDsvCPUDescriptorHandle, D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);	//원하는 값으로 깊이-스텐실(뷰)을 지운다.
+	m_pd3dCommandList->OMSetRenderTargets(1, &d3dRtvCPUDescriptorHandle, TRUE, &d3dDsvCPUDescriptorHandle);
+
+	if (m_pScene) m_pScene->Render(m_pd3dCommandList , m_pCamera);
+
 	//렌더 타겟 뷰(서술자)와 깊이-스텐실 뷰(서술자)를 출력-병합 단계(OM)에 연결한다.
 	//렌더링 코드는 여기에 추가될 것이다.
 	d3dResourceBarrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	d3dResourceBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 	d3dResourceBarrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	m_pd3dCommandList->ResourceBarrier(1, &d3dResourceBarrier);
-	/*현재 렌더 타겟에 대한 렌더링이 끝나기를 기다린다. GPU가 렌더 타겟(버퍼)을 더 이상 사용하지 않으면 렌더 타겟
-   의 상태는 프리젠트 상태(D3D12_RESOURCE_STATE_PRESENT)로 바뀔 것이다.*/
-	hResult = m_pd3dCommandList->Close();
-	//명령 리스트를 닫힌 상태로 만든다.
+
+	hResult = m_pd3dCommandList->Close();//명령 리스트를 닫힌 상태로 만든다.
+
 	ID3D12CommandList* ppd3dCommandLists[] = { m_pd3dCommandList };
-	m_pd3dCommandQueue->ExecuteCommandLists(1, ppd3dCommandLists);
-	//명령 리스트를 명령 큐에 추가하여 실행한다.
-	WaitForGpuComplete();
-	//GPU가 모든 명령 리스트를 실행할 때 까지 기다린다.
-	DXGI_PRESENT_PARAMETERS dxgiPresentParameters;
-	dxgiPresentParameters.DirtyRectsCount = 0;
-	dxgiPresentParameters.pDirtyRects = NULL;
-	dxgiPresentParameters.pScrollRect = NULL;
-	dxgiPresentParameters.pScrollOffset = NULL;
-	m_pdxgiSwapChain->Present1(1, 0, &dxgiPresentParameters);
-	/*스왑체인을 프리젠트한다. 프리젠트를 하면 현재 렌더 타겟(후면버퍼)의 내용이 전면버퍼로 옮겨지고 렌더 타겟 인
-   덱스가 바뀔 것이다.*/
+	m_pd3dCommandQueue->ExecuteCommandLists(_countof(ppd3dCommandLists), ppd3dCommandLists);//명령 리스트를 명령 큐에 추가하여 실행한다.
+
+	WaitForGpuComplete();	//GPU가 모든 명령 리스트를 실행할 때 까지 기다린다.
+
+	// DXGI_PRESENT_PARAMETERS 구조체는 Present1에서만 사용됨. Present(0, 0)만 호출하면 됨.
+	m_pdxgiSwapChain->Present(1, 0);// 스왑체인을 프리젠트한다. 
+
 	m_nSwapChainBufferIndex = m_pdxgiSwapChain->GetCurrentBackBufferIndex();
 
-    ClearFrameBuffer(RGB(255, 255, 255));
 
-	ChoiceGameMode(); //게임 모드 설정
+	ClearFrameBuffer(RGB(255, 255, 255));
 
-	//CCamera* pCamera = m_pPlayer->GetCamera();
-	//if (m_pScene) m_pScene->Render(m_hDCFrameBuffer, pCamera); //애니메이트 한 결과에 따라서 씬을 랜더한다.
+	//ChoiceGameMode(); //게임 모드 설정
 
 
-	PresentFrameBuffer(); //랜더한 결과를 화면에 그려준다.
+	//PresentFrameBuffer(); //랜더한 결과를 화면에 그려준다.
 
 	m_GameTimer.GetFrameRate(m_pszFrameRate + 12, 37);
 	::SetWindowText(m_hWnd, m_pszFrameRate);
+
+	MoveToNextFrame();
+
 }
 
 void CGameFramework::WaitForGpuComplete()
 {
-	m_nFenceValue++;
-	//CPU 펜스의 값을 증가한다.
-	const UINT64 nFence = m_nFenceValue;
-	HRESULT hResult = m_pd3dCommandQueue->Signal(m_pd3dFence, nFence);
+	UINT64 nFenceValue = ++m_nFenceValues[m_nSwapChainBufferIndex]; //CPU 펜스의 값을 증가한다.
+	HRESULT hResult = m_pd3dCommandQueue->Signal(m_pd3dFence, nFenceValue);
 	//GPU가 펜스의 값을 설정하는 명령을 명령 큐에 추가한다.
-	if (m_pd3dFence->GetCompletedValue() < nFence)
+	if (m_pd3dFence->GetCompletedValue() < nFenceValue)
 	{
 		//펜스의 현재 값이 설정한 값보다 작으면 펜스의 현재 값이 설정한 값이 될 때까지 기다린다.
-		hResult = m_pd3dFence->SetEventOnCompletion(nFence, m_hFenceEvent);
+		hResult = m_pd3dFence->SetEventOnCompletion(nFenceValue, m_hFenceEvent);
 		::WaitForSingleObject(m_hFenceEvent, INFINITE);
 	}
 }
@@ -716,10 +708,11 @@ void CGameFramework::WaitForGpuComplete()
 
 void CGameFramework::ChoiceGameMode() // 모드에 따라 화면 출력
 {
-	if (pGameState->GetCurrentState() != GAME && m_pScene) {
-		m_pScene->ReleaseObjects();
-		delete m_pScene;
-		m_pScene = nullptr;
+
+	if (pGameState->GetCurrentState() != GAME && m_pScene_2) {
+		m_pScene_2->ReleaseObjects();
+		delete m_pScene_2;
+		m_pScene_2 = nullptr;
 	}
 	if (pGameState->GetCurrentState() != GAME_1 && m_pScene_1) {
 		m_pScene_1->ReleaseObjects();
@@ -740,13 +733,13 @@ void CGameFramework::ChoiceGameMode() // 모드에 따라 화면 출력
 		break;
 	case GAME:
 	{
-		if (!m_pScene) {
+		if (!m_pScene_2) {
 			BuildObjects();
-			m_pScene = new CGameScene(m_pPlayer);
-			m_pScene->BuildObjects(); // 게임 모드로 전환 시 객체 초기화
+			m_pScene_2 = new CGameScene_2(m_pPlayer);
+			m_pScene_2->BuildObjects(); // 게임 모드로 전환 시 객체 초기화
 		}
-		CCamera* pCamera = m_pPlayer->GetCamera(); // 중괄호로 스코프를 감쌈
-		if (pCamera) m_pScene->Render(m_hDCFrameBuffer, pCamera); // 게임 화면 렌더링
+		CCamera_1* pCamera = m_pPlayer->GetCamera(); // 중괄호로 스코프를 감쌈
+		if (pCamera) m_pScene_2->Render(m_hDCFrameBuffer, pCamera); // 게임 화면 렌더링
 		break;
 	}
 	case GAME_1:
@@ -757,7 +750,7 @@ void CGameFramework::ChoiceGameMode() // 모드에 따라 화면 출력
 			m_pScene_1->BuildObjects(); // 게임 모드로 전환 시 객체 초기화
 		}
 		
-		CCamera* pCamera = m_pPlayer->GetCamera(); // 중괄호로 스코프를 감쌈
+		CCamera_1* pCamera = m_pPlayer->GetCamera(); // 중괄호로 스코프를 감쌈
 		if (pCamera) m_pScene_1->Render(m_hDCFrameBuffer, pCamera); // 게임 화면 렌더링
 		break;
 	}
@@ -782,4 +775,16 @@ void CGameFramework::ChoiceGameMode() // 모드에 따라 화면 출력
 	}
 
 	
+}
+
+void CGameFramework::MoveToNextFrame()
+{
+	m_nSwapChainBufferIndex = m_pdxgiSwapChain->GetCurrentBackBufferIndex();
+	UINT64 nFenceValue = ++m_nFenceValues[m_nSwapChainBufferIndex];
+	HRESULT hResult = m_pd3dCommandQueue->Signal(m_pd3dFence, nFenceValue);
+	if (m_pd3dFence->GetCompletedValue() < nFenceValue)
+	{
+		hResult = m_pd3dFence->SetEventOnCompletion(nFenceValue, m_hFenceEvent);
+		::WaitForSingleObject(m_hFenceEvent, INFINITE);
+	}
 }
