@@ -119,16 +119,18 @@ STRING& STRING::operator=(STRING&& other)
 }
 
 
-bool STRING::operator==(const STRING& rhs) const
-{
-    return std::equal(&p[0], &p[len], &rhs.p[0], &rhs.p[rhs.len]);
-}
-
+//bool STRING::operator==(const STRING& rhs) const
+//{
+//    return std::equal(&p[0], &p[len], &rhs.p[0], &rhs.p[rhs.len]);
+//}
+//
 bool STRING::operator<(const STRING& rhs) const //2025. 5. 8  
 {
     return std::lexicographical_compare(p.get(), p.get() + len,
-        rhs.p.get(), rhs.p.get() + rhs.len);
+        rhs.p.get(), rhs.p.get() + rhs.len); //lexicographical_compare을 이용해서 사전식 정렬을 했음.
 }
+
+
 
 
 size_t STRING::size()const
