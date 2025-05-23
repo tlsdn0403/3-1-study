@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "Camera.h"
 
-class CPlayer : public CGameObject_1
+class CPlayer : public CGameObject
 {
 public:
 	CPlayer();
@@ -27,7 +27,7 @@ public:
 	float           			m_fYaw = 0.0f;    //y축
 	float           			m_fRoll = 0.0f;  //z 축
 
-	CCamera_1*					m_pCamera = NULL;
+	CCamera*					m_pCamera = NULL;
 
 	bool   m_bShieldActive = false;
 
@@ -49,10 +49,10 @@ public:
 
 	virtual void OnUpdateTransform();//비행기가 y축 방향이 아니라 z축 방향을 향하도록 만들어줌
 	virtual void Animate(float fElapsedTime);
-	virtual void Render(HDC hDCFrameBuffer, CCamera_1* pCamera);
+	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 
-	void SetCamera(CCamera_1* pCamera) { m_pCamera = pCamera; }
-	CCamera_1* GetCamera() { return(m_pCamera); }
+	void SetCamera(CCamera* pCamera) { m_pCamera = pCamera; }
+	CCamera* GetCamera() { return(m_pCamera); }
 };
 
 #define BULLETS					50
@@ -74,17 +74,17 @@ public:
 
 	CBulletObject*				m_ppBullets[BULLETS];
 
-	void FireBullet(CGameObject_1* pLockedObject);
+	void FireBullet(CGameObject* pLockedObject);
 
 	void ActivateShield(float fDuration);
 	void UpdateShield(float fElapsedTime);
-	void RenderShield(HDC hDCFrameBuffer, CCamera_1* pCamera);
+	void RenderShield(HDC hDCFrameBuffer, CCamera* pCamera);
 
 
 
 	virtual void OnUpdateTransform();//비행기가 y축 방향이 아니라 z축 방향을 향하도록 만들어줌
 	virtual void Animate(float fElapsedTime);
-	virtual void Render(HDC hDCFrameBuffer, CCamera_1* pCamera);
+	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 };
 
 class CCartPlayer : public CPlayer
@@ -97,7 +97,7 @@ public:
 
 	virtual void OnUpdateTransform();//비행기가 y축 방향이 아니라 z축 방향을 향하도록 만들어줌
 	virtual void Animate(float fElapsedTime);
-	virtual void Render(HDC hDCFrameBuffer, CCamera_1* pCamera);
+	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 	virtual void Move(XMFLOAT3& xmf3Shift, bool bUpdateVelocity);
 	virtual void Move(float x, float y, float z);
 

@@ -5,79 +5,28 @@
 #include "GameObject.h"
 #include<array>
 #define BULLETS_1					1
-class CShader;
 
 class CBulletObject; // 전방 선언
-
 class CGameObject
 {
 public:
 	CGameObject();
 	virtual ~CGameObject();
-private:
-	int m_nReferences = 0;
-public:
-	void AddRef() { m_nReferences++; }
-	void Release() { if (--m_nReferences <= 0) delete this; }
-protected:
-	XMFLOAT4X4 m_xmf4x4World;
-	CMesh* m_pMesh = NULL;
-	CShader* m_pShader = NULL;
-public:
-	void Rotate(XMFLOAT3* pxmf3Axis, float fAngle);
-	void ReleaseUploadBuffers();
-	virtual void SetMesh(CMesh* pMesh);
-	virtual void SetShader(CShader* pShader);
-	virtual void Animate(float fTimeElapsed);
-	virtual void OnPrepareRender();
-	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera);
-};
-class CRotatingObject : public CGameObject
-{
-public:
-	CRotatingObject();
-	virtual ~CRotatingObject();
-private:
-	XMFLOAT3 m_xmf3RotationAxis;
-	float m_fRotationSpeed;
-public:
-	void SetRotationSpeed(float fRotationSpeed) { m_fRotationSpeed = fRotationSpeed; }
-	void SetRotationAxis(XMFLOAT3 xmf3RotationAxis) {
-		m_xmf3RotationAxis =
-			xmf3RotationAxis;
-	}
-	virtual void Animate(float fTimeElapsed);
-};
 
-class CGameObject_1
-{
-public:
-	CGameObject_1();
-	virtual ~CGameObject_1();
-private:
-	int m_nReferences = 0;
 public:
 
-	void AddRef() { m_nReferences++; }
-	void Release() { if (--m_nReferences <= 0) delete this; }
 
-protected:
-	
-
-	CShader* m_pShader = NULL;
-public:
 	bool						m_bActive = false;
 
 	CMesh*						m_pMesh = NULL;
 
 	//	기본적으로 단위행렬 값을 가지도록 ideentity()
-	XMFLOAT4X4 m_xmf4x4World;
-	//XMFLOAT4X4					m_xmf4x4World = Matrix4x4::Identity();  //월드 변환 행렬  (단위행렬)
+	XMFLOAT4X4					m_xmf4x4World = Matrix4x4::Identity();  //월드 변환 행렬  (단위행렬)
 
 	//바운딩 오리엔티드 박스로 충돌검사를 할 것임.
 	BoundingOrientedBox			m_xmOOBB = BoundingOrientedBox(); //게임 오브젝트가 가지고 있는 바운딩 박스는 월드 좌표계이다.
 
-	CGameObject_1*				m_pObjectCollided = NULL; //다른 충돌된 오브젝트에 대한 포인터
+	CGameObject*				m_pObjectCollided = NULL; //다른 충돌된 오브젝트에 대한 포인터
 
 	//선분의 색
 	DWORD						m_dwColor = RGB(255, 0, 0);
@@ -92,14 +41,8 @@ public:
 	CBulletObject* m_pBullets;
 
 public:
-	void ReleaseUploadBuffers();
-	virtual void SetMesh(CMesh* pMesh);
-	virtual void SetShader(CShader* pShader);
-	virtual void OnPrepareRender();
-	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList);
-
 	void SetActive(bool bActive) { m_bActive = bActive; }
-
+	void SetMesh(CMesh *pMesh) { m_pMesh = pMesh; if (pMesh) pMesh->AddRef(); }
 
 	void SetColor(DWORD dwColor) { m_dwColor = dwColor; }
 
@@ -118,8 +61,8 @@ public:
 	void SetRotationSpeed(float fSpeed) { m_fRotationSpeed = fSpeed; }
 
 	void InitializeBullets();
-	void FireBullet();
-	void AutoFire(float fElapsedTime);
+;	void FireBullet();
+void AutoFire(float fElapsedTime);
 
 	void MoveStrafe(float fDistance = 1.0f);
 	void MoveUp(float fDistance = 1.0f);
@@ -148,12 +91,12 @@ public:
 	virtual void OnUpdateTransform();
 
 	virtual void Animate(float fElapsedTime);
-	virtual void Render(HDC hDCFrameBuffer, CCamera_1* pCamera);
+	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 
 	void GenerateRayForPicking(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, XMVECTOR& xmvPickRayOrigin, XMVECTOR& xmvPickRayDirection);
 	int PickObjectByRayIntersection(XMVECTOR& xmPickPosition, XMMATRIX& xmmtxView, float* pfHitDistance);
 };
-class CBulletObject : public CGameObject_1
+class CBulletObject : public CGameObject
 {
 public:
 	CBulletObject(float fEffectiveRange);
@@ -172,13 +115,13 @@ public:
 	float						m_fElapsedTimeAfterFire = 0.0f;
 	float						m_fLockingDelayTime = 0.3f;
 	float						m_fLockingTime = 4.0f;
-	CGameObject_1* m_pLockedObject = NULL;
+	CGameObject* m_pLockedObject = NULL;
 
 	void SetFirePosition(XMFLOAT3 xmf3FirePosition);
 	void Reset();
 };
 
-class CExplosiveObject : public CGameObject_1 //게임 오브젝트에서 파생시킴
+class CExplosiveObject : public CGameObject //게임 오브젝트에서 파생시킴
 {
 public:
 	CExplosiveObject();
@@ -195,7 +138,7 @@ public:
 	float						m_fExplosionRotation = 720.0f; //회전
 
 	virtual void Animate(float fElapsedTime);
-	virtual void Render(HDC hDCFrameBuffer, CCamera_1* pCamera);
+	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 
 public:
 	static CMesh*				m_pExplosionMesh;
@@ -209,7 +152,7 @@ public:
 	static void PrepareExplosion();
 };
 
-class CFloorObject : public CGameObject_1 //6개의 평면과 바운딩 박스를 가지고 있다.
+class CFloorObject : public CGameObject //6개의 평면과 바운딩 박스를 가지고 있다.
 {
 public:
 	CFloorObject();
@@ -220,31 +163,31 @@ public:
 
 	std::array<XMFLOAT4,6>  m_pxmf4WallPlanes; //1개의 평면을 나타냄
 
-	virtual void Render(HDC hDCFrameBuffer, CCamera_1* pCamera);
+	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 };
 
 
 
 
-class CAxisObject : public CGameObject_1
+class CAxisObject : public CGameObject
 {
 public:
 	CAxisObject() { }
 	virtual ~CAxisObject() { }
 
-	virtual void Render(HDC hDCFrameBuffer, CCamera_1* pCamera);
+	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 };
 
 //-------------------------------------------------------------------------------------
 //  롤러코스터
 //-------------------------------------------------------------------------------------
-class CRollerCoasterRail : public CGameObject_1
+class CRollerCoasterRail : public CGameObject
 {
 public:
 	CRollerCoasterRail() {}
 	virtual ~CRollerCoasterRail() {}
 
-	virtual void Render(HDC hDCFrameBuffer, CCamera_1* pCamera);
+	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 	
 private:
 	std::vector<std::pair<XMFLOAT3, XMFLOAT3>> m_vRailSegments;
@@ -253,7 +196,7 @@ private:
 //-------------------------------------------------------------------------------------
 //  탱크
 //-------------------------------------------------------------------------------------
-class CShieldObject : public CGameObject_1
+class CShieldObject : public CGameObject
 {
 public:
 	CShieldObject(float fShieldDuration, float fShieldRadius);
@@ -269,6 +212,6 @@ public:
 	void ActivateShield();
 	void DeactivateShield();
 	virtual void Animate(float fElapsedTime);
-	virtual void Render(HDC hDCFrameBuffer, CCamera_1* pCamera);
+	virtual void Render(HDC hDCFrameBuffer, CCamera* pCamera);
 };
 

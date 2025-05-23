@@ -16,7 +16,7 @@ void CPlayer::SetPosition(float x, float y, float z)
 {
 	m_xmf3Position = XMFLOAT3(x, y, z);
 
-	CGameObject_1::SetPosition(x, y, z);
+	CGameObject::SetPosition(x, y, z);
 }
 
 void CPlayer::SetCameraOffset(XMFLOAT3& xmf3CameraOffset)
@@ -113,7 +113,7 @@ void CPlayer::Animate(float fElapsedTime)
 {
 	OnUpdateTransform();
 
-	CGameObject_1::Animate(fElapsedTime);
+	CGameObject::Animate(fElapsedTime);
 }
 
 void CPlayer::OnUpdateTransform()
@@ -124,9 +124,9 @@ void CPlayer::OnUpdateTransform()
 	m_xmf4x4World._41 = m_xmf3Position.x; m_xmf4x4World._42 = m_xmf3Position.y; m_xmf4x4World._43 = m_xmf3Position.z;
 }
 
-void CPlayer::Render(HDC hDCFrameBuffer, CCamera_1* pCamera)
+void CPlayer::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 {
-	CGameObject_1::Render(hDCFrameBuffer, pCamera);
+	CGameObject::Render(hDCFrameBuffer, pCamera);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -168,7 +168,7 @@ void CTankPlayer::OnUpdateTransform()
         // 기존 코드에서 미사일 발사 위치와 방향을 수정하여 정확한 방향으로 발사되도록 변경합니다.
 }
 
-void CTankPlayer::Render(HDC hDCFrameBuffer, CCamera_1* pCamera)
+void CTankPlayer::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 {
 	CPlayer::Render(hDCFrameBuffer, pCamera);
 	RenderShield(hDCFrameBuffer, pCamera);
@@ -215,7 +215,7 @@ void CTankPlayer::Render(HDC hDCFrameBuffer, CCamera_1* pCamera)
 //		}
 //	}
 //}
-void CTankPlayer::FireBullet(CGameObject_1* pLockedObject)
+void CTankPlayer::FireBullet(CGameObject* pLockedObject)
 {
 	CBulletObject* pBulletObject = NULL;
 	for (int i = 0; i < BULLETS; i++)
@@ -272,7 +272,7 @@ void CTankPlayer::UpdateShield(float fElapsedTime)
    }  
 }  
 
-void CTankPlayer::RenderShield(HDC hDCFrameBuffer, CCamera_1* pCamera)  
+void CTankPlayer::RenderShield(HDC hDCFrameBuffer, CCamera* pCamera)  
 {  
 
      if (m_bShieldActive)  
@@ -334,7 +334,7 @@ void CCartPlayer::OnUpdateTransform()
 	//90도를 라디안값으로 바꿔줘야 함
 }
 
-void CCartPlayer::Render(HDC hDCFrameBuffer, CCamera_1* pCamera)
+void CCartPlayer::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 {
 	CPlayer::Render(hDCFrameBuffer, pCamera);
 

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Scene.h"
 #include "GraphicsPipeline.h"
-#include"Shader.h"
 
 CGameState::GameState CGameState::CurrentState = CGameState::TITLE; // 정적 멤버 초
 void CGameState::ChangeGameState(GameState state)
@@ -155,8 +154,8 @@ void StartScene::OnMouseClick(int x, int y)
 
 void WinScene::Render(HDC hDCFrameBuffer) {  
    // "You Win!" 텍스트를 화면 중앙에 출력  
-   const int centerX = FRAME_BUFFER_WIDTH / 2;  
-   const int centerY = FRAME_BUFFER_HEIGHT / 2;  
+   const int centerX = FRAMEBUFFER_WIDTH / 2;  
+   const int centerY = FRAMEBUFFER_HEIGHT / 2;  
    TextOutW(hDCFrameBuffer, centerX - 50, centerY - 10, L"You Win!", wcslen(L"You Win!"));  
 }  
 
@@ -171,8 +170,8 @@ void WinScene::OnMouseClick(int x, int y) {
 
 void LossScene::Render(HDC hDCFrameBuffer) {
 	// "You Win!" 텍스트를 화면 중앙에 출력  
-	const int centerX = FRAME_BUFFER_WIDTH / 2;
-	const int centerY = FRAME_BUFFER_HEIGHT / 2;
+	const int centerX = FRAMEBUFFER_WIDTH / 2;
+	const int centerY = FRAMEBUFFER_HEIGHT / 2;
 	TextOutW(hDCFrameBuffer, centerX - 50, centerY - 10, L"You Loss!", wcslen(L"You Loss!"));
 }
 
@@ -186,7 +185,7 @@ void LossScene::OnMouseClick(int x, int y) {
 //--------------------------------------------------------------------------------------------------------------------------------
 
 MenuScene::MenuScene() {
-	int x = FRAME_BUFFER_WIDTH/2, y = FRAME_BUFFER_HEIGHT/4, width = 200, height = 40, spacing = 50;
+	int x = FRAMEBUFFER_WIDTH/2, y = FRAMEBUFFER_HEIGHT/4, width = 200, height = 40, spacing = 50;
 
 	for (size_t i = 0; i < m_MenuItems.size(); ++i) {
 		RECT rect = { x -width, y + static_cast<int>(i * spacing), x + width, y + height + static_cast<int>(i * spacing) };
@@ -234,16 +233,16 @@ void MenuScene::OnMouseClick(int x, int y)
 //                           게임
 //--------------------------------------------------------------------------------------------------------------------------------
 
-CGameScene_2::CGameScene_2(CPlayer* pPlayer)
+CGameScene::CGameScene(CPlayer* pPlayer)
 {
 	m_pPlayer = pPlayer;
 }
 
-CGameScene_2::~CGameScene_2()
+CGameScene::~CGameScene()
 {
 }
 
-void CGameScene_2::BuildObjects()
+void CGameScene::BuildObjects()
 {
 	CExplosiveObject::PrepareExplosion();
 
@@ -264,41 +263,41 @@ void CGameScene_2::BuildObjects()
 
 
 
-	m_pObstacle = new CGameObject_1 * [MAX_OBJECTS];
+	m_pObstacle = new CGameObject * [MAX_OBJECTS];
 	CCubeMesh* Cm = new CCubeMesh(10.0f, 10.0f, 5.0f);
 
 
-	m_pObstacle[0] = new CGameObject_1();
+	m_pObstacle[0] = new CGameObject();
 	m_pObstacle[0]->SetMesh(Cm);
 	m_pObstacle[0]->SetColor(RGB(255, 0, 0));
 	m_pObstacle[0]->SetPosition(-0.0f, 5.0f, -40.0f);
 	m_pObstacle[0]->OnUpdateTransform();
 
-	m_pObstacle[1] = new CGameObject_1();
+	m_pObstacle[1] = new CGameObject();
 	m_pObstacle[1]->SetMesh(Cm);
 	m_pObstacle[1]->SetColor(RGB(255, 0, 0));
 	m_pObstacle[1]->SetPosition(-0.0f, 5.0f, 40.0f);
 	m_pObstacle[1]->OnUpdateTransform();
 
-	m_pObstacle[2] = new CGameObject_1();
+	m_pObstacle[2] = new CGameObject();
 	m_pObstacle[2]->SetMesh(Cm);
 	m_pObstacle[2]->SetColor(RGB(255, 0, 0));
 	m_pObstacle[2]->SetPosition(-20.0f, 5.0f, 30.0f);
 	m_pObstacle[2]->OnUpdateTransform();
 
-	m_pObstacle[3] = new CGameObject_1();
+	m_pObstacle[3] = new CGameObject();
 	m_pObstacle[3]->SetMesh(Cm);
 	m_pObstacle[3]->SetColor(RGB(255, 0, 0));
 	m_pObstacle[3]->SetPosition(20.0f, 5.0f, 30.0f);
 	m_pObstacle[3]->OnUpdateTransform();
 
-	m_pObstacle[4] = new CGameObject_1();
+	m_pObstacle[4] = new CGameObject();
 	m_pObstacle[4]->SetMesh(Cm);
 	m_pObstacle[4]->SetColor(RGB(255, 0, 0));
 	m_pObstacle[4]->SetPosition(-20.0f, 5.0f, -30.0f);
 	m_pObstacle[4]->OnUpdateTransform();
 
-	m_pObstacle[5] = new CGameObject_1();
+	m_pObstacle[5] = new CGameObject();
 	m_pObstacle[5]->SetMesh(Cm);
 	m_pObstacle[5]->SetColor(RGB(255, 0, 0));
 	m_pObstacle[5]->SetPosition(20.0f, 5.0f, -30.0f);
@@ -306,7 +305,7 @@ void CGameScene_2::BuildObjects()
 
 	CTankMesh* pTankMesh = new CTankMesh(4.0f, 4.0f, 4.0f);
 	m_nObjects = 10;
-	m_ppObjects = new CGameObject_1 * [m_nObjects];
+	m_ppObjects = new CGameObject * [m_nObjects];
 
 
 
@@ -405,7 +404,7 @@ void CGameScene_2::BuildObjects()
 }
 
 
-void CGameScene_2::ReleaseObjects()
+void CGameScene::ReleaseObjects()
 {
 	if (CExplosiveObject::m_pExplosionMesh) CExplosiveObject::m_pExplosionMesh->Release();
 
@@ -419,18 +418,18 @@ void CGameScene_2::ReleaseObjects()
 #endif
 }
 
-void CGameScene_2::RotateTanksToFacePlayer() {  
+void CGameScene::RotateTanksToFacePlayer() {  
    XMFLOAT3 playerPosition = m_pPlayer->GetPosition();  
    for (int i = 0; i < m_nObjects; i++) {
 	   m_ppObjects[i]->RotateTowardsPlayer(playerPosition);
    }
 }
 
-void CGameScene_2::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
+void CGameScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
 }
 
-void CGameScene_2::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
+void CGameScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
 	switch (nMessageID)
 	{
@@ -469,7 +468,7 @@ void CGameScene_2::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARA
 	}
 }
 
-CGameObject_1* CGameScene_2::PickObjectPointedByCursor(int xClient, int yClient, CCamera_1* pCamera)
+CGameObject* CGameScene::PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamera)
 {
 	XMFLOAT3 xmf3PickPosition; //카메라 피킹 광선 (벡터이다)
 
@@ -484,7 +483,7 @@ CGameObject_1* CGameScene_2::PickObjectPointedByCursor(int xClient, int yClient,
 
 	int nIntersected = 0;
 	float fNearestHitDistance = FLT_MAX; //가장 가까운 거리	
-	CGameObject_1* pNearestObject = NULL;  //가장 가까운 오브젝트
+	CGameObject* pNearestObject = NULL;  //가장 가까운 오브젝트
 	for (int i = 0; i < m_nObjects; i++)
 	{
 		float fHitDistance = FLT_MAX;
@@ -500,7 +499,7 @@ CGameObject_1* CGameScene_2::PickObjectPointedByCursor(int xClient, int yClient,
 	return(pNearestObject);
 }
 
-void CGameScene_2::CheckObjectByObjectCollisions()
+void CGameScene::CheckObjectByObjectCollisions()
 {
 	//각 오브젝트들이 어떤 오브젝트하고 충돌이 일어났는지 알려주는 포인터 변수를 null로 초기화 시킨다.
 	for (int i = 0; i < m_nObjects; i++) m_ppObjects[i]->m_pObjectCollided = NULL; 
@@ -535,7 +534,7 @@ void CGameScene_2::CheckObjectByObjectCollisions()
 
 
 
-void CGameScene_2::CheckObjectByWallCollisions()
+void CGameScene::CheckObjectByWallCollisions()
 {
 	for (int i = 0; i < m_nObjects; i++)
 	{
@@ -595,7 +594,7 @@ void CGameScene_2::CheckObjectByWallCollisions()
 	}
 }
 
-void CGameScene_2::CheckPlayerByWallCollision()
+void CGameScene::CheckPlayerByWallCollision()
 {
 	BoundingOrientedBox xmOOBBPlayerMoveCheck;
 	m_pFloorObject->m_xmOOBBPlayerMoveCheck.Transform(xmOOBBPlayerMoveCheck, XMLoadFloat4x4(&m_pFloorObject->m_xmf4x4World));
@@ -604,7 +603,7 @@ void CGameScene_2::CheckPlayerByWallCollision()
 	if (!xmOOBBPlayerMoveCheck.Intersects(m_pPlayer->m_xmOOBB)) m_pFloorObject->SetPosition(m_pPlayer->m_xmf3Position);
 }
 
-void CGameScene_2::CheckObjectByBulletCollisions()
+void CGameScene::CheckObjectByBulletCollisions()
 {
 	CBulletObject** ppBullets = ((CTankPlayer*)m_pPlayer)->m_ppBullets;
 	for (int i = 0; i < m_nObjects; i++)
@@ -620,7 +619,7 @@ void CGameScene_2::CheckObjectByBulletCollisions()
 		}
 	}
 }
-void CGameScene_2::CheckTankIsBlowed()
+void CGameScene::CheckTankIsBlowed()
 {
 	for (int i = 0; i < m_nObjects; i++)
 	{
@@ -649,7 +648,7 @@ void CGameScene_2::CheckTankIsBlowed()
 	
 
 
-void CGameScene_2::CheckPlayerByBulletCollisions()  
+void CGameScene::CheckPlayerByBulletCollisions()  
 {  
     CBulletObject* ppBullets;  
     for (int i = 0; i < m_nObjects; i++)  
@@ -681,7 +680,7 @@ void CGameScene_2::CheckPlayerByBulletCollisions()
 //
 // 벽이 총알을 막아줌
 //
-void CGameScene_2::CheckBulletByWallCollisions()
+void CGameScene::CheckBulletByWallCollisions()
 {
    CBulletObject** ppBullets = ((CTankPlayer*)m_pPlayer)->m_ppBullets;
 
@@ -715,7 +714,7 @@ void CGameScene_2::CheckBulletByWallCollisions()
    }
 }
 
-void CGameScene_2::Animate(float fElapsedTime)
+void CGameScene::Animate(float fElapsedTime)
 {
 	m_pFloorObject->Animate(fElapsedTime);  //벽을 애니메이트 함
 
@@ -748,7 +747,7 @@ void CGameScene_2::Animate(float fElapsedTime)
 	CheckTankIsBlowed();
 }
 
-void CGameScene_2::Render(HDC hDCFrameBuffer, CCamera_1* pCamera)
+void CGameScene::Render(HDC hDCFrameBuffer, CCamera* pCamera)
 {
 	CGraphicsPipeline::SetViewport(&pCamera->m_Viewport);  //m_Viewport를 뷰포트 값으로 설정
 
@@ -772,114 +771,3 @@ void CGameScene_2::Render(HDC hDCFrameBuffer, CCamera_1* pCamera)
 
 
 
-CScene::CScene()
-{
-}
-ID3D12RootSignature* CScene::GetGraphicsRootSignature()
-{
-	return(m_pd3dGraphicsRootSignature);
-}
-ID3D12RootSignature* CScene::CreateGraphicsRootSignature(ID3D12Device* pd3dDevice)
-{
-	ID3D12RootSignature* pd3dGraphicsRootSignature = NULL;
-	D3D12_ROOT_PARAMETER pd3dRootParameters[2];
-	pd3dRootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
-	pd3dRootParameters[0].Constants.Num32BitValues = 16;
-	pd3dRootParameters[0].Constants.ShaderRegister = 0;
-	pd3dRootParameters[0].Constants.RegisterSpace = 0;
-	pd3dRootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	pd3dRootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
-	pd3dRootParameters[1].Constants.Num32BitValues = 32;
-	pd3dRootParameters[1].Constants.ShaderRegister = 1;
-	pd3dRootParameters[1].Constants.RegisterSpace = 0;
-	pd3dRootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	D3D12_ROOT_SIGNATURE_FLAGS d3dRootSignatureFlags =
-		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
-		D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
-		D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
-		D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
-		D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
-	D3D12_ROOT_SIGNATURE_DESC d3dRootSignatureDesc;
-	::ZeroMemory(&d3dRootSignatureDesc, sizeof(D3D12_ROOT_SIGNATURE_DESC));
-	d3dRootSignatureDesc.NumParameters = _countof(pd3dRootParameters);
-	d3dRootSignatureDesc.pParameters = pd3dRootParameters;
-	d3dRootSignatureDesc.NumStaticSamplers = 0;
-	d3dRootSignatureDesc.pStaticSamplers = NULL;
-	d3dRootSignatureDesc.Flags = d3dRootSignatureFlags;
-	ID3DBlob* pd3dSignatureBlob = NULL;
-	ID3DBlob* pd3dErrorBlob = NULL;
-	::D3D12SerializeRootSignature(&d3dRootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1,
-		&pd3dSignatureBlob, &pd3dErrorBlob);
-	pd3dDevice->CreateRootSignature(0, pd3dSignatureBlob->GetBufferPointer(),
-		pd3dSignatureBlob->GetBufferSize(), __uuidof(ID3D12RootSignature), (void
-			**)&pd3dGraphicsRootSignature);
-	if (pd3dSignatureBlob) pd3dSignatureBlob->Release();
-	if (pd3dErrorBlob) pd3dErrorBlob->Release();
-	return(pd3dGraphicsRootSignature);
-}
-
-void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
-{
-	m_pd3dGraphicsRootSignature = CreateGraphicsRootSignature(pd3dDevice);
-	CTriangleMesh* pMesh = new CTriangleMesh(pd3dDevice, pd3dCommandList);
-	m_nObjects = 1;
-	m_ppObjects = new CGameObject * [m_nObjects];
-	CRotatingObject* pRotatingObject = new CRotatingObject();
-	pRotatingObject->SetMesh(pMesh);
-	CDiffusedShader* pShader = new CDiffusedShader();
-	pShader->CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
-	pShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
-	pRotatingObject->SetShader(pShader);
-	m_ppObjects[0] = pRotatingObject;
-}
-void CScene::ReleaseObjects()
-{
-	if (m_pd3dGraphicsRootSignature) m_pd3dGraphicsRootSignature->Release();
-	if (m_ppObjects)
-	{
-		for (int j = 0; j < m_nObjects; j++) if (m_ppObjects[j]) delete m_ppObjects[j];
-		delete[] m_ppObjects;
-	}
-}
-bool CScene::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
-{
-	return(false);
-}
-
-bool CScene::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam,
-	LPARAM lParam)
-{
-	return(false);
-}
-bool CScene::ProcessInput(UCHAR* pKeysBuffer)
-{
-	return(false);
-}
-void CScene::AnimateObjects(float fTimeElapsed)
-{
-	for (int j = 0; j < m_nObjects; j++)
-	{
-		m_ppObjects[j]->Animate(fTimeElapsed);
-	}
-}
-
-void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera)
-{
-	pCamera->SetViewportsAndScissorRects(pd3dCommandList);
-	pd3dCommandList->SetGraphicsRootSignature(m_pd3dGraphicsRootSignature);
-	if (pCamera) pCamera->UpdateShaderVariables(pd3dCommandList);
-	//씬을 렌더링하는 것은 씬을 구성하는 게임 객체(셰이더를 포함하는 객체)들을 렌더링하는 것이다.
-	for (int j = 0; j < m_nObjects; j++)
-	{
-		if (m_ppObjects[j]) m_ppObjects[j]->Render(pd3dCommandList, pCamera);
-	}
-}
-
-void CScene::ReleaseUploadBuffers()
-{
-	if (m_ppObjects)
-	{
-		for (int j = 0; j < m_nObjects; j++) if (m_ppObjects[j])
-			m_ppObjects[j]->ReleaseUploadBuffers();
-	}
-}
