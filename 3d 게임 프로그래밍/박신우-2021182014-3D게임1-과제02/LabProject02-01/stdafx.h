@@ -24,6 +24,15 @@
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
 
+// direct3D12 API함수를 사용하기 위해 반드시 포함해야 한다.
+#include <d3d12.h> 
+#include <dxgi1_4.h>
+#include <d3dcompiler.h>
+#include <DirectXMath.h>
+#include <DirectXPackedVector.h>
+#include <DirectXColors.h>
+#include <DirectXCollision.h>
+
 #include<vector>
 #include<string>
 #include<iostream>
