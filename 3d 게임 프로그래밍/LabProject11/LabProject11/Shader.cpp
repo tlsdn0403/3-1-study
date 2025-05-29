@@ -328,90 +328,62 @@ void ObjectsShader::Render(ID3D12GraphicsCommandList * pd3dCommandList, Camera *
 
 void ObjectsShader::BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList) {
 	
-	float RectSize = 12.0f;
+	//float RectSize = 12.0f;
 
-	// 가로x세로x높이가 12x12x12인 정육면체 메쉬를 생성
-	CubeMeshDiffused *pCubeMesh = new CubeMeshDiffused(pd3dDevice, pd3dCommandList, RectSize, RectSize, RectSize);
+	//// 가로x세로x높이가 12x12x12인 정육면체 메쉬를 생성
+	//CubeMeshDiffused *pCubeMesh = new CubeMeshDiffused(pd3dDevice, pd3dCommandList, RectSize, RectSize, RectSize);
 
-	// x-축, y-축, z-축 양의 방향의 객체 개수이다.
-	int xObjects = 10, yObjects = 10, zObjects = 10, i = 0;
-	
-	//x-축, y-축, z-축으로 21개씩 총 21 x 21 x 21 = 9261개의 정육면체를 생성하고 배치한다.
-	m_nObjects = (xObjects * 2 + 1) * (yObjects * 2 + 1) * (zObjects * 2 + 1);
-	
-	// 객체 수에 맞는 메모리 할당
-	m_ppObjects = new GameObject*[m_nObjects];
+	//// x-축, y-축, z-축 양의 방향의 객체 개수이다.
+	//int xObjects = 1, yObjects = 1, zObjects = 1, i = 0;
+	//
+	////x-축, y-축, z-축으로 21개씩 총 21 x 21 x 21 = 9261개의 정육면체를 생성하고 배치한다.
+	//m_nObjects = (xObjects * 2 + 1) * (yObjects * 2 + 1) * (zObjects * 2 + 1);
+	//
+	//// 객체 수에 맞는 메모리 할당
+	//m_ppObjects = new GameObject*[m_nObjects];
 
-	float fxPitch = RectSize * 2.5f;
-	float fyPitch = RectSize * 2.5f;
-	float fzPitch = RectSize * 2.5f;
+	//float fxPitch = RectSize * 2.5f;
+	//float fyPitch = RectSize * 2.5f;
+	//float fzPitch = RectSize * 2.5f;
 
-	RotatingObject *pRotatingObject = NULL;
+	//RotatingObject *pRotatingObject = NULL;
 
-	for (int x = -xObjects; x <= xObjects; x++) {
-		for (int y = -yObjects; y <= yObjects; y++) {
-			for (int z = -zObjects; z <= zObjects; z++) {
-				// 새로운 OBJ 메모리 할당
-				pRotatingObject = new RotatingObject();
-				// 주소에 메쉬 생성
-				pRotatingObject->SetMesh(pCubeMesh);
+	//for (int x = -xObjects; x <= xObjects; x++) {
+	//	for (int y = -yObjects; y <= yObjects; y++) {
+	//		for (int z = -zObjects; z <= zObjects; z++) {
+	//			// 새로운 OBJ 메모리 할당
+	//			pRotatingObject = new RotatingObject();
+	//			// 주소에 메쉬 생성
+	//			pRotatingObject->SetMesh(pCubeMesh);
 
-				// 각 정육면체 객체의 위치를 설정
-				pRotatingObject->SetPosition(fxPitch*x, fyPitch*y, fzPitch*z);
-				// 각 정육면체 객체의 회전축 결정
-				pRotatingObject->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
-				// 각 정육면체 객체의 회전 속도 결정
-				pRotatingObject->SetRotationSpeed(10.0f*(i % 10) + 3.0f);
-				// 메모리에 하나씩 저장
-				m_ppObjects[i++] = pRotatingObject;
-			}
-		}
-	}
+	//			// 각 정육면체 객체의 위치를 설정
+	//			pRotatingObject->SetPosition(fxPitch*x, fyPitch*y, fzPitch*z);
+	//			// 각 정육면체 객체의 회전축 결정
+	//			pRotatingObject->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
+	//			// 각 정육면체 객체의 회전 속도 결정
+	//			pRotatingObject->SetRotationSpeed(10.0f*(i % 10) + 3.0f);
+	//			// 메모리에 하나씩 저장
+	//			m_ppObjects[i++] = pRotatingObject;
+	//		}
+	//	}
+	//}
 
 	CreateShaderVariables(pd3dDevice, pd3dCommandList);
 }
 
 void ObjectsShader::AnimateObjects(float fTimeElapsed){
-	for (int j = 0; j < m_nObjects; j++) {
+	/*for (int j = 0; j < m_nObjects; j++) {
 		m_ppObjects[j]->Animate(fTimeElapsed);
-	}
+	}*/
 }
 
 void ObjectsShader::ReleaseObjects(){
-	if (m_ppObjects) { 
+	/*if (m_ppObjects) { 
 		for (int j = 0; j < m_nObjects; j++) {
 			if (m_ppObjects[j]) delete m_ppObjects[j];
 		}
 		delete[] m_ppObjects;
-	}
+	}*/
 
 }
 
-void StartSceneObjectsShader::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
-{
-	// 타이틀 큐브 10개 + 이름 큐브 3개 = 총 13개
-	m_nObjects = 13;
-	m_ppObjects = new GameObject * [m_nObjects];
-
-	// 타이틀 큐브 ("3D 게임프로그래밍 1" 등)
-	float startX = 200.0f;
-	for (int i = 0; i < 10; ++i) {
-		GameObject* obj = new GameObject();
-		obj->SetMesh(new CubeMeshDiffused(pd3dDevice, pd3dCommandList, 2.0f, 2.0f, 2.0f));
-		obj->SetShader(this);
-		obj->SetPosition(startX + i * 8.0f, 200.0f, 0.0f);
-		m_ppObjects[i] = obj;
-	}
-
-	// 이름 큐브 (예: "박신우" 3글자)
-	float nameStartX = 280.0f;
-	for (int i = 0; i < 3; ++i) {
-		GameObject* obj = new GameObject();
-		obj->SetMesh(new CubeMeshDiffused(pd3dDevice, pd3dCommandList, 6.0f, 6.0f, 6.0f));
-		obj->SetShader(this);
-		obj->SetPosition(nameStartX + i * 20.0f, 250.0f, 0.0f);
-		m_ppObjects[10 + i] = obj;
-	}
-
-	CreateShaderVariables(pd3dDevice, pd3dCommandList);
-}

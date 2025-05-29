@@ -2,6 +2,7 @@
 #include "Timer.h"
 #include "Player.h"
 #include "Scene.h"
+#include <memory>
 
 class GameFramework{
 private:
@@ -17,7 +18,7 @@ private:
 	// Camera
 	Camera *m_pCamera = NULL;
 	// Player
-	Player *m_pPlayer = NULL;
+	std::unique_ptr<Player> m_pPlayer = nullptr;
 
 	// 마지막으로 마우스 버튼을 클릭할 때의 마우스 커서의 위치
 	POINT m_ptOldCursorPos;    
@@ -76,6 +77,8 @@ private:
 
 	CGameState* pGameState = new CGameState();
 
+	ID3D12RootSignature* m_pd3dGraphicsRootSignature = NULL;
+
 public:
 	GameFramework();
 	~GameFramework();
@@ -115,6 +118,11 @@ public:
 	void ChangeSwapChainState();
 	
 	void MoveToNextFrame();
+
+	//그래픽 루트 시그너쳐를 생성한다.
+	virtual ID3D12RootSignature* CreateGraphicsRootSignature(ID3D12Device* pd3dDevice);
+
+
 
 	// 윈도우의 메시지(키보드, 마우스 입력)을 처리하는 함수
 	void OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);

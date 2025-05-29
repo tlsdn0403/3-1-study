@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Shader.h"
 
+
 Player::Player(){
 
 	m_pCamera = NULL;
@@ -360,10 +361,10 @@ AirplanePlayer::AirplanePlayer(ID3D12Device * pd3dDevice, ID3D12GraphicsCommandL
 	pShader->CreateShader(pd3dDevice, pd3dGraphicsRootSignature);
 
 	// 쉐이더 해야하나
-	//pShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
+	pShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
 
 	// 이거 뭐지(?)  - 쉐이더에 객체가 있는데
-	//SetShader(pShader); 
+	SetShader(pShader); 
 }
 
 AirplanePlayer::~AirplanePlayer(){

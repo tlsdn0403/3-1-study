@@ -91,8 +91,3 @@ protected:
 	 int m_nObjects = 0;
  };
 
- class StartSceneObjectsShader : public ObjectsShader
- {
- public:
-	 virtual void BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList) override;
- };

@@ -49,6 +49,7 @@ protected:
 
 public: 
 	Player(); 
+	
 	virtual ~Player();
 
 	XMFLOAT3 GetPosition() { return(m_xmf3Position); } 

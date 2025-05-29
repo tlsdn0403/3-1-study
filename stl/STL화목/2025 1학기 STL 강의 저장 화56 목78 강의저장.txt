@@ -58035,3 +58035,1842 @@ int main()
 
     save("메인.cpp");
 }
+
+==============================================
+저장한 시간 :2025-05-27 오후 1:36:18 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<vector>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 vector에 저장하라.
+    // 단어의 개수를 출력하라
+   
+// 단어의 개수를 출력하라
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    std::vector<STRING> words; // words 벡터 선언
+
+    std::ifstream file("이상한 나라의 앨리스.txt");
+    if (!file)
+        return 1234;
+
+    STRING word;
+    while (file >> word) {
+        words.push_back(word);
+    }
+    cout << "단어의 개수: " << words.size() << endl;
+    
+ 
+
+
+
+     
+
+    
+
+
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-27 오후 1:37:31 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<vector>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 vector에 저장하라.
+    // 단어의 개수를 출력하라
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<STRING> words; 
+
+    ifstream in("이상한 나라의 앨리스.txt");
+    if (not in)
+        return 1234;
+
+    STRING word;
+    while (in >> word) {
+        words.push_back(word);
+    }
+    cout << "단어의 개수: " << words.size() << endl;
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-27 오후 1:39:02 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<vector>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 vector에 저장하라.
+    // 단어의 개수를 출력하라
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    vector<STRING> v{ istream_iterator<STRING>{in},{} };
+
+    cout << "단어의 개수: " << v.size() << endl;
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-27 오후 3:10:42 화요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<algorithm>
+#include<set>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라
+// [3] 
+// 
+// 
+// 
+// 찾을 단어를 입력받아 있는지 없는지 알려주라
+// 잘 찾기 위해서 set<STRING>으로 데이터를 복사하자
+// set에서 찾는 단어가 있는지 알려주자.
+// 특정 문자가 있는 단어는 몇 개인가? (예 'A'가 있는 단어는 몇개야?)
+// [7] 특정 단어가 포함된 단어는 몇 개 인가? (예 "ion"이 들어간 단어는 몇개야? )
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };
+
+    cout << "단어의 개수: " << ms.size() << endl;
+
+   
+  
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 3:59:05 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+
+    // [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+    map<char, size_t> alpha_count;
+    for (const auto& word : ms) {
+        for (auto ch : word) {
+            if (isalpha(static_cast<unsigned char>(ch))) {
+                char lower = tolower(static_cast<unsigned char>(ch));
+                alpha_count[lower]++;
+            }
+        }
+    }
+    for (char c = 'a'; c <= 'z'; ++c) {
+        cout << " " << c << " - " << alpha_count[c] << endl;
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:01:06 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+
+    // [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+    array<int, 26> count{}; // a~z까지 26개
+
+    for (const STRING& word : ms) {
+        for (auto ch : word) {
+            if (isalpha((char)(ch))) {
+                char lower = tolower((char)(ch));
+                count[lower - 'a']++;
+            }
+        }
+    }
+    for (int i = 0; i < 26; ++i) {
+        cout << " " << static_cast<char>('a' + i) << " - " << count[i] << endl;
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:01:53 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+
+    // [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+    array<int, 26> count{}; // a~z까지 26개
+
+    for (const STRING& word : ms) {
+        for (char ch : word) {
+            if (isalpha(ch)) {
+                char lower = tolower(ch);
+                count[lower - 'a']++;
+            }
+        }
+    }
+    for (int i = 0; i < 26; ++i) {
+        cout << " " << static_cast<char>('a' + i) << " - " << count[i] << endl;
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:02:14 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+
+    // [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+    array<int, 26> count{}; // a~z까지 26개
+
+    for (const STRING& word : ms) {
+        for (char ch : word) {
+           
+                count[ch - 'a']++;
+        }
+    }
+    for (int i = 0; i < 26; ++i) {
+        cout << " " << static_cast<char>('a' + i) << " - " << count[i] << endl;
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:03:00 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+
+    // [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+    array<int, 26> count{}; // a~z까지 26개
+
+    for (const STRING& word : ms) {
+        for (char ch : word) {
+           
+                count[ch - 'a']++;
+        }
+    }
+    for (int i = 0; i < 26; ++i) {
+        cout << " " << (char)('a' + i) << " - " << count[i] << endl;
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:03:44 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+
+    // [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+    array<int, 26> count{}; // a~z까지 26개
+
+    for (const STRING& word : ms) {
+        for (const char ch : word) {
+            count[ch - 'a']++;
+               
+        }
+    }
+    for (int i = 0; i < 26; ++i) {
+        cout << " " << (char)('a' + i) << " - " << count[i] << endl;
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:12:24 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  대문자를 소문자로 바꿔라
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+
+    array<size_t, 26> a{};
+
+    for (const STRING& word : ms) {
+        for (const char ch : word) {
+            a[tolower(ch) - 'a']++;
+               
+        }
+    }
+    for (size_t i = 0; i < a.size(); ++i) {
+        cout << " " << (char)('a' + i) << " : " << a[i] << endl;
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:13:08 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  대문자를 소문자로 바꿔라
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+     
+    array<size_t, 26> a{};  //클래스 데이터이기떄문에 디폴트 초기화 할 떄 { }
+
+    for (const STRING& word : ms) {
+        for (const char ch : word) {
+            a[tolower(ch) - 'a']++;
+               
+        }
+    }
+    for (size_t i = 0; i < a.size(); ++i) {
+        cout << " " << (char)('a' + i) << " : " << a[i] << endl;
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:14:00 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  대문자를 소문자로 바꿔라
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+     
+    array<size_t, 26> a{};  //클래스 데이터이기떄문에 디폴트 초기화 할 떄 { }
+
+    for (const STRING& word : ms) {
+        for (const char ch : word) {
+            a[tolower(ch) - 'a']++;
+               
+        }
+    }
+    for (size_t i = 0; i < a.size(); ++i) {
+        cout << " " << /*(char)*/('a' + i) << " : " << a[i] << endl;
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:15:00 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  대문자를 소문자로 바꿔라
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+     
+    array<size_t, 26> a{};  //클래스 데이터이기떄문에 디폴트 초기화 할 떄 { }
+
+    for (const STRING& word : ms) {
+        for (const char ch : word) {
+            a[tolower(ch) - 'a']++;
+               
+        }
+    }
+    for (size_t i = 0; i < a.size(); ++i) {
+        cout << " " << (char)('a' + i) << " : " << a[i] << endl;
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:28:54 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  대문자를 소문자로 바꿔라
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+     
+
+    //알파벳은 유니크하기 때문에 멀티맵이 아니라 그냥 맵
+    map<char, size_t> alphaNum{};     //연관배열
+
+    for (const STRING& 단어 : ms) {
+        for (char c : 단어) {
+            if (c == tolower(c)) {
+                alphaNum[c]++;
+            }
+        }
+    }
+
+    for (auto [소문자, 개수] : alphaNum)  //주소로 가져올 필요가 크게 없을 것이다.
+        cout << 소문자 << " - " << 개수 << endl;
+
+         
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:30:08 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  대문자를 소문자로 바꿔라
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+     
+
+    //알파벳은 유니크하기 때문에 멀티맵이 아니라 그냥 맵
+    map<char, size_t> alphaNum{};     //연관배열
+
+    for (const STRING& 단어 : ms) {
+        for (char c : 단어) {
+            if (isalpha(c)) {
+                tolower(c);
+                alphaNum[c]++;
+            }
+        }
+    }
+
+    for (auto [소문자, 개수] : alphaNum)  //주소로 가져올 필요가 크게 없을 것이다.
+        cout << 소문자 << " - " << 개수 << endl;
+
+         
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:31:06 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  대문자를 소문자로 바꿔라
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+     
+
+    //알파벳은 유니크하기 때문에 멀티맵이 아니라 그냥 맵
+    map<char, size_t> alphaNum{};     //연관배열
+
+    for (const STRING& 단어 : ms) {
+        for (char c : 단어) {
+            if (isalpha(c)&& tolower(c) ) {
+                
+                alphaNum[c]++;
+            }
+        }
+    }
+
+    for (auto [소문자, 개수] : alphaNum)  //주소로 가져올 필요가 크게 없을 것이다.
+        cout << 소문자 << " - " << 개수 << endl;
+
+         
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:31:27 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  대문자를 소문자로 바꿔라
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+     
+
+    //알파벳은 유니크하기 때문에 멀티맵이 아니라 그냥 맵
+    map<char, size_t> alphaNum{};     //연관배열
+
+    for (const STRING& 단어 : ms) {
+        for (char c : 단어) {
+            if (isalpha(c)) {
+                
+                alphaNum[tolower(c)]++;
+            }
+        }
+    }
+
+    for (auto [소문자, 개수] : alphaNum)  //주소로 가져올 필요가 크게 없을 것이다.
+        cout << 소문자 << " - " << 개수 << endl;
+
+         
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:32:23 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  대문자를 소문자로 바꿔라
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+
+   
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+     
+
+    //알파벳은 유니크하기 때문에 멀티맵이 아니라 그냥 맵
+    map<char, size_t> alphaNum{};     //연관배열
+
+    for (const STRING& 단어 : ms) {
+        for (char c : 단어) {
+            if (isalpha(c)) {
+                
+                alphaNum[tolower(c)]++;
+            }
+        }
+    }
+
+    for (auto [소문자, 개수] : alphaNum)  //주소로 가져올 필요가 크게 없을 것이다.
+        cout << 소문자 << " - " << 개수 << endl;
+
+         
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:53:07 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  대문자를 소문자로 바꿔라
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+// [4] 이 소설에 사용된 알파벳의 개수를 많이 사용된 순서대로 출력해봐라
+
+bool cmp(pair<string, int>& a, pair<string, int>& b);
+void Sort(map<string, int>& M);
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+     
+
+    //알파벳은 유니크하기 때문에 멀티맵이 아니라 그냥 맵
+    map<char, size_t> alphaNum{};     //연관배열
+
+    for (const STRING& 단어 : ms) {
+        for (char c : 단어) {
+            if (isalpha(c)) {
+                
+                alphaNum[tolower(c)]++;
+            }
+        }
+    }
+
+    map<size_t ,char>numAlpha;
+
+    for (auto [소문자, 개수] : alphaNum)  //주소로 가져올 필요가 크게 없을 것이다.
+        numAlpha[개수] = 소문자;
+
+    for (auto [개수, 소문자] : numAlpha)
+        cout << 소문자 << " - " << 개수 << endl;
+    
+
+         
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:54:24 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  대문자를 소문자로 바꿔라
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+// [4] 이 소설에 사용된 알파벳의 개수를 많이 사용된 순서대로 출력해봐라
+
+bool cmp(pair<string, int>& a, pair<string, int>& b);
+void Sort(map<string, int>& M);
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+     
+
+    //알파벳은 유니크하기 때문에 멀티맵이 아니라 그냥 맵
+    map<char, size_t> alphaNum{};     //연관배열
+
+    for (const STRING& 단어 : ms) {
+        for (char c : 단어) {
+            if (isalpha(c)) {
+                
+                alphaNum[tolower(c)]++;
+            }
+        }
+    }
+
+    map<size_t ,char, greater<size_t>>numAlpha; //이렇게 하면 뒤집어진 순서로 정렬할거야
+
+    for (auto [소문자, 개수] : alphaNum)  //주소로 가져올 필요가 크게 없을 것이다.
+        numAlpha[개수] = 소문자;
+
+    for (auto [개수, 소문자] : numAlpha)
+        cout << 소문자 << " - " << 개수 << endl;
+    
+
+         
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:55:24 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  대문자를 소문자로 바꿔라
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+// [4] 이 소설에 사용된 알파벳의 개수를 많이 사용된 순서대로 출력해봐라
+
+bool cmp(pair<string, int>& a, pair<string, int>& b);
+void Sort(map<string, int>& M);
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+     
+
+    //알파벳은 유니크하기 때문에 멀티맵이 아니라 그냥 맵
+    map<char, size_t> alphaNum{};     //연관배열
+
+    for (const STRING& 단어 : ms) {
+        for (char c : 단어) {
+            if (isalpha(c)) {
+                
+                alphaNum[tolower(c)]++;
+            }
+        }
+    }
+
+    map<size_t ,char>numAlpha; //이렇게 하면 뒤집어진 순서로 정렬할거야
+
+    for (auto [소문자, 개수] : alphaNum)  //주소로 가져올 필요가 크게 없을 것이다.
+        numAlpha[개수] = 소문자;
+
+    for (auto [개수, 소문자] : numAlpha | views::reverse)
+        cout << 소문자 << " - " << 개수 << endl;
+    
+
+         
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 4:58:00 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 이 소설에 사용된 알파벳의 개수를 다음과 같이 출력하라.
+//  대문자를 소문자로 바꿔라
+//  a - 10000
+//  b - 300
+//
+//  z - 30
+// [4] 이 소설에 사용된 알파벳의 개수를 많이 사용된 순서대로 출력해봐라
+
+bool cmp(pair<string, int>& a, pair<string, int>& b);
+void Sort(map<string, int>& M);
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+     
+
+    //알파벳은 유니크하기 때문에 멀티맵이 아니라 그냥 맵
+    map<char, size_t> alphaNum{};     //연관배열
+
+    for (const STRING& 단어 : ms) {
+        for (char c : 단어) {
+            if (isalpha(c)) {
+                
+                alphaNum[tolower(c)]++;
+            }
+        }
+    }
+
+    map<size_t ,char>numAlpha; //이렇게 하면 뒤집어진 순서로 정렬할거야
+
+    for (auto [소문자, 개수] : alphaNum)  //주소로 가져올 필요가 크게 없을 것이다.
+        numAlpha[개수] = 소문자;
+
+    for (auto i = numAlpha.rbegin(); i != numAlpha.rend(); ++i) //실행하면서 코드를 바인딩 한다 , 컴파일단계에서 하는 게 아님
+        cout << i->second << " - " << (*i).first << endl;
+    
+
+         
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 5:03:16 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 단어와 사용횟수를 화면에 출력하라.
+
+bool cmp(pair<string, int>& a, pair<string, int>& b);
+void Sort(map<string, int>& M);
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+     
+
+    map<STRING, size_t> wordNum;
+    for (const STRING& word : ms) {
+        wordNum[word]++;
+    }
+    for (auto [word, count] : wordNum) {
+        cout << word << " : " << count << '\n';
+    }
+  
+    
+
+         
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 5:03:35 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 단어와 사용횟수를 화면에 출력하라.
+
+bool cmp(pair<string, int>& a, pair<string, int>& b);
+void Sort(map<string, int>& M);
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+    multiset<STRING> ms{ istream_iterator<STRING>{in},{} };  //key 와 value를 이용해서 디폴트 오더링
+     
+
+    map<STRING, size_t> wordNum;
+    for (const STRING& word : ms) {
+        wordNum[word]++;
+    }
+    for (auto [word, count] : wordNum) {
+        cout << word << " : " << count << '\n';
+    }
+  
+    
+
+         
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 5:06:28 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 단어와 사용횟수를 화면에 출력하라.
+
+bool cmp(pair<string, int>& a, pair<string, int>& b);
+void Sort(map<string, int>& M);
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+
+     
+
+    map<STRING, size_t> wordNum;
+    STRING 단어;
+    while (in >> 단어)
+        wordNum[단어]++;
+
+
+
+    for (auto [word, count] : wordNum) {
+        cout << word << " : " << count << '\n';
+    }
+  
+    
+
+         
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-05-29 오후 5:11:29 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험
+//-------------------------------------------------------------------------------------------
+//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
+//                          정렬은 key값을 기준으로 한다.
+//  set / multiset - key == value
+//  map / multimap - pair(key, value>
+//-------------------------------------------------------------------------------------------
+#include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
+#include<algorithm>
+#include<set>
+#include<vector>
+#include<map>
+#include<format>
+#include<print>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 단어와 사용횟수를 화면에 출력하라.
+
+bool cmp(pair<string, int>& a, pair<string, int>& b);
+void Sort(map<string, int>& M);
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+
+     
+
+    map<STRING, size_t> wordNum;
+    STRING 단어;
+    while (in >> 단어)
+        wordNum[단어]++;
+
+
+
+    for (auto [word, count] : wordNum) {
+        cout << word << " - " << count << endl;
+       /* println("{:20} - {:}",(char*)(word) , count);*/
+    }
+  
+    
+
+         
+    save("메인.cpp");
+}

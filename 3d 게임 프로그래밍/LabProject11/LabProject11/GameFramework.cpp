@@ -57,12 +57,15 @@ bool GameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd) {
 
 	// Gameframework 생성
 	CreateDirect3DDevice();
+	
 	CreateCommandQueueAndList();
+	
 	CreateSwapChain();
 	CreateRtvAndDsvDescriptorHeaps();
 	CreateRenderTargetViews();
 	CreateDepthStencilViews();
-
+	
+	m_pd3dGraphicsRootSignature = CreateGraphicsRootSignature(m_pd3dDevice);
 	// 게임 오브젝트 생성
 	BuildObjects();
 
@@ -73,7 +76,10 @@ bool GameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd) {
 void GameFramework::OnDestory(){
 	ReleaseObjects();
 	::CloseHandle(m_hFenceEvent);
-
+	if (m_pd3dGraphicsRootSignature) {
+		m_pd3dGraphicsRootSignature->Release();
+		m_pd3dGraphicsRootSignature = nullptr;
+	}
 #if defined(_DEBUG) 
 	if (m_pd3dDebugController) m_pd3dDebugController->Release();
 #endif
@@ -214,7 +220,7 @@ void GameFramework::CreateDirect3DDevice() {
 		D3D12CreateDevice(pd3dAdapter, D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), (void **)&m_pd3dDevice);
 	}
 
-	//[선미]특성 레벨 12.0을 지원하는 하드웨어 디바이스를 생성할 수 없으면 WARP 디바이스를 생성한다.
+	//특성 레벨 12.0을 지원하는 하드웨어 디바이스를 생성할 수 없으면 WARP 디바이스를 생성한다.
 	D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS d3dMsaaQualityLevels;
 	d3dMsaaQualityLevels.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	//Msaa4x 다중 샘플링 
@@ -455,7 +461,7 @@ void GameFramework::FrameAdvance(){
 		D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, NULL);
 #endif
 	//3인칭 카메라일 때 플레이어를 렌더링한다.
-	/*if (m_pPlayer) m_pPlayer->Render(m_pd3dCommandList, m_pCamera);*/
+	if (m_pPlayer) m_pPlayer->Render(m_pd3dCommandList, m_pCamera);
 	
 	/*현재 렌더 타겟에 대한 렌더링이 끝나기를 기다린다.*/
 
@@ -552,6 +558,11 @@ void GameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPAR
 		case VK_F9:
 			ChangeSwapChainState();
 			break;
+		case'N':
+			ReleaseObjects();
+			pGameState->CGameState::ChangeGameState(CGameState::TITLE);
+			BuildObjects();
+			break;
 		default: break;
 		}
 		break;
@@ -582,50 +593,46 @@ LRESULT GameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPA
 	return(0);
 }
 
-void GameFramework::BuildObjects(){
+void GameFramework::BuildObjects() {
+    m_pd3dCommandList->Reset(m_pd3dCommandAllocator, NULL);
 
-	// 커맨드 리스트 생성
-	m_pd3dCommandList->Reset(m_pd3dCommandAllocator, NULL);
+    // 기존 플레이어, 카메라 해제
+    m_pPlayer.reset();
+    m_pCamera = nullptr;
 
-	// Scene 생성 -> Scene 객체 생성
-	switch (pGameState->GetCurrentState()) {
-	case GAME:
-		m_pScene = new Scene();
-		m_pScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList);
-		
-	case TITLE:
-		m_pStartScene = new StartScene();
-		m_pStartScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList);
+    switch (pGameState->GetCurrentState()) {
+    case GAME:
+        m_pScene = new Scene();
+        m_pScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList, m_pd3dGraphicsRootSignature);
+        m_pPlayer = std::make_unique<AirplanePlayer>(m_pd3dDevice, m_pd3dCommandList, m_pScene->GetGraphicsRootSignature());
+        m_pCamera = m_pPlayer->GetCamera();
+        break;
 
-	}
-	// Player 생성
-	AirplanePlayer* pAirplanePlayer = new AirplanePlayer(m_pd3dDevice, m_pd3dCommandList, m_pStartScene->GetGraphicsRootSignature());
-	// GameFramework의 Player를 동일하게
-	m_pPlayer = pAirplanePlayer;
-	// Player의 Camera를 GameFramework의 Camera로 
-	m_pCamera = m_pPlayer->GetCamera();
+    case TITLE:
+        m_pStartScene = new StartScene();
+        m_pStartScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList, m_pd3dGraphicsRootSignature);
+        // 타이틀 모드에서는 플레이어/카메라 생성하지 않음
+        /*m_pPlayer = nullptr;
+        m_pCamera = nullptr;*/
 
+		m_pPlayer = std::make_unique<AirplanePlayer>(m_pd3dDevice, m_pd3dCommandList, m_pStartScene->GetGraphicsRootSignature());
+		m_pCamera = m_pPlayer->GetCamera();
+        break;
+    }
 
-	
+    m_pd3dCommandList->Close();
+    ID3D12CommandList* ppd3dCommandLists[] = { m_pd3dCommandList };
+    m_pd3dCommandQueue->ExecuteCommandLists(1, ppd3dCommandLists);
+    WaitForGpuComplete();
 
-	//씬 객체를 생성하기 위하여 필요한 그래픽 명령 리스트들을 명령 큐에 추가한다.
-	m_pd3dCommandList->Close();
-	ID3D12CommandList *ppd3dCommandLists[] = { m_pd3dCommandList };
-	m_pd3dCommandQueue->ExecuteCommandLists(1, ppd3dCommandLists);
-
-	//그래픽 명령 리스트들이 모두 실행될 때까지 기다린다.
-	WaitForGpuComplete();
-
-
-	switch (pGameState->GetCurrentState()) {
-	case GAME:
-		//그래픽 리소스들을 생성하는 과정에 생성된 업로드 버퍼들을 소멸시킨다.
-		if (m_pScene) m_pScene->ReleaseUploadBuffers();
-	case TITLE:
-		if (m_pStartScene) m_pStartScene->ReleaseUploadBuffers();
-
-	}
-	//m_GameTimer.Reset();
+    switch (pGameState->GetCurrentState()) {
+    case GAME:
+        if (m_pScene) m_pScene->ReleaseUploadBuffers();
+        break;
+    case TITLE:
+        if (m_pStartScene) m_pStartScene->ReleaseUploadBuffers();
+        break;
+    }
 }
 
 void GameFramework::ReleaseObjects(){
@@ -635,6 +642,7 @@ void GameFramework::ReleaseObjects(){
 		if (m_pScene) {
 			m_pScene->ReleaseObjects();
 			delete m_pScene;
+			m_pScene = nullptr;
 			break;
 		}
 	}
@@ -642,6 +650,7 @@ void GameFramework::ReleaseObjects(){
 		if (m_pStartScene) {
 			m_pStartScene->ReleaseObjects();
 			delete m_pStartScene;
+			m_pStartScene = nullptr;
 			break;
 		}
 	}
@@ -672,39 +681,85 @@ void GameFramework::ProcessInput(){
 	그러므로 마우스가 캡쳐된 것은 마우스 버튼이 눌려진 상태를 의미한다. 
 	마우스 버튼이 눌려진 상태에서 마우스를 좌우 또는 상하로 움직이면 플 레이어를 x-축 또는 y-축으로 회전한다.*/ 
 	
-	if (::GetCapture() == m_hWnd) {
-		//마우스 커서를 화면에서 없앤다(보이지 않게 한다). 
-		::SetCursor(NULL);
-		
-		//현재 마우스 커서의 위치를 가져온다.
-		::GetCursorPos(&ptCursorPos);
-		
-		//마우스 버튼이 눌린 상태에서 마우스가 움직인 양을 구한다. 
-		cxDelta = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.0f;
-		cyDelta = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.0f;
-		
-		//마우스 커서의 위치를 마우스가 눌려졌던 위치로 설정한다.
-		::SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y); 
-	} 
-	
-	//마우스 또는 키 입력이 있으면 플레이어를 이동하거나(dwDirection) 회전한다(cxDelta 또는 cyDelta).
-	if ((dwDirection != 0) || (cxDelta != 0.0f) || (cyDelta != 0.0f)) {
-		if (cxDelta || cyDelta) { 
-			/*cxDelta는 y-축의 회전을 나타내고 cyDelta는 x-축의 회전을 나타낸다.
-			오른쪽 마우스 버튼이 눌려진 경우 cxDelta는 z-축의 회전을 나타낸다.*/ 
-			if (pKeyBuffer[VK_RBUTTON] & 0xF0) m_pPlayer->Rotate(cyDelta, 0.0f, -cxDelta);
-			
-			else m_pPlayer->Rotate(cyDelta, cxDelta, 0.0f);        
-		} 
 
-		/*플레이어를 dwDirection 방향으로 이동한다(실제로는 속도 벡터를 변경한다).
-		이동 거리는 시간에 비례하도록 한다. 플레이어의 이동 속력은 (50/초)로 가정한다.*/
-		
-		if (dwDirection) m_pPlayer->Move(dwDirection, 50.0f * m_GameTimer.GetTimeElapsed(), true);
+	switch (pGameState->GetCurrentState()) {
+	case GAME:
+	{
+		if (m_pScene) {
+			if (::GetCapture() == m_hWnd) {
+				//마우스 커서를 화면에서 없앤다(보이지 않게 한다). 
+				::SetCursor(NULL);
+
+				//현재 마우스 커서의 위치를 가져온다.
+				::GetCursorPos(&ptCursorPos);
+
+				//마우스 버튼이 눌린 상태에서 마우스가 움직인 양을 구한다. 
+				cxDelta = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.0f;
+				cyDelta = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.0f;
+
+				//마우스 커서의 위치를 마우스가 눌려졌던 위치로 설정한다.
+				::SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
+			}
+
+			//마우스 또는 키 입력이 있으면 플레이어를 이동하거나(dwDirection) 회전한다(cxDelta 또는 cyDelta).
+			if ((dwDirection != 0) || (cxDelta != 0.0f) || (cyDelta != 0.0f)) {
+				if (cxDelta || cyDelta) {
+					/*cxDelta는 y-축의 회전을 나타내고 cyDelta는 x-축의 회전을 나타낸다.
+					오른쪽 마우스 버튼이 눌려진 경우 cxDelta는 z-축의 회전을 나타낸다.*/
+					if (pKeyBuffer[VK_RBUTTON] & 0xF0) m_pPlayer->Rotate(cyDelta, 0.0f, -cxDelta);
+
+					else m_pPlayer->Rotate(cyDelta, cxDelta, 0.0f);
+				}
+
+				/*플레이어를 dwDirection 방향으로 이동한다(실제로는 속도 벡터를 변경한다).
+				이동 거리는 시간에 비례하도록 한다. 플레이어의 이동 속력은 (50/초)로 가정한다.*/
+
+				if (dwDirection) m_pPlayer->Move(dwDirection, 50.0f * m_GameTimer.GetTimeElapsed(), true);
+			}
+			//플레이어를 실제로 이동하고 카메라를 갱신한다. 중력과 마찰력의 영향을 속도 벡터에 적용한다.
+			if (m_pPlayer) m_pPlayer->Update(m_GameTimer.GetTimeElapsed());
+			break;
+		}
+	}
+	case TITLE:
+		if (m_pStartScene) {
+			if (::GetCapture() == m_hWnd) {
+				//마우스 커서를 화면에서 없앤다(보이지 않게 한다). 
+				::SetCursor(NULL);
+
+				//현재 마우스 커서의 위치를 가져온다.
+				::GetCursorPos(&ptCursorPos);
+
+				//마우스 버튼이 눌린 상태에서 마우스가 움직인 양을 구한다. 
+				cxDelta = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.0f;
+				cyDelta = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.0f;
+
+				//마우스 커서의 위치를 마우스가 눌려졌던 위치로 설정한다.
+				::SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
+			}
+
+			//마우스 또는 키 입력이 있으면 플레이어를 이동하거나(dwDirection) 회전한다(cxDelta 또는 cyDelta).
+			if ((dwDirection != 0) || (cxDelta != 0.0f) || (cyDelta != 0.0f)) {
+				if (cxDelta || cyDelta) {
+					/*cxDelta는 y-축의 회전을 나타내고 cyDelta는 x-축의 회전을 나타낸다.
+					오른쪽 마우스 버튼이 눌려진 경우 cxDelta는 z-축의 회전을 나타낸다.*/
+					if (pKeyBuffer[VK_RBUTTON] & 0xF0) m_pPlayer->Rotate(cyDelta, 0.0f, -cxDelta);
+
+					else m_pPlayer->Rotate(cyDelta, cxDelta, 0.0f);
+				}
+
+				/*플레이어를 dwDirection 방향으로 이동한다(실제로는 속도 벡터를 변경한다).
+				이동 거리는 시간에 비례하도록 한다. 플레이어의 이동 속력은 (50/초)로 가정한다.*/
+
+				if (dwDirection) m_pPlayer->Move(dwDirection, 50.0f * m_GameTimer.GetTimeElapsed(), true);
+			}
+			//플레이어를 실제로 이동하고 카메라를 갱신한다. 중력과 마찰력의 영향을 속도 벡터에 적용한다.
+			if (m_pPlayer) m_pPlayer->Update(m_GameTimer.GetTimeElapsed());
+			break;
+		}
 	}
 
-	//플레이어를 실제로 이동하고 카메라를 갱신한다. 중력과 마찰력의 영향을 속도 벡터에 적용한다.
-	m_pPlayer->Update(m_GameTimer.GetTimeElapsed()); 
+	
 }
 
 void GameFramework::AnimateObject(){
@@ -795,3 +850,74 @@ void GameFramework::MoveToNextFrame() {
 	}
 }
 
+ID3D12RootSignature* GameFramework::CreateGraphicsRootSignature(ID3D12Device* pd3dDevice) {
+	// [루트 시그니쳐 - 할당받을 포인터 생성] : 파이프라인의 전역변수
+	ID3D12RootSignature* pd3dGraphicsRootSignature = NULL;
+
+	// Root Parameters 생성 : 2개
+	D3D12_ROOT_PARAMETER pd3dRootParameters[2];
+
+	// 1번 Root Parameter
+	// 1번 Root Parameter - 유형 : 루트 상수
+	pd3dRootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
+	// 1번 Root Parameter - 상수 개수 : 16개
+	pd3dRootParameters[0].Constants.Num32BitValues = 16;
+	// 1번 Root Parameter - 레지스터 번호 : 0
+	pd3dRootParameters[0].Constants.ShaderRegister = 0;
+	// 1번 Root Parameter - 레지스터 공간 : 0
+	pd3dRootParameters[0].Constants.RegisterSpace = 0;
+	// 1번 Root Parameter - 어떤 Shader에서 사용 가능한가? : Vertex Shader
+	pd3dRootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+
+	// 2번 Root Parameter
+	// 2번 Root Parameter - 유형 : 루트 상수
+	pd3dRootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
+	// 2번 Root Parameter - 상수 개수 : 32개
+	pd3dRootParameters[1].Constants.Num32BitValues = 32;
+	// 2번 Root Parameter - 레지스터 번호 : 1
+	pd3dRootParameters[1].Constants.ShaderRegister = 1;
+	// 2번 Root Parameter - 레지스터 공간 : 0
+	pd3dRootParameters[1].Constants.RegisterSpace = 0;
+	// 2번 Root Parameter - 어떤 Shader에서 사용 가능한가? : Vertex Shader
+	pd3dRootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+
+	// 루트 시그니처 레이아웃(어떤 쉐이더에서 접근 가능한가.)
+	D3D12_ROOT_SIGNATURE_FLAGS d3dRootSignatureFlags =
+		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT |
+		D3D12_ROOT_SIGNATURE_FLAG_DENY_HULL_SHADER_ROOT_ACCESS |
+		D3D12_ROOT_SIGNATURE_FLAG_DENY_DOMAIN_SHADER_ROOT_ACCESS |
+		D3D12_ROOT_SIGNATURE_FLAG_DENY_GEOMETRY_SHADER_ROOT_ACCESS |
+		D3D12_ROOT_SIGNATURE_FLAG_DENY_PIXEL_SHADER_ROOT_ACCESS;
+
+	// [루트 시그니처 - 설정]
+	// 루트 시그니처 DESC 생성
+	D3D12_ROOT_SIGNATURE_DESC d3dRootSignatureDesc;
+	// 루트 시그니처 DESC - 모든 변수 초기화 0 or NULL
+	::ZeroMemory(&d3dRootSignatureDesc, sizeof(D3D12_ROOT_SIGNATURE_DESC));
+	// 루트 시그니처 DESC - root parameter 개수 : 2개
+	d3dRootSignatureDesc.NumParameters = _countof(pd3dRootParameters);
+	// 루트 시그니처 DESC - root parameter 시작 주소 : pd3dRootParameters
+	d3dRootSignatureDesc.pParameters = pd3dRootParameters;
+	// 루트 시그니처 DESC - static sampler 개수 (정점 샘플러의 개수)
+	d3dRootSignatureDesc.NumStaticSamplers = 0;
+	// 루트 시그니처 DESC - static sampler 주소
+	d3dRootSignatureDesc.pStaticSamplers = NULL;
+	// 루트 시그니처 DESC - 레이아웃(어떤 쉐이더에서 접근 가능한가.) : IA단계를 허용
+	d3dRootSignatureDesc.Flags = d3dRootSignatureFlags;
+
+	// Blob 생성
+	ID3DBlob* pd3dSignatureBlob = NULL;
+	ID3DBlob* pd3dErrorBlob = NULL;
+
+	// 생성한 루트 시그니처 DESC의 설정, 버전, Blob을 이용해 (할당 ?)
+	::D3D12SerializeRootSignature(&d3dRootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &pd3dSignatureBlob, &pd3dErrorBlob);
+
+	// pd3dDevice에 RootSignature생성 : (단일 GPU, 직렬화된 RootSignature의 데이터 포인터, RootSignature의 크기, riid, 생성할 RootSignature의 주소)
+	pd3dDevice->CreateRootSignature(0, pd3dSignatureBlob->GetBufferPointer(), pd3dSignatureBlob->GetBufferSize(), __uuidof(ID3D12RootSignature), (void**)&pd3dGraphicsRootSignature);
+
+	// com객체 Release
+	if (pd3dSignatureBlob) pd3dSignatureBlob->Release();
+	if (pd3dErrorBlob) pd3dErrorBlob->Release();
+	// 생성한 RootSignature의 주소를 내보내
+	return pd3dGraphicsRootSignature;
+}

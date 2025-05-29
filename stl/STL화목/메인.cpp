@@ -8,39 +8,57 @@
 //  map / multimap - pair(key, value>
 //-------------------------------------------------------------------------------------------
 #include<iostream>
+#include<fstream>
+#include<ranges>
+#include<array>
 #include<algorithm>
 #include<set>
-#include<ranges>
+#include<vector>
+#include<map>
+#include<format>
+#include<print>
 #include"save.h"
 #include"STRING.h"
 using namespace std;
 
 extern bool 관찰; // 관찰하려면 true로
-template<>
-struct less<STRING>
-{
-public:
-    bool operator()(const STRING & a, const STRING  & b) const //이게 멤버함수로 바꿔주는 순간 후위 const를 붙여줘야 됨 const 일관성
-    {
-        return a.size() < b.size();
-    }
-};
+
+
+// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
+// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
+// 단어의 개수를 출력하라 26626
+// [3] 단어와 사용횟수를 화면에 출력하라.
+
+bool cmp(pair<string, int>& a, pair<string, int>& b);
+void Sort(map<string, int>& M);
 
 //----------
 int main()
 //------------------------------------------------------------
 {  
+   
+
+    ifstream in("이상한 나라의 앨리스.txt");
+   
+    if (not in)
+        return 1234;
+
+     
+
+    map<STRING, size_t> wordNum;
+    STRING 단어;
+    while (in >> 단어)
+        wordNum[단어]++;
+
+
+
+    for (auto [word, count] : wordNum) {
+        cout << word << " - " << count << endl;
+       /* println("{:20} - {:}",(char*)(word) , count);*/
+    }
+  
     
 
-    //[문제] s를 기본정렬 기준인 less를 사용하여 바이트 수 기준으로 정렬되게 하자
-    set<STRING > s{ "333","2222","11111","44","5" }; 
-
-    for (const STRING& str : s) {
-        cout << str << endl;
-    }
-    cout<<endl;
-
-
-
+         
     save("메인.cpp");
 }

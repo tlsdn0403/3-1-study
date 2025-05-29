@@ -25,7 +25,7 @@ private:
 
 	CPlayer*					m_pPlayer = NULL;
 	
-	CGameState* pGameState = new CGameState();;
+	CGameState* pGameState = new CGameState();
 	StartScene*					pStartScene = NULL;
 	MenuScene* pMenuScene = NULL;
 	WinScene* pWinScene = nullptr;

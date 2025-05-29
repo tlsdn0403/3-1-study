@@ -1,39 +1,7 @@
 #include "stdafx.h"
 #include "Mesh.h"
 
-//정점을 표현하기 위한 클래스를 선언.
- class Vertex { 
- protected: 
-	 //정점의 위치 벡터이다(모든 정점은 최소한 위치 벡터를 가져야 한다).
-	 XMFLOAT3 m_xmf3Position;
 
-public:
-	Vertex() { m_xmf3Position = XMFLOAT3(0.0f, 0.0f, 0.0f); }
-	Vertex(XMFLOAT3 xmf3Position) { m_xmf3Position = xmf3Position; }
-	~Vertex() { } 
- };
-
-class DiffusedVertex : public Vertex {
-protected: 
-	//정점의 색상이다.
-	XMFLOAT4 m_xmf4Diffuse;
-public: 
-	DiffusedVertex() { 
-		m_xmf3Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
-		m_xmf4Diffuse = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
-	}
-
-	DiffusedVertex(float x, float y, float z, XMFLOAT4 xmf4Diffuse) {
-		m_xmf3Position = XMFLOAT3(x, y, z);
-		m_xmf4Diffuse = xmf4Diffuse; 
-	}
-
-	DiffusedVertex(XMFLOAT3 xmf3Position, XMFLOAT4 xmf4Diffuse) {
-		m_xmf3Position = xmf3Position;
-		m_xmf4Diffuse = xmf4Diffuse;
-	}
-	~DiffusedVertex() { }
-};
 
 Mesh::Mesh(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList) {
 
@@ -319,3 +287,4 @@ AirplaneMeshDiffused::AirplaneMeshDiffused(ID3D12Device *pd3dDevice, ID3D12Graph
 
 AirplaneMeshDiffused::~AirplaneMeshDiffused() {
 }
+

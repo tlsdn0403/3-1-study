@@ -29,7 +29,7 @@ public:
 	// 키보드 입력처리
 	bool OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 
-	void BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList);
+	void BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList , ID3D12RootSignature* rootSignatue);
 	void ReleaseObjects();
 
 	bool ProcessInput(UCHAR *pKeysBuffer);
@@ -39,7 +39,6 @@ public:
 	void ReleaseUploadBuffers();
 
 	//그래픽 루트 시그너쳐를 생성한다.
-	virtual ID3D12RootSignature *CreateGraphicsRootSignature(ID3D12Device *pd3dDevice);
 	virtual ID3D12RootSignature *GetGraphicsRootSignature();
 
 protected: 
@@ -48,7 +47,14 @@ protected:
 	int m_nShaders = 0;
 
 	ID3D12RootSignature *m_pd3dGraphicsRootSignature = NULL;
+
+protected:
+	GameObject** m_ppObjects = NULL;
+	int m_nObjects = 0;
 };
+
+
+
 class StartScene : public Scene {
 public:
 	void OnMouseClick(int x, int y);
@@ -56,12 +62,19 @@ public:
 	float angle = 0.0f;
 
 	// 오버라이드
-	 void BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList) ;
+	 void BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList , ID3D12RootSignature* rootSignatue) ;
 	 void Render(ID3D12GraphicsCommandList* pd3dCommandList, Camera* pCamera) ;
-
+	 void ReleaseUploadBuffers();
+	 void AnimateObjects(float fTimeElapsed);
 	// 소멸자 추가
 	virtual ~StartScene();
+	ID3D12RootSignature* m_pd3dGraphicsRootSignature = NULL;
 
+	float explosionTime = 0.0f;
 private:
-	StartSceneObjectsShader* m_pStartSceneShader = nullptr;
+	ObjectsShader* m_pStartSceneShader = nullptr;
+
+protected:
+	GameObject** m_ppStartObjects = NULL;
+	int m_nStartObjects = 0;
 };

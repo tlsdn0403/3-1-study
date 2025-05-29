@@ -13,7 +13,7 @@ GameObject::~GameObject() {
 
 void GameObject::SetShader(Shader *pShader) {
 	if (m_pShader) m_pShader->Release();
-	//m_pShader = pShader;
+	m_pShader = pShader;
 	if (m_pShader) m_pShader->AddRef();
 }
 
