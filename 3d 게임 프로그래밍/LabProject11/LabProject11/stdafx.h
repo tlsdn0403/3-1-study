@@ -32,7 +32,7 @@
 #include <DirectXPackedVector.h>
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
-
+#include <d2d1.h>
 
 
 //[선미추가] timeGetTime을 위해서
@@ -48,6 +48,7 @@ using Microsoft::WRL::ComPtr;
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
+#pragma comment(lib, "d2d1.lib")
 
 #define FRAME_BUFFER_WIDTH    1280 
 #define FRAME_BUFFER_HEIGHT  960

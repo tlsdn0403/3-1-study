@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Scene.h"
 #include <memory>
+#include <d2d1_1.h>
 
 class GameFramework{
 private:
@@ -27,6 +28,10 @@ private:
 	HWND m_hWnd;
 	int m_nWndClientWidth;
 	int m_nWndClientHeight;
+	//2D
+	ID2D1Factory1* m_pD2DFactory = nullptr;
+	ID2D1Device* m_pD2DDevice = nullptr;
+	ID2D1DeviceContext* m_pD2DContext = nullptr;
 
 	IDXGIFactory4* m_pdxgiFactory;
 	// 디스플레이 제어를 위해

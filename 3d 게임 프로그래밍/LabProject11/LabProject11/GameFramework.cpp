@@ -50,26 +50,34 @@ GameFramework::~GameFramework() {
 }
 
 bool GameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd) {
-// 응용 프로그램이 실행되어 주 윈도우가 생성되면 호출 !!!
+    m_hInstance = hInstance;
+    m_hWnd = hMainWnd;
 
-	m_hInstance = hInstance;
-	m_hWnd = hMainWnd;
+    CreateDirect3DDevice();
 
-	// Gameframework 생성
-	CreateDirect3DDevice();
-	
-	CreateCommandQueueAndList();
-	
-	CreateSwapChain();
-	CreateRtvAndDsvDescriptorHeaps();
-	CreateRenderTargetViews();
-	CreateDepthStencilViews();
-	
-	m_pd3dGraphicsRootSignature = CreateGraphicsRootSignature(m_pd3dDevice);
-	// 게임 오브젝트 생성
-	BuildObjects();
+    // === Direct2D 초기화 코드 추가 ===
+    D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
 
-	return true;
+    IDXGIDevice* pDXGIDevice = nullptr;
+    m_pd3dDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDXGIDevice);
+
+    m_pD2DFactory->CreateDevice(pDXGIDevice, &m_pD2DDevice);
+
+    m_pD2DDevice->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &m_pD2DContext);
+
+    if (pDXGIDevice) pDXGIDevice->Release();
+    // ===============================
+
+    CreateCommandQueueAndList();
+    CreateSwapChain();
+    CreateRtvAndDsvDescriptorHeaps();
+    CreateRenderTargetViews();
+    CreateDepthStencilViews();
+
+    m_pd3dGraphicsRootSignature = CreateGraphicsRootSignature(m_pd3dDevice);
+    BuildObjects();
+
+    return true;
 }
 
 
@@ -312,19 +320,24 @@ void GameFramework::CreateRtvAndDsvDescriptorHeaps(){
 }
 
 
-void GameFramework::CreateRenderTargetViews(){
-	// Rtv CPU Descriptor Handle 생성 - 힙의 시작을 나타내는 CPU 서술자 핸들 첫 주소를 받음
-	D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = m_pd3dRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+void GameFramework::CreateRenderTargetViews() {
+    D3D12_CPU_DESCRIPTOR_HANDLE d3dRtvCPUDescriptorHandle = m_pd3dRtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-	// Swap Chain Buffer의 개수만큼 반복
-	for (UINT i = 0; i < m_nSwapChainBuffers; i++)	{
-		// 스왑체인의 i번째 후면버퍼, uuidof를, Render Target Buffer[i]로 반환
-		HRESULT hResult = m_pdxgiSwapChain->GetBuffer(i, __uuidof(ID3D12Resource),(void **)&m_ppd3dRenderTargetBuffers[i]);
+    for (UINT i = 0; i < m_nSwapChainBuffers; i++) {
+        HRESULT hResult = m_pdxgiSwapChain->GetBuffer(i, __uuidof(ID3D12Resource), (void**)&m_ppd3dRenderTargetBuffers[i]);
+        m_pd3dDevice->CreateRenderTargetView(m_ppd3dRenderTargetBuffers[i], NULL, d3dRtvCPUDescriptorHandle);
+        d3dRtvCPUDescriptorHandle.ptr += m_nRtvDescriptorIncrementSize;
+    }
 
-		// 새로 만들어진 d3dRtvCPUDescriptorHandle(주소)의 내용을 Render Target Buffer[i]로 만들어
-		m_pd3dDevice->CreateRenderTargetView(m_ppd3dRenderTargetBuffers[i], NULL, d3dRtvCPUDescriptorHandle);
-		d3dRtvCPUDescriptorHandle.ptr += m_nRtvDescriptorIncrementSize;
-	}
+    //// 0번 버퍼에 대해 Direct2D 렌더 타겟 생성 (예시)
+    ComPtr<IDXGISurface> dxgiSurface;
+    m_ppd3dRenderTargetBuffers[3]->QueryInterface(__uuidof(IDXGISurface), (void**)&dxgiSurface);
+
+    D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties();
+    ID2D1RenderTarget* pD2DRenderTarget = nullptr;
+    m_pD2DFactory->CreateDxgiSurfaceRenderTarget(
+        dxgiSurface.Get(), &props, &pD2DRenderTarget
+    );
 }
 
 // 깊이 - 스텐실 뷰 생성
@@ -677,7 +690,7 @@ void GameFramework::ProcessInput(){
 	
 	POINT ptCursorPos;
 	/*마우스를 캡쳐했으면 마우스가 얼마만큼 이동하였는 가를 계산한다.
-	마우스 왼쪽 또는 오른쪽 버튼이 눌러질 때의 메시지(WM_LBUTTONDOWN, WM_RBUTTONDOWN)를 처리할 때 마우스를 캡쳐하였다. 
+	마우스 왼쪽 또는 오른쪽 버튼이 눌려질 때의 메시지(WM_LBUTTONDOWN, WM_RBUTTONDOWN)를 처리할 때 마우스를 캡쳐하였다. 
 	그러므로 마우스가 캡쳐된 것은 마우스 버튼이 눌려진 상태를 의미한다. 
 	마우스 버튼이 눌려진 상태에서 마우스를 좌우 또는 상하로 움직이면 플 레이어를 x-축 또는 y-축으로 회전한다.*/ 
 	

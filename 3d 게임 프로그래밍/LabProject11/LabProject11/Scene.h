@@ -2,6 +2,9 @@
 
 #include "Shader.h"
 #include "Player.h"
+
+#include <d2d1.h>
+#include <dwrite.h>
 class CGameState {
 public:
 	static enum GameState { TITLE, MENU, GAME, GAME_1, WIN, LOSS };
@@ -18,6 +21,23 @@ public:
 	}
 };
 
+struct MenuItemRect {
+	float left, top, right, bottom;
+};
+
+class MenuScene {
+public:
+	MenuScene(ID2D1RenderTarget* pRT, IDWriteFactory* pDWriteFactory);
+	void Render();
+	void OnMouseClick(float x, float y);
+
+private:
+	std::vector<std::wstring> m_MenuItems;
+	std::vector<MenuItemRect> m_MenuItemRects;
+	ID2D1RenderTarget* m_pRT;
+	IDWriteTextFormat* m_pTextFormat;
+	ID2D1SolidColorBrush* m_pBrush;
+};
 
 class Scene{
 public:

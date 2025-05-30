@@ -44,7 +44,7 @@ ID3D12Resource *CreateBufferResource(ID3D12Device *pd3dDevice, ID3D12GraphicsCom
 	d3dResourceDesc.SampleDesc.Count = 1;
 	// Resource Desc - 다중 샘플링 : 품질 레벨 0 == 다중 샘플링 하지 않음
 	d3dResourceDesc.SampleDesc.Quality = 0;
-	// Resource Desc - 다차원 리소스를 1차원 리소스로 매핑하기 위한 방법 : 텍스쳐 데이터가 행우선 순서로 저장
+	// Resource Desc - 다차원 리소스를 1차원 리소스로 매핑하기 위한 방법 : 텍스쳐 데이터가 행우선 순서로 저장 -> 이래야 세이더에서 빠르게 됨
 	d3dResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	// Resource Desc - 어떤 뷰에서 사용 가능한지 : 모두 가능
 	d3dResourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
