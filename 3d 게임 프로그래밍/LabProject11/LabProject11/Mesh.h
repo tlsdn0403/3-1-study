@@ -1,7 +1,7 @@
 #pragma once
 //정점을 표현하기 위한 클래스를 선언.
 class Vertex {
-protected:
+public:
 	//정점의 위치 벡터이다(모든 정점은 최소한 위치 벡터를 가져야 한다).
 	XMFLOAT3 m_xmf3Position;
 
@@ -32,15 +32,36 @@ public:
 	}
 	~DiffusedVertex() {}
 };
+
+
+
+class CPolygon
+{
+public:
+	CPolygon() {}
+	CPolygon(int nVertices);
+	~CPolygon();
+	int							m_nVertices = 0;
+	Vertex* m_pVertices = NULL;
+	void SetVertex(int nIndex, Vertex& vertex);
+};
+
 class Mesh {
 public:  
 	Mesh() {}
 	Mesh(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList);
 	virtual ~Mesh();
-
+	BOOL RayIntersectionByTriangle(XMVECTOR& xmRayOrigin, XMVECTOR& xmRayDirection, XMVECTOR v0, XMVECTOR v1, XMVECTOR v2, float* pfNearHitDistance);
+	int CheckRayIntersection(XMFLOAT3& xmf3RayOrigin, XMFLOAT3& xmf3RayDirection, float* pfNearHitDistance);
+public:
+	//모델 좌표계의 OOBB 바운딩 박스이다.
+	BoundingOrientedBox m_xmBoundingBox;
 private: 
 	int m_nReferences = 0;
-
+protected:
+	DiffusedVertex * m_pVertices = NULL;
+	//메쉬의 인덱스를 저장한다(인덱스 버퍼를 Map()하여 읽지 않아도 되도록).
+		UINT * m_pnIndices = NULL;
 public: 
 	void AddRef() { m_nReferences++; }
 	void Release() {
@@ -48,6 +69,10 @@ public:
 			delete this;
 	}
 	void ReleaseUploadBuffers();
+protected:
+	//메쉬를 구성하는 다각형(면)들의 리스트이다. 
+	int							m_nPolygons = 0;
+	CPolygon** m_ppPolygons = NULL;
 
 protected: 
 	// 리소스 버퍼
@@ -105,3 +130,15 @@ public:
 		XMFLOAT4 xmf4Color = XMFLOAT4(1.0f, 1.0f, 0.0f, 0.0f));
 	virtual ~AirplaneMeshDiffused();
 };
+class CartMesh : public Mesh {
+public:
+    CartMesh (ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList,
+		float fWidth = 20.0f, float fHeight = 20.0f, float fDepth = 20.0f,
+		XMFLOAT4 xmf4Color = XMFLOAT4(1.0f, 1.0f, 0.0f, 0.0f));
+};
+
+class CRollerCoasterMesh_Up : public Mesh {
+public:
+	CRollerCoasterMesh_Up(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, float fWidth, float fHeight, float fDepth);
+};
+

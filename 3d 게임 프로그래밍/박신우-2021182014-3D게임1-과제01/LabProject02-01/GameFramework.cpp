@@ -438,6 +438,4 @@ void CGameFramework::ChoiceGameMode() // 모드에 따라 화면 출력
 
 
 	}
-
-	
 }

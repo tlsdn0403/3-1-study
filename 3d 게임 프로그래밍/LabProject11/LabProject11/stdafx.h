@@ -33,13 +33,13 @@
 #include <DirectXColors.h>
 #include <DirectXCollision.h>
 #include <d2d1.h>
+#include <d3d11on12.h> // 상단에
 
 
-//[선미추가] timeGetTime을 위해서
-#include <windows.h>
 #include <timeapi.h>
+#pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "winmm.lib") 
-
+#pragma comment(lib, "dwrite.lib")
 using namespace DirectX;
 using namespace DirectX::PackedVector;
 using Microsoft::WRL::ComPtr;

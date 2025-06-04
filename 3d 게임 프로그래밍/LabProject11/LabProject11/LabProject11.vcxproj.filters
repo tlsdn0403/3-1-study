@@ -43,6 +43,9 @@
     <Filter Include="textMesh">
       <UniqueIdentifier>{9208e493-f995-490d-8816-2cf02c5bae34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CGameScene">
+      <UniqueIdentifier>{17863c0f-c199-452e-aeb5-8300d8dbf82f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -87,6 +90,9 @@
     <ClInclude Include="TextMesh.h">
       <Filter>textMesh</Filter>
     </ClInclude>
+    <ClInclude Include="CGameScene_1.h">
+      <Filter>CGameScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -121,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="TesxMesh.cpp">
       <Filter>textMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="CGameScene_1.cpp">
+      <Filter>CGameScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

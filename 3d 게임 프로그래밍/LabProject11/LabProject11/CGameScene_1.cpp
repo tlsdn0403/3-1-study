@@ -1,11 +1,14 @@
 #include "stdafx.h"
 #include "CGameScene_1.h"
+
+
+
 #include"Scene.h"
-#include "GraphicsPipeline.h"
 
 
 
-CGameScene_1::CGameScene_1(CPlayer* pPlayer)
+
+CGameScene_1::CGameScene_1(Player* pPlayer)
 {
 	m_pPlayer = pPlayer;
 }
@@ -16,17 +19,7 @@ void CGameScene_1::changeMovingState(bool b)
 {
 	isMovingCart = b;
 }
-void CGameScene_1::BuildObjects() {
-	CRollerCoasterMesh_Up* pRailMesh = new CRollerCoasterMesh_Up(20.0f, 10.0f, 6.0f);
-	m_nObjects_1 = 1;
-	m_ppObjects_1 = new CGameObject * [m_nObjects_1];
-
-
-
-	m_ppObjects_1[0] = new CGameObject();
-	m_ppObjects_1[0]->SetMesh(pRailMesh);
-	m_ppObjects_1[0]->SetColor(RGB(0, 0, 255));
-	m_ppObjects_1[0]->SetPosition(0.0f, 0.0f, -1.5f);
+void CGameScene_1::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, ID3D12RootSignature* rootSignature) {
 
 }
 void CGameScene_1::Animate(float fElapsedTime)
@@ -119,47 +112,15 @@ void CGameScene_1::moveCart()
 		}
 	}
 }
+void CGameScene_1::Render(ID3D12GraphicsCommandList* pd3dCommandList, Camera* pCamera)
+{
+}
 void CGameScene_1::ReleaseObjects()
 {
 	for (int i = 0; i < m_nObjects_1; i++) if (m_ppObjects_1[i]) delete m_ppObjects_1[i];
 	if (m_ppObjects_1) delete[] m_ppObjects_1;
 }
 
-void CGameScene_1::Render(HDC hDCFrameBuffer, CCamera* pCamera)
-{
-	CGraphicsPipeline::SetViewport(&pCamera->m_Viewport);
-	CGraphicsPipeline::SetViewPerspectiveProjectTransform(&pCamera->m_xmf4x4ViewPerspectiveProject);
-
-	for (int i = 0; i < m_nObjects_1; i++) m_ppObjects_1[i]->Render(hDCFrameBuffer, pCamera);
-
-	if (m_pPlayer) m_pPlayer->Render(hDCFrameBuffer, pCamera);
-}
 
 
-void CGameScene_1::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
-{
-	switch (nMessageID)
-	{
-	case WM_KEYDOWN:
-		switch (wParam)
-		{
-		case '1':
-		case '2':
-		case '3':
-		case '4':
-		case '5':
-		case '6':
-		case '7':
-		case '8':
-		case '9':
-		case 'N':
-			CGameState::ChangeGameState(CGameState::GAME); // 게임 상태로 변경  
-			break;
-		default:
-			break;
-		}
-		break;
-	default:
-		break;
-	}
-}
+
