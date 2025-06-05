@@ -50,7 +50,7 @@ public:
 	XMFLOAT3 GetLook();
 	XMFLOAT3 GetUp();
 	XMFLOAT3 GetRight();
-
+	float getY() { return m_xmf4x4World._42; }
 	// 게임 객체의 위치를 설정
 	void SetPosition(float x, float y, float z);
 	void SetPosition(XMFLOAT3 xmf3Position);
@@ -62,6 +62,9 @@ public:
 
 	// 게임 객체를 회전 (x-축, y-축, z-축) 
 	void Rotate(float fPitch = 10.0f, float fYaw = 10.0f, float fRoll = 10.0f);
+	void Revolve(const XMFLOAT3& center, const XMFLOAT3& axis, float angleDegrees);
+	void GenerateRayForPicking(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, XMVECTOR& xmvPickRayOrigin, XMVECTOR& xmvPickRayDirection);
+	int PickObjectByRayIntersection(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, float* pfHitDistance);
 };
 
 class RotatingObject : public GameObject {

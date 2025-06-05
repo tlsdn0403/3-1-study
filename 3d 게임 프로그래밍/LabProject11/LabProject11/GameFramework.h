@@ -3,7 +3,11 @@
 #include "Player.h"
 #include "Scene.h"
 #include <memory>
-#include <d2d1_1.h>
+#include <wrl.h>
+#include <d3d11on12.h>
+#include <d2d1_3.h>
+#include <dwrite.h>
+#include"CGameScene_1.h"
 
 class GameFramework{
 private:
@@ -16,6 +20,8 @@ private:
 	// Scene
 	Scene* m_pScene;
 	StartScene *m_pStartScene;
+	MenuScene* m_pMenuScene;
+	CGameScene_1* m_pGame_1_Scene;
 	// Camera
 	Camera *m_pCamera = NULL;
 	// Player
@@ -28,10 +34,9 @@ private:
 	HWND m_hWnd;
 	int m_nWndClientWidth;
 	int m_nWndClientHeight;
-	//2D
-	ID2D1Factory1* m_pD2DFactory = nullptr;
-	ID2D1Device* m_pD2DDevice = nullptr;
-	ID2D1DeviceContext* m_pD2DContext = nullptr;
+
+	
+
 
 	IDXGIFactory4* m_pdxgiFactory;
 	// 디스플레이 제어를 위해
@@ -61,6 +66,10 @@ private:
 	ID3D12DescriptorHeap *m_pd3dDsvDescriptorHeap;
 	// 디프스텐실 서술자 원소의 크기
 	UINT m_nDsvDescriptorIncrementSize;
+
+
+
+
 
 	//명령 큐, 명령 할당자, 명령 리스트 인터페이스
 	ID3D12CommandQueue *m_pd3dCommandQueue;
@@ -127,10 +136,12 @@ public:
 	//그래픽 루트 시그너쳐를 생성한다.
 	virtual ID3D12RootSignature* CreateGraphicsRootSignature(ID3D12Device* pd3dDevice);
 
-
+	
 
 	// 윈도우의 메시지(키보드, 마우스 입력)을 처리하는 함수
 	void OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 	void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 	LRESULT CALLBACK OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
+
+	void ChoiceGameMode();
 };

@@ -13,7 +13,7 @@
 class Player : public GameObject{
 protected:
 	//플레이어의 위치 벡터, x-축(Right), y-축(Up), z-축(Look) 벡터이다.
-	XMFLOAT3 m_xmf3Position;
+	
 	XMFLOAT3 m_xmf3Right;
 	XMFLOAT3 m_xmf3Up;
 	XMFLOAT3 m_xmf3Look;
@@ -52,6 +52,7 @@ public:
 	
 	virtual ~Player();
 
+	XMFLOAT3 m_xmf3Position;
 	XMFLOAT3 GetPosition() { return(m_xmf3Position); } 
 	XMFLOAT3 GetLookVector() { return(m_xmf3Look); }
 	XMFLOAT3 GetUpVector() { return(m_xmf3Up); } 
@@ -124,5 +125,13 @@ public:
 	virtual ~AirplanePlayer();
 	
 	virtual Camera *ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed);
+	virtual void OnPrepareRender();
+};
+class CartPlayer : public Player {
+public:
+	CartPlayer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, ID3D12RootSignature* pd3dGraphicsRootSignature);
+	virtual ~CartPlayer();
+
+	virtual Camera* ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed);
 	virtual void OnPrepareRender();
 };

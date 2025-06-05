@@ -55,18 +55,6 @@ bool GameFramework::OnCreate(HINSTANCE hInstance, HWND hMainWnd) {
 
     CreateDirect3DDevice();
 
-    // === Direct2D 초기화 코드 추가 ===
-    D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pD2DFactory);
-
-    IDXGIDevice* pDXGIDevice = nullptr;
-    m_pd3dDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&pDXGIDevice);
-
-    m_pD2DFactory->CreateDevice(pDXGIDevice, &m_pD2DDevice);
-
-    m_pD2DDevice->CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS_NONE, &m_pD2DContext);
-
-    if (pDXGIDevice) pDXGIDevice->Release();
-    // ===============================
 
     CreateCommandQueueAndList();
     CreateSwapChain();
@@ -113,6 +101,8 @@ void GameFramework::OnDestory(){
 	if (m_pdxgiFactory) m_pdxgiFactory->Release();
 
 }
+
+
 
 inline void GameFramework::CreateSwapChain() {
 
@@ -328,16 +318,6 @@ void GameFramework::CreateRenderTargetViews() {
         m_pd3dDevice->CreateRenderTargetView(m_ppd3dRenderTargetBuffers[i], NULL, d3dRtvCPUDescriptorHandle);
         d3dRtvCPUDescriptorHandle.ptr += m_nRtvDescriptorIncrementSize;
     }
-
-    //// 0번 버퍼에 대해 Direct2D 렌더 타겟 생성 (예시)
-    ComPtr<IDXGISurface> dxgiSurface;
-    m_ppd3dRenderTargetBuffers[3]->QueryInterface(__uuidof(IDXGISurface), (void**)&dxgiSurface);
-
-    D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties();
-    ID2D1RenderTarget* pD2DRenderTarget = nullptr;
-    m_pD2DFactory->CreateDxgiSurfaceRenderTarget(
-        dxgiSurface.Get(), &props, &pD2DRenderTarget
-    );
 }
 
 // 깊이 - 스텐실 뷰 생성
@@ -464,6 +444,12 @@ void GameFramework::FrameAdvance(){
 	case TITLE:
 		if (m_pStartScene) m_pStartScene->Render(m_pd3dCommandList, m_pCamera);
 		break;
+	case MENU:
+		if (m_pMenuScene) m_pMenuScene->Render(m_pd3dCommandList, m_pCamera);
+		break;
+	case GAME_1:
+		if (m_pGame_1_Scene) m_pGame_1_Scene->Render(m_pd3dCommandList, m_pCamera);
+		break;
 	}
 
 
@@ -503,7 +489,7 @@ void GameFramework::FrameAdvance(){
 	m_pdxgiSwapChain->Present(0, 0 /*&dxgiPresentParameters*/);
 
 	MoveToNextFrame();
-
+	ChoiceGameMode();
 	/*::_itow_s(m_nCurrentFrameRate, (m_pszFrameRate + 12), 37, 10);
 	::wcscat_s((m_pszFrameRate + 12), 37, _T(" FPS)"));*/
 
@@ -530,6 +516,22 @@ void GameFramework::WaitForGpuComplete(){
 void GameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam){
 	switch (nMessageID)	{
 	case WM_LBUTTONDOWN:
+		switch (pGameState->GetCurrentState())
+		{
+		case TITLE:
+			m_pStartScene->OnMouseClick(LOWORD(lParam), HIWORD(lParam)); // x, y 좌표 전달
+			break;
+		case MENU:
+			m_pMenuScene->OnMouseClick(LOWORD(lParam), HIWORD(lParam)); // x, y 좌표 전달
+			break;
+		case GAME_1:
+			m_pGame_1_Scene->changeDir(DIR_FORWARD);
+			if (!m_pGame_1_Scene->checkMoving())
+				m_pGame_1_Scene->changeMovingState(true);
+			else
+				m_pGame_1_Scene->changeMovingState(false);
+			break;
+		}
 	case WM_RBUTTONDOWN:
 		// 마우스 캡쳐 - 현재 마우스 위치를 가져온다.
 		::SetCapture(hWnd);
@@ -573,7 +575,7 @@ void GameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPAR
 			break;
 		case'N':
 			ReleaseObjects();
-			pGameState->CGameState::ChangeGameState(CGameState::TITLE);
+			pGameState->CGameState::ChangeGameState(CGameState::MENU);
 			BuildObjects();
 			break;
 		default: break;
@@ -617,20 +619,38 @@ void GameFramework::BuildObjects() {
     case GAME:
         m_pScene = new Scene();
         m_pScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList, m_pd3dGraphicsRootSignature);
-        m_pPlayer = std::make_unique<AirplanePlayer>(m_pd3dDevice, m_pd3dCommandList, m_pScene->GetGraphicsRootSignature());
+        m_pPlayer = std::make_unique<CartPlayer>(m_pd3dDevice, m_pd3dCommandList, m_pScene->GetGraphicsRootSignature());
         m_pCamera = m_pPlayer->GetCamera();
+		if (m_pPlayer)
+			m_pCamera = m_pPlayer->ChangeCamera((DWORD)(3), m_GameTimer.GetTimeElapsed());
         break;
 
     case TITLE:
         m_pStartScene = new StartScene();
         m_pStartScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList, m_pd3dGraphicsRootSignature);
-        // 타이틀 모드에서는 플레이어/카메라 생성하지 않음
-        /*m_pPlayer = nullptr;
-        m_pCamera = nullptr;*/
 
 		m_pPlayer = std::make_unique<AirplanePlayer>(m_pd3dDevice, m_pd3dCommandList, m_pStartScene->GetGraphicsRootSignature());
 		m_pCamera = m_pPlayer->GetCamera();
         break;
+	case MENU:
+		m_pMenuScene = new MenuScene();
+		m_pMenuScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList, m_pd3dGraphicsRootSignature);
+
+		m_pPlayer = std::make_unique<AirplanePlayer>(m_pd3dDevice, m_pd3dCommandList, m_pMenuScene->GetGraphicsRootSignature());
+		m_pCamera = m_pPlayer->GetCamera();
+		break;
+
+	case GAME_1:
+		m_pGame_1_Scene = new CGameScene_1();
+		m_pGame_1_Scene->BuildObjects(m_pd3dDevice, m_pd3dCommandList, m_pd3dGraphicsRootSignature);
+		m_pPlayer = std::make_unique<CartPlayer>(m_pd3dDevice, m_pd3dCommandList, m_pGame_1_Scene->GetGraphicsRootSignature());
+		m_pCamera = m_pPlayer->GetCamera();
+		m_pPlayer->SetPosition(XMFLOAT3(-20.0f, 0.0f, 0.0f));
+		m_pPlayer->Rotate(0.0f, 90.0f, 0.0f);
+		if (m_pPlayer)
+			m_pCamera = m_pPlayer->ChangeCamera((DWORD)(3), m_GameTimer.GetTimeElapsed());
+		m_pGame_1_Scene->getPlayer(m_pPlayer.get());
+		break;
     }
 
     m_pd3dCommandList->Close();
@@ -645,6 +665,12 @@ void GameFramework::BuildObjects() {
     case TITLE:
         if (m_pStartScene) m_pStartScene->ReleaseUploadBuffers();
         break;
+	case MENU:
+		if (m_pMenuScene) m_pMenuScene->ReleaseUploadBuffers();
+		break;
+	case GAME_1:
+		if (m_pGame_1_Scene) m_pMenuScene->ReleaseUploadBuffers();
+		break;
     }
 }
 
@@ -656,16 +682,41 @@ void GameFramework::ReleaseObjects(){
 			m_pScene->ReleaseObjects();
 			delete m_pScene;
 			m_pScene = nullptr;
-			break;
+			
 		}
+		break;
 	}
 	case TITLE:
+	{
 		if (m_pStartScene) {
 			m_pStartScene->ReleaseObjects();
 			delete m_pStartScene;
 			m_pStartScene = nullptr;
-			break;
+			
 		}
+		break;
+	}
+	case MENU:
+	{
+		if (m_pMenuScene) {
+			m_pMenuScene->ReleaseObjects();
+			delete m_pMenuScene;
+			m_pMenuScene = nullptr;
+
+		}
+		break;
+	}
+	case GAME_1:
+	{
+		if (m_pGame_1_Scene) {
+			m_pGame_1_Scene->ReleaseObjects();
+			delete m_pGame_1_Scene;
+			m_pGame_1_Scene = nullptr;
+
+		}
+		break;
+			
+	}
 	}
 }
 
@@ -750,6 +801,42 @@ void GameFramework::ProcessInput(){
 				//마우스 커서의 위치를 마우스가 눌려졌던 위치로 설정한다.
 				::SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
 			}
+			break;
+		}
+	case MENU:
+		if (m_pMenuScene) {
+			if (::GetCapture() == m_hWnd) {
+				//마우스 커서를 화면에서 없앤다(보이지 않게 한다). 
+				::SetCursor(NULL);
+
+				//현재 마우스 커서의 위치를 가져온다.
+				::GetCursorPos(&ptCursorPos);
+
+				//마우스 버튼이 눌린 상태에서 마우스가 움직인 양을 구한다. 
+				cxDelta = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.0f;
+				cyDelta = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.0f;
+
+				//마우스 커서의 위치를 마우스가 눌려졌던 위치로 설정한다.
+				::SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
+			}
+			break;
+		}
+	case GAME_1:
+		if (m_pGame_1_Scene) {
+			if (::GetCapture() == m_hWnd) {
+				//마우스 커서를 화면에서 없앤다(보이지 않게 한다). 
+				::SetCursor(NULL);
+
+				//현재 마우스 커서의 위치를 가져온다.
+				::GetCursorPos(&ptCursorPos);
+
+				//마우스 버튼이 눌린 상태에서 마우스가 움직인 양을 구한다. 
+				cxDelta = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.0f;
+				cyDelta = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.0f;
+
+				//마우스 커서의 위치를 마우스가 눌려졌던 위치로 설정한다.
+				::SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
+			}
 
 			//마우스 또는 키 입력이 있으면 플레이어를 이동하거나(dwDirection) 회전한다(cxDelta 또는 cyDelta).
 			if ((dwDirection != 0) || (cxDelta != 0.0f) || (cyDelta != 0.0f)) {
@@ -771,9 +858,11 @@ void GameFramework::ProcessInput(){
 			break;
 		}
 	}
+}
+
 
 	
-}
+
 
 void GameFramework::AnimateObject(){
 	switch (pGameState->GetCurrentState()) {
@@ -781,14 +870,28 @@ void GameFramework::AnimateObject(){
 	{
 		if (m_pScene) {
 			m_pScene->AnimateObjects(m_GameTimer.GetTimeElapsed());
-			break;
 		}
+		break;
+
 	}
 	case TITLE:
 		if (m_pStartScene) {
 			m_pStartScene->AnimateObjects(m_GameTimer.GetTimeElapsed());
-			break;
+			
 		}
+		break;
+	case MENU:
+		if (m_pMenuScene) {
+			m_pMenuScene->AnimateObjects(m_GameTimer.GetTimeElapsed());
+			
+		}
+		break;
+	case GAME_1:
+		if (m_pGame_1_Scene) {
+			m_pGame_1_Scene->AnimateObjects(m_GameTimer.GetTimeElapsed());
+
+		}
+		break;
 	}
 
 		
@@ -933,4 +1036,34 @@ ID3D12RootSignature* GameFramework::CreateGraphicsRootSignature(ID3D12Device* pd
 	if (pd3dErrorBlob) pd3dErrorBlob->Release();
 	// 생성한 RootSignature의 주소를 내보내
 	return pd3dGraphicsRootSignature;
+}
+void GameFramework::ChoiceGameMode() // 모드에 따라 화면 출력
+{
+    if (pGameState->GetCurrentState() != GAME && m_pScene) {
+    m_pScene->ReleaseObjects();
+    delete m_pScene;
+    m_pScene = nullptr;
+    }
+
+    switch (pGameState->GetCurrentState())
+    {
+    case TITLE:
+    if (!m_pStartScene) m_pStartScene = new StartScene();
+    m_pStartScene->Render(m_pd3dCommandList, m_pCamera);
+    break;
+    case MENU:
+    if (!m_pMenuScene) 
+    BuildObjects();
+    break;
+    case GAME:
+    if (!m_pScene) {
+    BuildObjects();
+    }
+    break;
+    case GAME_1:
+    if (!m_pGame_1_Scene) {
+    BuildObjects();
+    }
+    break;
+    }
 }

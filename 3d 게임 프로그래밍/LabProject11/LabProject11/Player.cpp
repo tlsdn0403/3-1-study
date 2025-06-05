@@ -332,7 +332,7 @@ void Player::Render(ID3D12GraphicsCommandList * pd3dCommandList, Camera * pCamer
 	DWORD nCameraMode = (pCamera) ? pCamera->GetMode() : 0x00;
 	
 	if (m_pShader) {
-		//게임 객체의 월드 변환 행렬을 셰이더의 상수 버퍼로 전달(복사)한다.
+		////게임 객체의 월드 변환 행렬을 셰이더의 상수 버퍼로 전달(복사)한다.
 		//m_pShader->UpdateShaderVariable(pd3dCommandList, &m_xmf4x4World);
 		//m_pShader->Render(pd3dCommandList, pCamera);
 	}
@@ -344,7 +344,7 @@ void Player::Render(ID3D12GraphicsCommandList * pd3dCommandList, Camera * pCamer
 
 AirplanePlayer::AirplanePlayer(ID3D12Device * pd3dDevice, ID3D12GraphicsCommandList * pd3dCommandList, ID3D12RootSignature * pd3dGraphicsRootSignature){
 	//비행기 메쉬를 생성한다.
-	Mesh *pAirplaneMesh = new AirplaneMeshDiffused(pd3dDevice, pd3dCommandList, 20.0f, 20.0f, 4.0f, XMFLOAT4(0.0f, 0.5f, 0.0f, 0.0f));
+	Mesh *pAirplaneMesh = new CartMesh(pd3dDevice, pd3dCommandList, 20.0f, 15.0f, 20.0f, XMFLOAT4(0.0f, 0.5f, 0.0f, 0.0f));
 	SetMesh(pAirplaneMesh);
 	
 	//플레이어의 카메라를 스페이스-쉽 카메라로 변경(생성)한다.
@@ -452,6 +452,121 @@ void AirplanePlayer::OnPrepareRender(){
 	Player::OnPrepareRender();
 
 	//비행기 모델을 그리기 전, 회전
-	XMMATRIX mtxRotate = XMMatrixRotationRollPitchYaw(XMConvertToRadians(90.0f), 0.0f, 0.0f);
-	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);
+	/*XMMATRIX mtxRotate = XMMatrixRotationRollPitchYaw(XMConvertToRadians(90.0f), 0.0f, 0.0f);
+	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);*/
+}
+
+
+CartPlayer::CartPlayer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, ID3D12RootSignature* pd3dGraphicsRootSignature) {
+	//카트 메쉬를 생성한다.
+	Mesh* pAirplaneMesh = new CartMesh(pd3dDevice, pd3dCommandList, 2.0f, 2.0f, 2.0f, XMFLOAT4(0.0f, 0.5f, 0.0f, 0.0f));
+	SetMesh(pAirplaneMesh);
+
+	//플레이어의 카메라를 스페이스-쉽 카메라로 변경(생성)한다.
+	m_pCamera = ChangeCamera(SPACESHIP_CAMERA, 0.0f);
+
+	//플레이어를 위한 셰이더 변수를 생성한다.
+	CreateShaderVariables(pd3dDevice, pd3dCommandList);
+
+	//플레이어의 위치를 설정한다. 
+	SetPosition(XMFLOAT3(0.0f, 0.0f, -50.0f));
+
+	//플레이어(비행기) 메쉬를 렌더링할 때 사용할 셰이더를 생성한다.
+	PlayerShader* pShader = new PlayerShader();
+	pShader->CreateShader(pd3dDevice, pd3dGraphicsRootSignature);
+
+	// 쉐이더 해야하나
+	pShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
+
+	// 이거 뭐지(?)  - 쉐이더에 객체가 있는데
+	SetShader(pShader);
+}
+
+CartPlayer::~CartPlayer() {
+
+}
+
+//카메라를 변경할 때 호출되는 함수이다. nNewCameraMode는 새로 설정할 카메라 모드이다. 
+Camera* CartPlayer::ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed) {
+	DWORD nCurrentCameraMode = (m_pCamera) ? m_pCamera->GetMode() : 0x00;
+	if (nCurrentCameraMode == nNewCameraMode)
+		return(m_pCamera);
+
+	switch (nNewCameraMode) {
+	case FIRST_PERSON_CAMERA:
+		//플레이어의 특성을 1인칭 카메라 모드에 맞게 변경한다. 중력은 적용하지 않는다.
+		SetFriction(200.0f);
+		SetGravity(XMFLOAT3(0.0f, 0.0f, 0.0f));
+		SetMaxVelocityXZ(125.0f);
+		SetMaxVelocityY(400.0f);
+		m_pCamera = OnChangeCamera(FIRST_PERSON_CAMERA, nCurrentCameraMode);
+
+		// 1인칭 카메라의 지연 효과를 설정한다. (0.f ~ 1.f)
+		m_pCamera->SetTimeLag(0.0f);
+		// 카메라가 캐릭터기준 어디에 위치하는가
+		m_pCamera->SetOffset(XMFLOAT3(0.0f, 20.0f, 0.0f));
+		// 카메라 절두체
+		m_pCamera->GenerateProjectionMatrix(1.01f, 5000.0f, ASPECT_RATIO, 60.0f);
+		// 카메라 뷰포트
+		m_pCamera->SetViewport(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0.0f, 1.0f);
+		// 카메라 씨저
+		m_pCamera->SetScissorRect(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
+		break;
+
+	case SPACESHIP_CAMERA:
+		//플레이어의 특성을 스페이스-쉽 카메라 모드에 맞게 변경한다. 중력은 적용하지 않는다.
+		SetFriction(125.0f);
+		SetGravity(XMFLOAT3(0.0f, 0.0f, 0.0f));
+		SetMaxVelocityXZ(400.0f);
+		SetMaxVelocityY(400.0f);
+		m_pCamera = OnChangeCamera(SPACESHIP_CAMERA, nCurrentCameraMode);
+
+		// 자유시점 카메라의 지연 효과를 설정한다. (0.f ~ 1.f)
+		m_pCamera->SetTimeLag(0.0f);
+		// 카메라가 캐릭터기준 어디에 위치하는가
+		m_pCamera->SetOffset(XMFLOAT3(0.0f, 0.0f, 0.0f));
+		// 카메라 절두체
+		m_pCamera->GenerateProjectionMatrix(1.01f, 5000.0f, ASPECT_RATIO, 60.0f);
+		// 카메라 뷰포트
+		m_pCamera->SetViewport(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0.0f, 1.0f);
+		// 카메라 씨저
+		m_pCamera->SetScissorRect(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
+		break;
+
+	case THIRD_PERSON_CAMERA:
+		//플레이어의 특성을 3인칭 카메라 모드에 맞게 변경한다. 지연 효과와 카메라 오프셋을 설정한다.
+		SetFriction(250.0f);
+		SetGravity(XMFLOAT3(0.0f, 0.0f, 0.0f));
+		SetMaxVelocityXZ(125.0f);
+		SetMaxVelocityY(400.0f);
+		m_pCamera = OnChangeCamera(THIRD_PERSON_CAMERA, nCurrentCameraMode);
+
+		// 3인칭 카메라의 지연 효과를 설정한다. (0.f ~ 1.f)
+		m_pCamera->SetTimeLag(0.25f);
+		// 카메라가 캐릭터기준 어디에 위치하는가
+		m_pCamera->SetOffset(XMFLOAT3(0.0f, 60.0f, -50.0f));
+		// 카메라 절두체
+		m_pCamera->GenerateProjectionMatrix(1.01f, 5000.0f, ASPECT_RATIO, 60.0f);
+		// 카메라 뷰포트
+		m_pCamera->SetViewport(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0.0f, 1.0f);
+		// 카메라 씨저
+		m_pCamera->SetScissorRect(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
+		break;
+
+	default:
+		break;
+	}
+
+	//플레이어를 시간의 경과에 따라 갱신(위치와 방향을 변경: 속도, 마찰력, 중력 등을 처리)한다.
+	Update(fTimeElapsed);
+
+	return(m_pCamera);
+}
+
+void CartPlayer::OnPrepareRender() {
+	Player::OnPrepareRender();
+
+	//비행기 모델을 그리기 전, 회전
+	/*XMMATRIX mtxRotate = XMMatrixRotationRollPitchYaw(XMConvertToRadians(90.0f), 0.0f, 0.0f);
+	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);*/
 }

@@ -2,9 +2,12 @@
 
 #include "Shader.h"
 #include "Player.h"
-
 #include <d2d1.h>
 #include <dwrite.h>
+#include <d2d1_1.h>
+#include <wrl/client.h>
+
+
 class CGameState {
 public:
 	static enum GameState { TITLE, MENU, GAME, GAME_1, WIN, LOSS };
@@ -21,23 +24,12 @@ public:
 	}
 };
 
-struct MenuItemRect {
-	float left, top, right, bottom;
-};
 
-class MenuScene {
-public:
-	MenuScene(ID2D1RenderTarget* pRT, IDWriteFactory* pDWriteFactory);
-	void Render();
-	void OnMouseClick(float x, float y);
 
-private:
-	std::vector<std::wstring> m_MenuItems;
-	std::vector<MenuItemRect> m_MenuItemRects;
-	ID2D1RenderTarget* m_pRT;
-	IDWriteTextFormat* m_pTextFormat;
-	ID2D1SolidColorBrush* m_pBrush;
-};
+
+
+
+
 
 class Scene{
 public:
@@ -57,7 +49,7 @@ public:
 	virtual void Render(ID3D12GraphicsCommandList *pd3dCommandList, Camera *pCamera);
 
 	void ReleaseUploadBuffers();
-
+	
 	//그래픽 루트 시그너쳐를 생성한다.
 	virtual ID3D12RootSignature *GetGraphicsRootSignature();
 
@@ -89,6 +81,8 @@ public:
 	// 소멸자 추가
 	virtual ~StartScene();
 	ID3D12RootSignature* m_pd3dGraphicsRootSignature = NULL;
+	void ReleaseObjects();
+
 
 	float explosionTime = 0.0f;
 private:
@@ -97,4 +91,27 @@ private:
 protected:
 	GameObject** m_ppStartObjects = NULL;
 	int m_nStartObjects = 0;
+};
+
+class MenuScene : public Scene {
+public:
+
+	void OnMouseClick(int x, int y);
+	// 오버라이드
+	void BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, ID3D12RootSignature* rootSignatue);
+	void Render(ID3D12GraphicsCommandList* pd3dCommandList, Camera* pCamera);
+	void ReleaseUploadBuffers();
+	// 소멸자 추가
+	virtual ~MenuScene();
+	ID3D12RootSignature* m_pd3dGraphicsRootSignature = NULL;
+	void ReleaseObjects();
+
+
+	float explosionTime = 0.0f;
+	ObjectsShader* m_pMenuSceneShader = nullptr;
+
+protected:
+	GameObject** m_ppMenuObjects = NULL;
+	int m_nMenuObjects = 0;
+
 };

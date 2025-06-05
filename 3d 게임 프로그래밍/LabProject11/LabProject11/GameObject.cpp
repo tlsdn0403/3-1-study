@@ -55,7 +55,28 @@ void GameObject::Rotate(XMFLOAT3 *pxmf3Axis, float fAngle) {
 	XMMATRIX mtxRotate = XMMatrixRotationAxis(XMLoadFloat3(pxmf3Axis), XMConvertToRadians(fAngle));
 	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);
 }
+void GameObject::Revolve(const XMFLOAT3& center, const XMFLOAT3& axis, float angleDegrees)
+{
+	// 1. 현재 위치에서 중심점까지의 벡터
+	XMFLOAT3 pos = GetPosition();
+	XMVECTOR vPos = XMLoadFloat3(&pos);
+	XMVECTOR vCenter = XMLoadFloat3(&center);
+	XMVECTOR vDir = vPos - vCenter;
 
+	// 2. 회전 행렬 생성
+	XMMATRIX mRotate = XMMatrixRotationAxis(XMLoadFloat3(&axis), XMConvertToRadians(angleDegrees));
+
+	// 3. 벡터 회전
+	vDir = XMVector3TransformNormal(vDir, mRotate);
+
+	// 4. 회전된 벡터를 중심점에 더함
+	vPos = vCenter + vDir;
+
+	// 5. 위치 설정
+	XMFLOAT3 newPos;
+	XMStoreFloat3(&newPos, vPos);
+	SetPosition(newPos);
+}
 void GameObject::CreateShaderVariables(ID3D12Device * pd3dDevice, ID3D12GraphicsCommandList * pd3dCommandList){
 
 }
@@ -147,4 +168,38 @@ void GameObject::SetPosition(float x, float y, float z){
 
 void GameObject::SetPosition(XMFLOAT3 xmf3Position){
 	SetPosition(xmf3Position.x, xmf3Position.y, xmf3Position.z);
+}
+void GameObject::GenerateRayForPicking(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, XMVECTOR& xmvPickRayOrigin, XMVECTOR& xmvPickRayDirection)
+{
+	//카메라 좌표계를 모델 좌표계로 바꿔주는 행렬의 의미가 된다.
+	XMMATRIX xmmtxToModel = XMMatrixInverse(NULL, XMLoadFloat4x4(&m_xmf4x4World) * xmmtxView);  //월드변환 행렬과 카메라 변환 행렬을 곱한거의 역행렬을 구한다.  
+
+	XMFLOAT3 xmf3CameraOrigin(0.0f, 0.0f, 0.0f);
+	xmvPickRayOrigin = XMVector3TransformCoord(XMLoadFloat3(&xmf3CameraOrigin), xmmtxToModel); //카메라 좌표계의 0,0,0을 모델 좌표계로 바꿔주는 변환.
+	xmvPickRayDirection = XMVector3TransformCoord(xmvPickPosition, xmmtxToModel); //피킹 포지션도 모델 좌표계로 바꿔준다.
+
+	xmvPickRayDirection = XMVector3Normalize(xmvPickRayDirection - xmvPickRayOrigin); //모델 좌표계의 광선의 방향
+}
+
+
+
+int GameObject::PickObjectByRayIntersection(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, float* pfHitDistance) //포지션 , 카메라 변환행렬
+{
+	int nIntersected = 0;
+	if (m_pMesh)
+	{
+		XMVECTOR xmvPickRayOrigin, xmvPickRayDirection;
+		//우리는 충돌이라고 하는 것을 월드좌표게에서 할 것이다.
+		GenerateRayForPicking(xmvPickPosition, xmmtxView, xmvPickRayOrigin, xmvPickRayDirection); //광선을 월드좌표게의 벡터로 만든다.
+		//xmvPickRayOrigin과 xmvPickRayDirection은 월드좌표게의 벡터가 된다.
+
+		// XMVECTOR를 XMFLOAT3로 변환　
+		XMFLOAT3 xmfPickRayOrigin, xmfPickRayDirection;
+		XMStoreFloat3(&xmfPickRayOrigin, xmvPickRayOrigin);
+		XMStoreFloat3(&xmfPickRayDirection, xmvPickRayDirection);
+
+		//바운딩 박스에 대한 충돌검사를 먼저하고 바운딩 박스 안에 있는 메쉬에 대해서 충돌 검사를 하겠다.
+		nIntersected = m_pMesh->CheckRayIntersection(xmfPickRayOrigin, xmfPickRayDirection, pfHitDistance);  //여기서는 모델좌표게에서 피킹을 하겠다.
+	}
+	return nIntersected;
 }
