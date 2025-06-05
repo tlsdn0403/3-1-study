@@ -724,7 +724,7 @@ void MenuScene::OnMouseClick(int x, int y) {
 
     if (x >= level1_left && x <= level1_right &&
         y >= level1_top && y <= level1_bottom) {
-        CGameState::ChangeGameState(CGameState::GAME);
+        CGameState::ChangeGameState(CGameState::GAME_1);
     }
 }
 void MenuScene::ReleaseObjects() {

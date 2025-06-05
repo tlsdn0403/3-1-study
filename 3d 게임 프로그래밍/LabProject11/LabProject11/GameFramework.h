@@ -7,6 +7,7 @@
 #include <d3d11on12.h>
 #include <d2d1_3.h>
 #include <dwrite.h>
+#include"CGameScene_1.h"
 
 class GameFramework{
 private:
@@ -20,6 +21,7 @@ private:
 	Scene* m_pScene;
 	StartScene *m_pStartScene;
 	MenuScene* m_pMenuScene;
+	CGameScene_1* m_pGame_1_Scene;
 	// Camera
 	Camera *m_pCamera = NULL;
 	// Player

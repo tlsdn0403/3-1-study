@@ -1,16 +1,12 @@
 #include "stdafx.h"
 #include "CGameScene_1.h"
-
-
-
 #include"Scene.h"
 
 
 
 
-CGameScene_1::CGameScene_1(Player* pPlayer)
+CGameScene_1::CGameScene_1()
 {
-	m_pPlayer = pPlayer;
 }
 CGameScene_1::~CGameScene_1()
 {
@@ -20,7 +16,20 @@ void CGameScene_1::changeMovingState(bool b)
 	isMovingCart = b;
 }
 void CGameScene_1::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, ID3D12RootSignature* rootSignature) {
-
+	
+	m_pd3dGraphicsRootSignature = rootSignature;
+	// 1. ¼ÎÀÌ´õ »ý¼º
+	m_nShaders = 1;
+	m_pShaders = new ObjectsShader[m_nShaders];
+	m_pShaders[0].CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
+	GameObject* obj = new GameObject();
+	CRollerCoasterMesh_Up* pRailMesh = new CRollerCoasterMesh_Up(pd3dDevice, pd3dCommandList, 20.0f, 10.0f, 6.0f);
+	m_nObjects =  1;
+	m_ppObjects = new GameObject * [m_nObjects];
+	obj->SetMesh(pRailMesh);
+	obj->SetShader(&m_pShaders[0]);
+	obj->SetPosition(0, 0, 0);
+	m_ppObjects[0] = obj;
 }
 void CGameScene_1::Animate(float fElapsedTime)
 {
@@ -114,13 +123,50 @@ void CGameScene_1::moveCart()
 }
 void CGameScene_1::Render(ID3D12GraphicsCommandList* pd3dCommandList, Camera* pCamera)
 {
+	pCamera->SetViewportsAndScissorRects(pd3dCommandList);
+	pd3dCommandList->SetGraphicsRootSignature(m_pd3dGraphicsRootSignature);
+	if (pCamera) pCamera->UpdateShaderVariables(pd3dCommandList);
+
+	for (int i = 0; i < m_nObjects; i++) {
+		if (m_ppObjects[i]) m_ppObjects[i]->Render(pd3dCommandList, pCamera);
+	}
+}
+void CGameScene_1::getPlayer(Player* p)
+{
+	m_pPlayer = p;
 }
 void CGameScene_1::ReleaseObjects()
 {
-	for (int i = 0; i < m_nObjects_1; i++) if (m_ppObjects_1[i]) delete m_ppObjects_1[i];
-	if (m_ppObjects_1) delete[] m_ppObjects_1;
+	if (m_ppObjects) {
+		for (int i = 0; i < m_nObjects; i++) {
+			if (m_ppObjects[i]) delete m_ppObjects[i];
+		}
+		delete[] m_ppObjects;
+		m_ppObjects = nullptr;
+	}
+	if (m_pShaders) {
+		for (int i = 0; i < m_nShaders; i++) {
+			m_pShaders[i].ReleaseShaderVariables();
+		}
+		delete[] m_pShaders;
+		m_pShaders = nullptr;
+	}
+}
+
+void CGameScene_1::AnimateObjects(float fTimeElapsed) {
+	for (int i = 0; i < m_nObjects; i++) {
+		if (m_ppObjects[i]) m_ppObjects[i]->Animate(fTimeElapsed);
+	}
+	if (isMovingCart) {
+		moveCart();
+	}
+}
+void CGameScene_1::ReleaseUploadBuffers() {
+	for (int i = 0; i < m_nShaders; i++)
+		m_pShaders[i].ReleaseUploadBuffers();
 }
 
 
-
-
+ID3D12RootSignature* CGameScene_1::GetGraphicsRootSignature() {
+	return(m_pd3dGraphicsRootSignature);
+}
