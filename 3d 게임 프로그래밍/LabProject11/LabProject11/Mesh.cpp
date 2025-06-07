@@ -60,55 +60,95 @@ BOOL Mesh::RayIntersectionByTriangle(XMVECTOR& xmRayOrigin, XMVECTOR& xmRayDirec
 
 	return(bIntersected);
 }
-int Mesh::CheckRayIntersection(XMFLOAT3& xmf3RayOrigin, XMFLOAT3& xmf3RayDirection, float* pfNearHitDistance)
+//int Mesh::CheckRayIntersection(XMFLOAT3& xmf3RayOrigin, XMFLOAT3& xmf3RayDirection, float* pfNearHitDistance)
+//{
+//	//하나의 메쉬에서 광선은 여러 개의 삼각형과 교차할 수 있다. 교차하는 삼각형들 중 가장 가까운 삼각형을 찾는다.
+//	int nIntersections = 0;
+//	BYTE* pbPositions = (BYTE*)m_pVertices;
+//	int nOffset = (m_d3dPrimitiveTopology == D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) ? 3 : 1;
+//	/*메쉬의 프리미티브(삼각형)들의 개수이다. 삼각형 리스트인 경우 (정점의 개수 / 3) 또는 (인덱스의 개수 / 3), 삼각
+//   형 스트립의 경우 (정점의 개수 - 2) 또는 (인덱스의 개수 ? 2)이다.*/
+//	int nPrimitives = (m_d3dPrimitiveTopology == D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) ?
+//		(m_nVertices / 3) : (m_nVertices - 2);
+//	if (m_nIndices > 0) nPrimitives = (m_d3dPrimitiveTopology ==
+//		D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) ? (m_nIndices / 3) : (m_nIndices - 2);
+//	//광선은 모델 좌표계로 표현된다.
+//	XMVECTOR xmRayOrigin = XMLoadFloat3(&xmf3RayOrigin);
+//	XMVECTOR xmRayDirection = XMLoadFloat3(&xmf3RayDirection);
+//	//모델 좌표계의 광선과 메쉬의 바운딩 박스(모델 좌표계)와의 교차를 검사한다.
+//	bool bIntersected = m_xmBoundingBox.Intersects(xmRayOrigin, xmRayDirection,
+//		*pfNearHitDistance);
+//	//모델 좌표계의 광선이 메쉬의 바운딩 박스와 교차하면 메쉬와의 교차를 검사한다.
+//	if (bIntersected)
+//	{
+//		float fNearHitDistance = FLT_MAX;
+//		/*메쉬의 모든 프리미티브(삼각형)들에 대하여 픽킹 광선과의 충돌을 검사한다. 충돌하는 모든 삼각형을 찾아 광선의
+//	   시작점(실제로는 카메라 좌표계의 원점)에 가장 가까운 삼각형을 찾는다.*/
+//		for (int i = 0; i < nPrimitives; i++)
+//		{
+//			XMVECTOR v0 = XMLoadFloat3((XMFLOAT3*)(pbPositions + ((m_pnIndices) ?
+//				(m_pnIndices[(i * nOffset) + 0]) : ((i * nOffset) + 0)) * m_nStride));
+//			XMVECTOR v1 = XMLoadFloat3((XMFLOAT3*)(pbPositions + ((m_pnIndices) ?
+//				(m_pnIndices[(i * nOffset) + 1]) : ((i * nOffset) + 1)) * m_nStride));
+//			XMVECTOR v2 = XMLoadFloat3((XMFLOAT3*)(pbPositions + ((m_pnIndices) ?
+//				(m_pnIndices[(i * nOffset) + 2]) : ((i * nOffset) + 2)) * m_nStride));
+//			float fHitDistance;
+//			BOOL bIntersected = TriangleTests::Intersects(xmRayOrigin, xmRayDirection, v0,
+//				v1, v2, fHitDistance);
+//			if (bIntersected)
+//			{
+//				if (fHitDistance < fNearHitDistance)
+//				{
+//					*pfNearHitDistance = fNearHitDistance = fHitDistance;
+//				}
+//				nIntersections++;
+//			}
+//		}
+//	}
+//	return(nIntersections);
+//}
+
+int Mesh::CheckRayIntersection(XMVECTOR& xmvPickRayOrigin, XMVECTOR& xmvPickRayDirection, float* pfNearHitDistance)
 {
-	//하나의 메쉬에서 광선은 여러 개의 삼각형과 교차할 수 있다. 교차하는 삼각형들 중 가장 가까운 삼각형을 찾는다.
 	int nIntersections = 0;
-	BYTE* pbPositions = (BYTE*)m_pVertices;
-	int nOffset = (m_d3dPrimitiveTopology == D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) ? 3 : 1;
-	/*메쉬의 프리미티브(삼각형)들의 개수이다. 삼각형 리스트인 경우 (정점의 개수 / 3) 또는 (인덱스의 개수 / 3), 삼각
-   형 스트립의 경우 (정점의 개수 - 2) 또는 (인덱스의 개수 ? 2)이다.*/
-	int nPrimitives = (m_d3dPrimitiveTopology == D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) ?
-		(m_nVertices / 3) : (m_nVertices - 2);
-	if (m_nIndices > 0) nPrimitives = (m_d3dPrimitiveTopology ==
-		D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) ? (m_nIndices / 3) : (m_nIndices - 2);
-	//광선은 모델 좌표계로 표현된다.
-	XMVECTOR xmRayOrigin = XMLoadFloat3(&xmf3RayOrigin);
-	XMVECTOR xmRayDirection = XMLoadFloat3(&xmf3RayDirection);
-	//모델 좌표계의 광선과 메쉬의 바운딩 박스(모델 좌표계)와의 교차를 검사한다.
-	bool bIntersected = m_xmBoundingBox.Intersects(xmRayOrigin, xmRayDirection,
-		*pfNearHitDistance);
-	//모델 좌표계의 광선이 메쉬의 바운딩 박스와 교차하면 메쉬와의 교차를 검사한다.
+	//월드 좌표게에서 Intersects를 먼저 호출하고 
+	bool bIntersected = m_xmOOBB.Intersects(xmvPickRayOrigin, xmvPickRayDirection, *pfNearHitDistance); //모델좌표게에서 인터섹션 검사
 	if (bIntersected)
 	{
-		float fNearHitDistance = FLT_MAX;
-		/*메쉬의 모든 프리미티브(삼각형)들에 대하여 픽킹 광선과의 충돌을 검사한다. 충돌하는 모든 삼각형을 찾아 광선의
-	   시작점(실제로는 카메라 좌표계의 원점)에 가장 가까운 삼각형을 찾는다.*/
-		for (int i = 0; i < nPrimitives; i++)
+		for (int i = 0; i < m_nPolygons; i++)
 		{
-			XMVECTOR v0 = XMLoadFloat3((XMFLOAT3*)(pbPositions + ((m_pnIndices) ?
-				(m_pnIndices[(i * nOffset) + 0]) : ((i * nOffset) + 0)) * m_nStride));
-			XMVECTOR v1 = XMLoadFloat3((XMFLOAT3*)(pbPositions + ((m_pnIndices) ?
-				(m_pnIndices[(i * nOffset) + 1]) : ((i * nOffset) + 1)) * m_nStride));
-			XMVECTOR v2 = XMLoadFloat3((XMFLOAT3*)(pbPositions + ((m_pnIndices) ?
-				(m_pnIndices[(i * nOffset) + 2]) : ((i * nOffset) + 2)) * m_nStride));
-			float fHitDistance;
-			BOOL bIntersected = TriangleTests::Intersects(xmRayOrigin, xmRayDirection, v0,
-				v1, v2, fHitDistance);
-			if (bIntersected)
+			switch (m_ppPolygons[i]->m_nVertices)
 			{
-				if (fHitDistance < fNearHitDistance)
-				{
-					*pfNearHitDistance = fNearHitDistance = fHitDistance;
-				}
-				nIntersections++;
+			case 3:
+			{
+				XMVECTOR v0 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[0].m_xmf3Position));
+				XMVECTOR v1 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[1].m_xmf3Position));
+				XMVECTOR v2 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[2].m_xmf3Position));
+				//삼각형이면 삼각형 하나를 가져다가 가장 가까운 삼각형의 거리를 가져온다
+				BOOL bIntersected = RayIntersectionByTriangle(xmvPickRayOrigin, xmvPickRayDirection, v0, v1, v2, pfNearHitDistance);
+				if (bIntersected) nIntersections++;
+				break;
+			}
+			case 4:
+			{
+				//사각형인 경우 삼각형이 2개니까 2번을 해준다.
+				XMVECTOR v0 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[0].m_xmf3Position));
+				XMVECTOR v1 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[1].m_xmf3Position));
+				XMVECTOR v2 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[2].m_xmf3Position));
+				BOOL bIntersected = RayIntersectionByTriangle(xmvPickRayOrigin, xmvPickRayDirection, v0, v1, v2, pfNearHitDistance);
+				if (bIntersected) nIntersections++;
+				v0 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[0].m_xmf3Position));
+				v1 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[2].m_xmf3Position));
+				v2 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[3].m_xmf3Position));
+				bIntersected = RayIntersectionByTriangle(xmvPickRayOrigin, xmvPickRayDirection, v0, v1, v2, pfNearHitDistance);
+				if (bIntersected) nIntersections++;
+				break;
+			}
 			}
 		}
 	}
 	return(nIntersections);
 }
-
-
 
 
 TriangleMesh::TriangleMesh(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList) : Mesh(pd3dDevice, pd3dCommandList) {
@@ -231,6 +271,8 @@ CubeMeshDiffused::CubeMeshDiffused(ID3D12Device * pd3dDevice, ID3D12GraphicsComm
 	m_d3dIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
 	// 인덱스 버퍼 전체 크기 : UINT * 인덱스의 개수
 	m_d3dIndexBufferView.SizeInBytes = sizeof(UINT) * m_nIndices; 
+	//중심 , 크기 , 0,0,0,1은 회전이 전혀 없는 쿼터니언을 의미함
+	m_xmOOBB = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fx, fy, fz), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 CubeMeshDiffused::~CubeMeshDiffused(){

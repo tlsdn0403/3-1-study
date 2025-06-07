@@ -513,8 +513,9 @@ void GameFramework::WaitForGpuComplete(){
 }
 
 
-void GameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam){
-	switch (nMessageID)	{
+void GameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
+	if(m_pScene) m_pScene->OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
+	switch (nMessageID) {
 	case WM_LBUTTONDOWN:
 		switch (pGameState->GetCurrentState())
 		{
@@ -532,21 +533,36 @@ void GameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM 
 				m_pGame_1_Scene->changeMovingState(false);
 			break;
 		}
-	case WM_RBUTTONDOWN:
-		// 마우스 캡쳐 - 현재 마우스 위치를 가져온다.
 		::SetCapture(hWnd);
-		::GetCursorPos(&m_ptOldCursorPos); 
+		::GetCursorPos(&m_ptOldCursorPos);
+		break; // **break 추가**
+
+	case WM_RBUTTONDOWN:
+		switch (pGameState->GetCurrentState())
+		{
+		case TITLE:
+			break;
+		case MENU:
+			break;
+		case GAME: 
+			m_pLockedObject = m_pScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera);
+			break;
+		case GAME_1:
+			break;
+		}
+
 		break;
+
 	case WM_LBUTTONUP:
-	case WM_RBUTTONUP:
 		// 마우스 캡쳐 - 해제
-		::ReleaseCapture(); 
+		::ReleaseCapture();
+	case WM_RBUTTONUP:
+
 		break;
 	case WM_MOUSEMOVE:
 		break;
 	default: break;
 	}
-
 }
 
 void GameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam){
