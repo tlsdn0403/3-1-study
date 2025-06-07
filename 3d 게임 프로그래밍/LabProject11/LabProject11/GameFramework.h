@@ -27,6 +27,9 @@ private:
 	// Player
 	std::unique_ptr<Player> m_pPlayer = nullptr;
 
+	GameObject* m_pLockedObject = NULL;
+
+
 	// 마지막으로 마우스 버튼을 클릭할 때의 마우스 커서의 위치
 	POINT m_ptOldCursorPos;    
 

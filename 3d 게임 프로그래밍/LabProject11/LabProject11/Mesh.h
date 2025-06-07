@@ -51,6 +51,10 @@ public:
 	Mesh() {}
 	Mesh(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList);
 	virtual ~Mesh();
+
+	//모든 바운딩 박스는 기본적으로 Mesh가 가지고 있다. 메쉬가 가지고 있는 바운딩 박스는 모델 좌표계이다.
+	BoundingOrientedBox			m_xmOOBB = BoundingOrientedBox(); //기본 생성자 호출하여 초기화, OOBB바운딩 박스
+
 	BOOL RayIntersectionByTriangle(XMVECTOR& xmRayOrigin, XMVECTOR& xmRayDirection, XMVECTOR v0, XMVECTOR v1, XMVECTOR v2, float* pfNearHitDistance);
 	int CheckRayIntersection(XMFLOAT3& xmf3RayOrigin, XMFLOAT3& xmf3RayDirection, float* pfNearHitDistance);
 public:
@@ -109,6 +113,14 @@ public:
 	virtual void Render(ID3D12GraphicsCommandList *pd3dCommandList);
 };
 
+class CSphereMeshDiffused : public Mesh
+{
+public:
+	CSphereMeshDiffused(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList
+		* pd3dCommandList, float fRadius = 2.0f, int nSlices = 20, int nStacks = 20);
+	virtual ~CSphereMeshDiffused();
+};
+
 class TriangleMesh : public Mesh {
 public:    
 	TriangleMesh(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList); 
@@ -122,7 +134,11 @@ public:
 		float fWidth = 2.0f, float fHeight = 2.0f, float fDepth = 2.0f);
 	virtual ~CubeMeshDiffused();
 };
-
+class CFloorMesh : public Mesh {
+public:
+	CFloorMesh (ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList,float fWidth = 4.0f, float fDepth = 4.0f, int nSubRects = 20);
+	virtual ~CFloorMesh() {}
+};
 class AirplaneMeshDiffused : public Mesh {
 public:
 	AirplaneMeshDiffused(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList,
@@ -130,6 +146,16 @@ public:
 		XMFLOAT4 xmf4Color = XMFLOAT4(1.0f, 1.0f, 0.0f, 0.0f));
 	virtual ~AirplaneMeshDiffused();
 };
+class CTankMesh : public Mesh
+{
+public:
+	CTankMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList,
+		float fWidth = 20.0f, float fHeight = 20.0f, float fDepth = 4.0f,
+		XMFLOAT4 xmf4Color = XMFLOAT4(1.0f, 1.0f, 0.0f, 0.0f));
+	virtual ~CTankMesh() {}
+};
+
+
 class CartMesh : public Mesh {
 public:
     CartMesh (ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList,

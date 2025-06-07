@@ -391,7 +391,7 @@ void GameFramework::FrameAdvance(){
 	ProcessInput();
 	
 	AnimateObject();
-
+	ChoiceGameMode();
 	//명령 할당자와 명령 리스트를 리셋한다.
 	HRESULT hResult = m_pd3dCommandAllocator->Reset();
 	hResult = m_pd3dCommandList->Reset(m_pd3dCommandAllocator, NULL);
@@ -487,9 +487,9 @@ void GameFramework::FrameAdvance(){
 	
 	// 렌더링 된 영상을 Present - 디스플레이 출력
 	m_pdxgiSwapChain->Present(0, 0 /*&dxgiPresentParameters*/);
-
+	
 	MoveToNextFrame();
-	ChoiceGameMode();
+	
 	/*::_itow_s(m_nCurrentFrameRate, (m_pszFrameRate + 12), 37, 10);
 	::wcscat_s((m_pszFrameRate + 12), 37, _T(" FPS)"));*/
 
@@ -578,12 +578,17 @@ void GameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPAR
 			pGameState->CGameState::ChangeGameState(CGameState::MENU);
 			BuildObjects();
 			break;
+		case 'A':  
+			if (m_pScene && m_pPlayer) {
+				m_pScene->FireBulletFromPlayer(m_pPlayer.get(), m_pd3dDevice, m_pd3dCommandList, m_pLockedObject);
+				m_pLockedObject = NULL;
+			}
+			break;
 		default: break;
 		}
 		break;
 	default: break;
 	}
-
 }
 
 LRESULT GameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam){
@@ -619,7 +624,7 @@ void GameFramework::BuildObjects() {
     case GAME:
         m_pScene = new Scene();
         m_pScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList, m_pd3dGraphicsRootSignature);
-        m_pPlayer = std::make_unique<CartPlayer>(m_pd3dDevice, m_pd3dCommandList, m_pScene->GetGraphicsRootSignature());
+        m_pPlayer = std::make_unique<TankPlayer>(m_pd3dDevice, m_pd3dCommandList, m_pScene->GetGraphicsRootSignature());
         m_pCamera = m_pPlayer->GetCamera();
 		if (m_pPlayer)
 			m_pCamera = m_pPlayer->ChangeCamera((DWORD)(3), m_GameTimer.GetTimeElapsed());
@@ -629,14 +634,14 @@ void GameFramework::BuildObjects() {
         m_pStartScene = new StartScene();
         m_pStartScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList, m_pd3dGraphicsRootSignature);
 
-		m_pPlayer = std::make_unique<AirplanePlayer>(m_pd3dDevice, m_pd3dCommandList, m_pStartScene->GetGraphicsRootSignature());
+		m_pPlayer = std::make_unique<TankPlayer>(m_pd3dDevice, m_pd3dCommandList, m_pStartScene->GetGraphicsRootSignature());
 		m_pCamera = m_pPlayer->GetCamera();
         break;
 	case MENU:
 		m_pMenuScene = new MenuScene();
 		m_pMenuScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList, m_pd3dGraphicsRootSignature);
 
-		m_pPlayer = std::make_unique<AirplanePlayer>(m_pd3dDevice, m_pd3dCommandList, m_pMenuScene->GetGraphicsRootSignature());
+		m_pPlayer = std::make_unique<TankPlayer>(m_pd3dDevice, m_pd3dCommandList, m_pMenuScene->GetGraphicsRootSignature());
 		m_pCamera = m_pPlayer->GetCamera();
 		break;
 
@@ -772,7 +777,7 @@ void GameFramework::ProcessInput(){
 					오른쪽 마우스 버튼이 눌려진 경우 cxDelta는 z-축의 회전을 나타낸다.*/
 					if (pKeyBuffer[VK_RBUTTON] & 0xF0) m_pPlayer->Rotate(cyDelta, 0.0f, -cxDelta);
 
-					else m_pPlayer->Rotate(cyDelta, cxDelta, 0.0f);
+					else m_pPlayer->Rotate(0.0f, cxDelta, 0.0f);
 				}
 
 				/*플레이어를 dwDirection 방향으로 이동한다(실제로는 속도 벡터를 변경한다).
@@ -838,21 +843,6 @@ void GameFramework::ProcessInput(){
 				::SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
 			}
 
-			//마우스 또는 키 입력이 있으면 플레이어를 이동하거나(dwDirection) 회전한다(cxDelta 또는 cyDelta).
-			if ((dwDirection != 0) || (cxDelta != 0.0f) || (cyDelta != 0.0f)) {
-				if (cxDelta || cyDelta) {
-					/*cxDelta는 y-축의 회전을 나타내고 cyDelta는 x-축의 회전을 나타낸다.
-					오른쪽 마우스 버튼이 눌려진 경우 cxDelta는 z-축의 회전을 나타낸다.*/
-					if (pKeyBuffer[VK_RBUTTON] & 0xF0) m_pPlayer->Rotate(cyDelta, 0.0f, -cxDelta);
-
-					else m_pPlayer->Rotate(cyDelta, cxDelta, 0.0f);
-				}
-
-				/*플레이어를 dwDirection 방향으로 이동한다(실제로는 속도 벡터를 변경한다).
-				이동 거리는 시간에 비례하도록 한다. 플레이어의 이동 속력은 (50/초)로 가정한다.*/
-
-				if (dwDirection) m_pPlayer->Move(dwDirection, 50.0f * m_GameTimer.GetTimeElapsed(), true);
-			}
 			//플레이어를 실제로 이동하고 카메라를 갱신한다. 중력과 마찰력의 영향을 속도 벡터에 적용한다.
 			if (m_pPlayer) m_pPlayer->Update(m_GameTimer.GetTimeElapsed());
 			break;
@@ -1044,7 +1034,11 @@ void GameFramework::ChoiceGameMode() // 모드에 따라 화면 출력
     delete m_pScene;
     m_pScene = nullptr;
     }
-
+	if (pGameState->GetCurrentState() != GAME_1 && m_pGame_1_Scene) {
+		m_pGame_1_Scene->ReleaseObjects();
+		delete m_pGame_1_Scene;
+		m_pGame_1_Scene = nullptr;
+	}
     switch (pGameState->GetCurrentState())
     {
     case TITLE:

@@ -1,64 +1,53 @@
 //-------------------------------------------------------------------------------------------
-// 2025 STL 화56 목78  5월 22일 목요일      (12주 2일차 강의) 
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
 //  6월 19일 목 15주 2일 - 기말시험
 //-------------------------------------------------------------------------------------------
-//  Associative Container - key와 연관된 value를 항상 정렬상태로 유지하는 컨테이너
-//                          정렬은 key값을 기준으로 한다.
-//  set / multiset - key == value
-//  map / multimap - pair(key, value>
-//-------------------------------------------------------------------------------------------
+// Unordered Associatiove Containers - Hash 구조
+//-----------------------------------------------------
 #include<iostream>
-#include<fstream>
-#include<ranges>
-#include<array>
-#include<algorithm>
-#include<set>
-#include<vector>
-#include<map>
-#include<format>
+#include<unordered_set>
 #include<print>
 #include"save.h"
 #include"STRING.h"
 using namespace std;
 
+
+
 extern bool 관찰; // 관찰하려면 true로
 
 
-// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
-// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
-// 단어의 개수를 출력하라 26626
-// [3] 단어와 사용횟수를 화면에 출력하라.
+template<>
+struct std::hash<STRING>  { //스페셜라이제이션 한다
+    size_t operator()(const STRING& s)const {
+        std::string str(s.begin(), s.end());
+        return hash<std::string>{}(string{ s.begin(),s.end() }); //템플릿 스트럭쳐이기에 템플릿 스트럭쳐를 타입을 주지 않고 생성할 방법은 없다.
+    }
+};
 
-bool cmp(pair<string, int>& a, pair<string, int>& b);
-void Sort(map<string, int>& M);
+
 
 //----------
 int main()
 //------------------------------------------------------------
 {  
-   
-
-    ifstream in("이상한 나라의 앨리스.txt");
-   
-    if (not in)
-        return 1234;
-
-     
-
-    map<STRING, size_t> wordNum;
-    STRING 단어;
-    while (in >> 단어)
-        wordNum[단어]++;
-
-
-
-    for (auto [word, count] : wordNum) {
-        cout << word << " - " << count << endl;
-       /* println("{:20} - {:}",(char*)(word) , count);*/
-    }
-  
+    unordered_set<STRING, hash<STRING> > us{ "1","22","333", "4444", "55555" };
     
+    for (const STRING& s : us)
+        cout << s << endl;
+    //언오더드 셋의 메모리를 화면에 출력한다
+    while (true) {
+        for (size_t bc = 0; bc < us.bucket_count(); ++bc) {
+            print("[{:>3}]", bc);
+            for (auto i = us.begin(bc); i != us.end(bc); ++i) {
+                print(" -> {:}", std::string{ i->begin(), i->end() });
+            }
+            cout << endl;
+        }
 
-         
+        cout << "추가할 STRING -";
+        STRING s;
+        cin >> s;
+        us.insert(s);
+    }
     save("메인.cpp");
 }
