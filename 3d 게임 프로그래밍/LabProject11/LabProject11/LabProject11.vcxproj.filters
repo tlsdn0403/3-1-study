@@ -25,9 +25,6 @@
     <Filter Include="LabProject">
       <UniqueIdentifier>{76c9b776-5534-433f-8dc2-807d83c06ca9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mesh">
-      <UniqueIdentifier>{1f1c4485-cd6a-47fa-b874-34ff2c21199e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{9c713916-0dfd-4f81-bea7-3f008329699b}</UniqueIdentifier>
     </Filter>
@@ -45,6 +42,9 @@
     </Filter>
     <Filter Include="CGameScene">
       <UniqueIdentifier>{17863c0f-c199-452e-aeb5-8300d8dbf82f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LabProject\Mesh">
+      <UniqueIdentifier>{1f1c4485-cd6a-47fa-b874-34ff2c21199e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -70,7 +70,7 @@
       <Filter>LabProject</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>Mesh</Filter>
+      <Filter>LabProject\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Scene</Filter>
@@ -111,7 +111,7 @@
       <Filter>LabProject</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>Mesh</Filter>
+      <Filter>LabProject\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>Scene</Filter>

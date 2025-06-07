@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Mesh.h"
 
 
@@ -7,49 +7,49 @@ Mesh::Mesh(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList)
 }
 
 Mesh::~Mesh() {
-	// ¹öÅØ½º ¹öÆÛ & ¾÷·Îµå ¹öÆÛ
+	// ë²„í…ìŠ¤ ë²„í¼ & ì—…ë¡œë“œ ë²„í¼
 	if (m_pd3dVertexBuffer) 		m_pd3dVertexBuffer->Release();
 	if (m_pd3dVertexUploadBuffer) 	m_pd3dVertexUploadBuffer->Release();
 	
-	// ÀÎµ¦½º ¹öÆÛ & ¾÷·Îµå ¹öÆÛ
+	// ì¸ë±ìŠ¤ ë²„í¼ & ì—…ë¡œë“œ ë²„í¼
 	if (m_pd3dIndexBuffer)			m_pd3dIndexBuffer->Release();
 	if (m_pd3dIndexUploadBuffer)	m_pd3dIndexUploadBuffer->Release();
 
-	//ÇÇÅ·À» À§ÇØ
+	//í”¼í‚¹ì„ ìœ„í•´
 	if (m_pVertices) delete[] m_pVertices;
 	if (m_pnIndices) delete[] m_pnIndices;
 }
 
 void Mesh::ReleaseUploadBuffers() {
-	// Á¤Á¡ ¹öÆÛ¸¦ À§ÇÑ ¾÷·Îµå ¹öÆÛ¸¦ ¼Ò¸ê½ÃÅ²´Ù.
+	// ì •ì  ë²„í¼ë¥¼ ìœ„í•œ ì—…ë¡œë“œ ë²„í¼ë¥¼ ì†Œë©¸ì‹œí‚¨ë‹¤.
 	if (m_pd3dVertexUploadBuffer) m_pd3dVertexUploadBuffer->Release();
 	m_pd3dVertexUploadBuffer = NULL;
 
-	// ÀÎµ¦½º ¹öÆÛ¸¦ À§ÇÑ ¾÷·Îµå ¹öÆÛ¸¦ ¼Ò¸ê½ÃÅ²´Ù.
+	// ì¸ë±ìŠ¤ ë²„í¼ë¥¼ ìœ„í•œ ì—…ë¡œë“œ ë²„í¼ë¥¼ ì†Œë©¸ì‹œí‚¨ë‹¤.
 	if (m_pd3dIndexUploadBuffer) m_pd3dIndexUploadBuffer->Release();
 	m_pd3dIndexUploadBuffer = NULL;
 };
 
 void Mesh::Render(ID3D12GraphicsCommandList *pd3dCommandList) {
-	//¸Ş½¬ÀÇ ÇÁ¸®¹ÌÆ¼ºê À¯ÇüÀ» ¼³Á¤ÇÑ´Ù.
+	//ë©”ì‰¬ì˜ í”„ë¦¬ë¯¸í‹°ë¸Œ ìœ í˜•ì„ ì„¤ì •í•œë‹¤.
 	pd3dCommandList->IASetPrimitiveTopology(m_d3dPrimitiveTopology);
 
-	//¸Ş½¬ÀÇ Á¤Á¡ ¹öÆÛ ºä¸¦ ¼³Á¤ÇÑ´Ù.
-	// Á¤Á¡¹öÆÛÀÇ ½ÃÀÛ ÀÔ·Â ½½·Ô(µğ¹ÙÀÌ½º), Á¤Á¡ ¹öÆÛÀÇ °³¼ö, Á¤Á¡¹öÆÛ ºä ÁÖ¼Ò
+	//ë©”ì‰¬ì˜ ì •ì  ë²„í¼ ë·°ë¥¼ ì„¤ì •í•œë‹¤.
+	// ì •ì ë²„í¼ì˜ ì‹œì‘ ì…ë ¥ ìŠ¬ë¡¯(ë””ë°”ì´ìŠ¤), ì •ì  ë²„í¼ì˜ ê°œìˆ˜, ì •ì ë²„í¼ ë·° ì£¼ì†Œ
 	pd3dCommandList->IASetVertexBuffers(m_nSlot, 1, &m_d3dVertexBufferView);
 	
-	//ÀÎµ¦½º ¹öÆÛ°¡ ÀÖÀ¸¸é ÀÎµ¦½º ¹öÆÛ¸¦ ÆÄÀÌÇÁ¶óÀÎ(IA: ÀÔ·Â Á¶¸³±â)¿¡ ¿¬°áÇÏ°í ÀÎµ¦½º¸¦ »ç¿ëÇÏ¿© ·»´õ¸µ
+	//ì¸ë±ìŠ¤ ë²„í¼ê°€ ìˆìœ¼ë©´ ì¸ë±ìŠ¤ ë²„í¼ë¥¼ íŒŒì´í”„ë¼ì¸(IA: ì…ë ¥ ì¡°ë¦½ê¸°)ì— ì—°ê²°í•˜ê³  ì¸ë±ìŠ¤ë¥¼ ì‚¬ìš©í•˜ì—¬ ë Œë”ë§
 	if (m_pd3dIndexBuffer) {
-		// ÆÄÀÌÇÁ¶óÀÎ¿¡ ÇÏ³ªÀÇ ÀÎµ¦½º ¹öÆÛ ¿¬°á °¡´É
-		// ÀÎµ¦½º ¹öÆÛ ÁÖ¼Ò
+		// íŒŒì´í”„ë¼ì¸ì— í•˜ë‚˜ì˜ ì¸ë±ìŠ¤ ë²„í¼ ì—°ê²° ê°€ëŠ¥
+		// ì¸ë±ìŠ¤ ë²„í¼ ì£¼ì†Œ
 		pd3dCommandList->IASetIndexBuffer(&m_d3dIndexBufferView);
 
-		// ÀÎµ¦½º °³¼ö, °´Ã¼ ¼ö, ½ÃÀÛ ÀÎµ¦½º À§Ä¡, °¢ Á¤Á¡ ÀÎµ¦½º¿¡ ´õÇØÁú °ª, °´Ã¼ ÀÎµ¦½º¿¡ ´õÇØÁú °ª
+		// ì¸ë±ìŠ¤ ê°œìˆ˜, ê°ì²´ ìˆ˜, ì‹œì‘ ì¸ë±ìŠ¤ ìœ„ì¹˜, ê° ì •ì  ì¸ë±ìŠ¤ì— ë”í•´ì§ˆ ê°’, ê°ì²´ ì¸ë±ìŠ¤ì— ë”í•´ì§ˆ ê°’
 		pd3dCommandList->DrawIndexedInstanced(m_nIndices, 1, 0, 0, 0);
 	} 
 
-	//¸Ş½¬ÀÇ Á¤Á¡ ¹öÆÛ ºä¸¦ ·»´õ¸µ (ÆÄÀÌÇÁ¶óÀÎ(ÀÔ·Â Á¶¸³±â)À» ÀÛµ¿ÇÏ°Ô ÇÑ´Ù).
-	// Á¤Á¡ °³¼ö, °´Ã¼ ¼ö, ½ÃÀÛ Á¤Á¡ À§Ä¡, °´Ã¼ ÀÎµ¦½º¿¡ ´õÇØÁú °ª
+	//ë©”ì‰¬ì˜ ì •ì  ë²„í¼ ë·°ë¥¼ ë Œë”ë§ (íŒŒì´í”„ë¼ì¸(ì…ë ¥ ì¡°ë¦½ê¸°)ì„ ì‘ë™í•˜ê²Œ í•œë‹¤).
+	// ì •ì  ê°œìˆ˜, ê°ì²´ ìˆ˜, ì‹œì‘ ì •ì  ìœ„ì¹˜, ê°ì²´ ì¸ë±ìŠ¤ì— ë”í•´ì§ˆ ê°’
 	else	pd3dCommandList->DrawInstanced(m_nVertices, 1, m_nOffset, 0); 
 }
 BOOL Mesh::RayIntersectionByTriangle(XMVECTOR& xmRayOrigin, XMVECTOR& xmRayDirection, XMVECTOR v0, XMVECTOR v1, XMVECTOR v2, float* pfNearHitDistance)
@@ -62,28 +62,28 @@ BOOL Mesh::RayIntersectionByTriangle(XMVECTOR& xmRayOrigin, XMVECTOR& xmRayDirec
 }
 //int Mesh::CheckRayIntersection(XMFLOAT3& xmf3RayOrigin, XMFLOAT3& xmf3RayDirection, float* pfNearHitDistance)
 //{
-//	//ÇÏ³ªÀÇ ¸Ş½¬¿¡¼­ ±¤¼±Àº ¿©·¯ °³ÀÇ »ï°¢Çü°ú ±³Â÷ÇÒ ¼ö ÀÖ´Ù. ±³Â÷ÇÏ´Â »ï°¢Çüµé Áß °¡Àå °¡±î¿î »ï°¢ÇüÀ» Ã£´Â´Ù.
+//	//í•˜ë‚˜ì˜ ë©”ì‰¬ì—ì„œ ê´‘ì„ ì€ ì—¬ëŸ¬ ê°œì˜ ì‚¼ê°í˜•ê³¼ êµì°¨í•  ìˆ˜ ìˆë‹¤. êµì°¨í•˜ëŠ” ì‚¼ê°í˜•ë“¤ ì¤‘ ê°€ì¥ ê°€ê¹Œìš´ ì‚¼ê°í˜•ì„ ì°¾ëŠ”ë‹¤.
 //	int nIntersections = 0;
 //	BYTE* pbPositions = (BYTE*)m_pVertices;
 //	int nOffset = (m_d3dPrimitiveTopology == D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) ? 3 : 1;
-//	/*¸Ş½¬ÀÇ ÇÁ¸®¹ÌÆ¼ºê(»ï°¢Çü)µéÀÇ °³¼öÀÌ´Ù. »ï°¢Çü ¸®½ºÆ®ÀÎ °æ¿ì (Á¤Á¡ÀÇ °³¼ö / 3) ¶Ç´Â (ÀÎµ¦½ºÀÇ °³¼ö / 3), »ï°¢
-//   Çü ½ºÆ®¸³ÀÇ °æ¿ì (Á¤Á¡ÀÇ °³¼ö - 2) ¶Ç´Â (ÀÎµ¦½ºÀÇ °³¼ö ? 2)ÀÌ´Ù.*/
+//	/*ë©”ì‰¬ì˜ í”„ë¦¬ë¯¸í‹°ë¸Œ(ì‚¼ê°í˜•)ë“¤ì˜ ê°œìˆ˜ì´ë‹¤. ì‚¼ê°í˜• ë¦¬ìŠ¤íŠ¸ì¸ ê²½ìš° (ì •ì ì˜ ê°œìˆ˜ / 3) ë˜ëŠ” (ì¸ë±ìŠ¤ì˜ ê°œìˆ˜ / 3), ì‚¼ê°
+//   í˜• ìŠ¤íŠ¸ë¦½ì˜ ê²½ìš° (ì •ì ì˜ ê°œìˆ˜ - 2) ë˜ëŠ” (ì¸ë±ìŠ¤ì˜ ê°œìˆ˜ ? 2)ì´ë‹¤.*/
 //	int nPrimitives = (m_d3dPrimitiveTopology == D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) ?
 //		(m_nVertices / 3) : (m_nVertices - 2);
 //	if (m_nIndices > 0) nPrimitives = (m_d3dPrimitiveTopology ==
 //		D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) ? (m_nIndices / 3) : (m_nIndices - 2);
-//	//±¤¼±Àº ¸ğµ¨ ÁÂÇ¥°è·Î Ç¥ÇöµÈ´Ù.
+//	//ê´‘ì„ ì€ ëª¨ë¸ ì¢Œí‘œê³„ë¡œ í‘œí˜„ëœë‹¤.
 //	XMVECTOR xmRayOrigin = XMLoadFloat3(&xmf3RayOrigin);
 //	XMVECTOR xmRayDirection = XMLoadFloat3(&xmf3RayDirection);
-//	//¸ğµ¨ ÁÂÇ¥°èÀÇ ±¤¼±°ú ¸Ş½¬ÀÇ ¹Ù¿îµù ¹Ú½º(¸ğµ¨ ÁÂÇ¥°è)¿ÍÀÇ ±³Â÷¸¦ °Ë»çÇÑ´Ù.
+//	//ëª¨ë¸ ì¢Œí‘œê³„ì˜ ê´‘ì„ ê³¼ ë©”ì‰¬ì˜ ë°”ìš´ë”© ë°•ìŠ¤(ëª¨ë¸ ì¢Œí‘œê³„)ì™€ì˜ êµì°¨ë¥¼ ê²€ì‚¬í•œë‹¤.
 //	bool bIntersected = m_xmBoundingBox.Intersects(xmRayOrigin, xmRayDirection,
 //		*pfNearHitDistance);
-//	//¸ğµ¨ ÁÂÇ¥°èÀÇ ±¤¼±ÀÌ ¸Ş½¬ÀÇ ¹Ù¿îµù ¹Ú½º¿Í ±³Â÷ÇÏ¸é ¸Ş½¬¿ÍÀÇ ±³Â÷¸¦ °Ë»çÇÑ´Ù.
+//	//ëª¨ë¸ ì¢Œí‘œê³„ì˜ ê´‘ì„ ì´ ë©”ì‰¬ì˜ ë°”ìš´ë”© ë°•ìŠ¤ì™€ êµì°¨í•˜ë©´ ë©”ì‰¬ì™€ì˜ êµì°¨ë¥¼ ê²€ì‚¬í•œë‹¤.
 //	if (bIntersected)
 //	{
 //		float fNearHitDistance = FLT_MAX;
-//		/*¸Ş½¬ÀÇ ¸ğµç ÇÁ¸®¹ÌÆ¼ºê(»ï°¢Çü)µé¿¡ ´ëÇÏ¿© ÇÈÅ· ±¤¼±°úÀÇ Ãæµ¹À» °Ë»çÇÑ´Ù. Ãæµ¹ÇÏ´Â ¸ğµç »ï°¢ÇüÀ» Ã£¾Æ ±¤¼±ÀÇ
-//	   ½ÃÀÛÁ¡(½ÇÁ¦·Î´Â Ä«¸Ş¶ó ÁÂÇ¥°èÀÇ ¿øÁ¡)¿¡ °¡Àå °¡±î¿î »ï°¢ÇüÀ» Ã£´Â´Ù.*/
+//		/*ë©”ì‰¬ì˜ ëª¨ë“  í”„ë¦¬ë¯¸í‹°ë¸Œ(ì‚¼ê°í˜•)ë“¤ì— ëŒ€í•˜ì—¬ í”½í‚¹ ê´‘ì„ ê³¼ì˜ ì¶©ëŒì„ ê²€ì‚¬í•œë‹¤. ì¶©ëŒí•˜ëŠ” ëª¨ë“  ì‚¼ê°í˜•ì„ ì°¾ì•„ ê´‘ì„ ì˜
+//	   ì‹œì‘ì (ì‹¤ì œë¡œëŠ” ì¹´ë©”ë¼ ì¢Œí‘œê³„ì˜ ì›ì )ì— ê°€ì¥ ê°€ê¹Œìš´ ì‚¼ê°í˜•ì„ ì°¾ëŠ”ë‹¤.*/
 //		for (int i = 0; i < nPrimitives; i++)
 //		{
 //			XMVECTOR v0 = XMLoadFloat3((XMFLOAT3*)(pbPositions + ((m_pnIndices) ?
@@ -107,98 +107,92 @@ BOOL Mesh::RayIntersectionByTriangle(XMVECTOR& xmRayOrigin, XMVECTOR& xmRayDirec
 //	}
 //	return(nIntersections);
 //}
-
-int Mesh::CheckRayIntersection(XMVECTOR& xmvPickRayOrigin, XMVECTOR& xmvPickRayDirection, float* pfNearHitDistance)
+int Mesh::CheckRayIntersection(XMVECTOR& xmRayOrigin, XMVECTOR& xmRayDirection, float* pfNearHitDistance)
 {
 	int nIntersections = 0;
-	//¿ùµå ÁÂÇ¥°Ô¿¡¼­ Intersects¸¦ ¸ÕÀú È£ÃâÇÏ°í 
-	bool bIntersected = m_xmOOBB.Intersects(xmvPickRayOrigin, xmvPickRayDirection, *pfNearHitDistance); //¸ğµ¨ÁÂÇ¥°Ô¿¡¼­ ÀÎÅÍ¼½¼Ç °Ë»ç
+	BYTE* pbPositions = (BYTE*)m_pVertices;
+	int nOffset = (m_d3dPrimitiveTopology == D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) ? 3 : 1;
+	int nPrimitives = (m_d3dPrimitiveTopology == D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) ?
+		(m_nVertices / 3) : (m_nVertices - 2);
+	if (m_nIndices > 0)
+		nPrimitives = (m_d3dPrimitiveTopology == D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST) ? (m_nIndices / 3) : (m_nIndices - 2);
+
+	// ë°”ìš´ë”© ë°•ìŠ¤ êµì°¨ ê²€ì‚¬ (XMVECTOR ë°”ë¡œ ì‚¬ìš©)
+	bool bIntersected = m_xmOOBB.Intersects(xmRayOrigin, xmRayDirection, *pfNearHitDistance);
+
 	if (bIntersected)
 	{
-		for (int i = 0; i < m_nPolygons; i++)
+		float fNearHitDistance = FLT_MAX;
+		for (int i = 0; i < nPrimitives; i++)
 		{
-			switch (m_ppPolygons[i]->m_nVertices)
+			XMVECTOR v0 = XMLoadFloat3((XMFLOAT3*)(pbPositions + ((m_pnIndices) ? (m_pnIndices[(i * nOffset) + 0]) : ((i * nOffset) + 0)) * m_nStride));
+			XMVECTOR v1 = XMLoadFloat3((XMFLOAT3*)(pbPositions + ((m_pnIndices) ? (m_pnIndices[(i * nOffset) + 1]) : ((i * nOffset) + 1)) * m_nStride));
+			XMVECTOR v2 = XMLoadFloat3((XMFLOAT3*)(pbPositions + ((m_pnIndices) ? (m_pnIndices[(i * nOffset) + 2]) : ((i * nOffset) + 2)) * m_nStride));
+			float fHitDistance;
+			BOOL bTriIntersected = TriangleTests::Intersects(xmRayOrigin, xmRayDirection, v0, v1, v2, fHitDistance);
+			if (bTriIntersected)
 			{
-			case 3:
-			{
-				XMVECTOR v0 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[0].m_xmf3Position));
-				XMVECTOR v1 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[1].m_xmf3Position));
-				XMVECTOR v2 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[2].m_xmf3Position));
-				//»ï°¢ÇüÀÌ¸é »ï°¢Çü ÇÏ³ª¸¦ °¡Á®´Ù°¡ °¡Àå °¡±î¿î »ï°¢ÇüÀÇ °Å¸®¸¦ °¡Á®¿Â´Ù
-				BOOL bIntersected = RayIntersectionByTriangle(xmvPickRayOrigin, xmvPickRayDirection, v0, v1, v2, pfNearHitDistance);
-				if (bIntersected) nIntersections++;
-				break;
-			}
-			case 4:
-			{
-				//»ç°¢ÇüÀÎ °æ¿ì »ï°¢ÇüÀÌ 2°³´Ï±î 2¹øÀ» ÇØÁØ´Ù.
-				XMVECTOR v0 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[0].m_xmf3Position));
-				XMVECTOR v1 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[1].m_xmf3Position));
-				XMVECTOR v2 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[2].m_xmf3Position));
-				BOOL bIntersected = RayIntersectionByTriangle(xmvPickRayOrigin, xmvPickRayDirection, v0, v1, v2, pfNearHitDistance);
-				if (bIntersected) nIntersections++;
-				v0 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[0].m_xmf3Position));
-				v1 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[2].m_xmf3Position));
-				v2 = XMLoadFloat3(&(m_ppPolygons[i]->m_pVertices[3].m_xmf3Position));
-				bIntersected = RayIntersectionByTriangle(xmvPickRayOrigin, xmvPickRayDirection, v0, v1, v2, pfNearHitDistance);
-				if (bIntersected) nIntersections++;
-				break;
-			}
+				if (fHitDistance < fNearHitDistance)
+				{
+					*pfNearHitDistance = fNearHitDistance = fHitDistance;
+				}
+				nIntersections++;
 			}
 		}
 	}
-	return(nIntersections);
+	return nIntersections;
 }
 
 
+
 TriangleMesh::TriangleMesh(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList) : Mesh(pd3dDevice, pd3dCommandList) {
-	// »ï°¢Çü ¸Ş½¬¸¦ Á¤ÀÇÇÑ´Ù.
-	// ¸Ş½¬ÀÇ Á¤Á¡ÀÇ °³¼ö
+	// ì‚¼ê°í˜• ë©”ì‰¬ë¥¼ ì •ì˜í•œë‹¤.
+	// ë©”ì‰¬ì˜ ì •ì ì˜ ê°œìˆ˜
 	m_nVertices = 3;
-	// ¸Ş½¬ÀÇ »ö»ó, À§Ä¡¸¦ °¡Áø Á¤Á¡À» Ç¥ÇöÇÏ´Â classÀÇ Å©±â - Á¤Á¡ ¹öÆÛ ¿ø¼Ò ÇÏ³ªÀÇ Å©±â
+	// ë©”ì‰¬ì˜ ìƒ‰ìƒ, ìœ„ì¹˜ë¥¼ ê°€ì§„ ì •ì ì„ í‘œí˜„í•˜ëŠ” classì˜ í¬ê¸° - ì •ì  ë²„í¼ ì›ì†Œ í•˜ë‚˜ì˜ í¬ê¸°
 	m_nStride = sizeof(DiffusedVertex);
 	// Primitive Topology
 	m_d3dPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-	//Á¤Á¡(»ï°¢ÇüÀÇ ²ÀÁöÁ¡)ÀÇ »ö»óÀº ½Ã°è¹æÇâ ¼ø¼­´ë·Î »¡°£»ö, ³ì»ö, ÆÄ¶õ»öÀ¸·Î ÁöÁ¤ÇÑ´Ù.
-	//RGBA(Red, Green, Blue, Alpha) 4°³ÀÇ ÆÄ¶ó¸ŞÅÍ¸¦ »ç¿ëÇÏ¿© »ö»óÀ» Ç¥ÇöÇÑ´Ù.
-	//°¢ ÆÄ¶ó¸ŞÅÍ´Â 0.0~1.0 »çÀÌÀÇ ½Ç¼ö°ªÀ» °¡Áø´Ù.
+	//ì •ì (ì‚¼ê°í˜•ì˜ ê¼­ì§€ì )ì˜ ìƒ‰ìƒì€ ì‹œê³„ë°©í–¥ ìˆœì„œëŒ€ë¡œ ë¹¨ê°„ìƒ‰, ë…¹ìƒ‰, íŒŒë€ìƒ‰ìœ¼ë¡œ ì§€ì •í•œë‹¤.
+	//RGBA(Red, Green, Blue, Alpha) 4ê°œì˜ íŒŒë¼ë©”í„°ë¥¼ ì‚¬ìš©í•˜ì—¬ ìƒ‰ìƒì„ í‘œí˜„í•œë‹¤.
+	//ê° íŒŒë¼ë©”í„°ëŠ” 0.0~1.0 ì‚¬ì´ì˜ ì‹¤ìˆ˜ê°’ì„ ê°€ì§„ë‹¤.
 
-	// »ö, À§Ä¡ Á¤º¸¸¦ °¡Áø Á¤Á¡ 3°³ »ı¼º
+	// ìƒ‰, ìœ„ì¹˜ ì •ë³´ë¥¼ ê°€ì§„ ì •ì  3ê°œ ìƒì„±
 	DiffusedVertex pVertices[3];
 	pVertices[0] = DiffusedVertex(XMFLOAT3(0.0f, 0.5f, 0.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
 	pVertices[1] = DiffusedVertex(XMFLOAT3(0.5f, -0.5f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
 	pVertices[2] = DiffusedVertex(XMFLOAT3(-0.5f, -0.5f, 0.0f), XMFLOAT4(Colors::Blue));
 
-	// »ï°¢Çü ¸Ş½¬¸¦ ¸®¼Ò½º(Á¤Á¡ ¹öÆÛ)·Î »ı¼ºÇÑ´Ù.
-	// ¸®¼Ò½º¿Í ³»ºÎÀû ÈüÀ» µ¿½Ã¿¡ »ı¼º
-	// µğ¹ÙÀÌ½º, Ä¿¸Çµå ¸®½ºÆ®, Á¤Á¡µ¥ÀÌÅÍ ÁÖ¼Ò, Á¤Á¡ ¹öÆÛ ÀüÃ¼ÀÇ Å©±â, ÈüÀÇ À¯Çü, ¸®¼Ò½º ¹öÆÛÀÇ »óÅÂ, ¾÷·Îµå ¹öÆÛÀÇ ÁÖ¼Ò
+	// ì‚¼ê°í˜• ë©”ì‰¬ë¥¼ ë¦¬ì†ŒìŠ¤(ì •ì  ë²„í¼)ë¡œ ìƒì„±í•œë‹¤.
+	// ë¦¬ì†ŒìŠ¤ì™€ ë‚´ë¶€ì  í™ì„ ë™ì‹œì— ìƒì„±
+	// ë””ë°”ì´ìŠ¤, ì»¤ë§¨ë“œ ë¦¬ìŠ¤íŠ¸, ì •ì ë°ì´í„° ì£¼ì†Œ, ì •ì  ë²„í¼ ì „ì²´ì˜ í¬ê¸°, í™ì˜ ìœ í˜•, ë¦¬ì†ŒìŠ¤ ë²„í¼ì˜ ìƒíƒœ, ì—…ë¡œë“œ ë²„í¼ì˜ ì£¼ì†Œ
 	m_pd3dVertexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices, m_nStride * m_nVertices,
 		D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dVertexUploadBuffer);
 
-	// Á¤Á¡ ¹öÆÛ ºä¸¦ »ı¼ºÇÑ´Ù.
-	// Á¤Á¡ ¹öÆÛ ÁÖ¼Ò
+	// ì •ì  ë²„í¼ ë·°ë¥¼ ìƒì„±í•œë‹¤.
+	// ì •ì  ë²„í¼ ì£¼ì†Œ
 	m_d3dVertexBufferView.BufferLocation = m_pd3dVertexBuffer->GetGPUVirtualAddress();
-	// Á¤Á¡ ¹öÆÛ ÀüÃ¼ÀÇ Å©±â
+	// ì •ì  ë²„í¼ ì „ì²´ì˜ í¬ê¸°
 	m_d3dVertexBufferView.SizeInBytes = m_nStride * m_nVertices;
-	// Á¤Á¡ ¹öÆÛ °¢ ¿ø¼ÒÀÇ Å©±â, ÇÏ³ªÀÇ Á¤Á¡ Å©±â
+	// ì •ì  ë²„í¼ ê° ì›ì†Œì˜ í¬ê¸°, í•˜ë‚˜ì˜ ì •ì  í¬ê¸°
 	m_d3dVertexBufferView.StrideInBytes = m_nStride;
 }
 
 CubeMeshDiffused::CubeMeshDiffused(ID3D12Device * pd3dDevice, ID3D12GraphicsCommandList * pd3dCommandList,
 	float fWidth, float fHeight, float fDepth){
 
-	// °´Ã¼¿¡ ÇÊ¿äÇÑ Á¤Á¡ ¼ö 8°³ (Á÷À°¸éÃ¼)
+	// ê°ì²´ì— í•„ìš”í•œ ì •ì  ìˆ˜ 8ê°œ (ì§ìœ¡ë©´ì²´)
 	m_nVertices = 8;
 	m_nStride = sizeof(DiffusedVertex);
 	
 	m_d3dPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	
-	//fWidth: Á÷À°¸éÃ¼ °¡·Î(x-Ãà) ±æÀÌ, fHeight: Á÷À°¸éÃ¼ ¼¼·Î(y-Ãà) ±æÀÌ, fDepth: Á÷À°¸éÃ¼ ±íÀÌ(z-Ãà) ±æÀÌ 
+	//fWidth: ì§ìœ¡ë©´ì²´ ê°€ë¡œ(x-ì¶•) ê¸¸ì´, fHeight: ì§ìœ¡ë©´ì²´ ì„¸ë¡œ(y-ì¶•) ê¸¸ì´, fDepth: ì§ìœ¡ë©´ì²´ ê¹Šì´(z-ì¶•) ê¸¸ì´ 
 	float fx = fWidth*0.5f, fy = fHeight*0.5f, fz = fDepth*0.5f;
 	
-	// [1] Á¤Á¡ ¹öÆÛ
-	//Á¤Á¡ ¹öÆÛ´Â Á÷À°¸éÃ¼ÀÇ ²ÀÁöÁ¡ 8°³¿¡ ´ëÇÑ Á¤Á¡ µ¥ÀÌÅÍ¸¦ °¡Áø´Ù.
+	// [1] ì •ì  ë²„í¼
+	//ì •ì  ë²„í¼ëŠ” ì§ìœ¡ë©´ì²´ì˜ ê¼­ì§€ì  8ê°œì— ëŒ€í•œ ì •ì  ë°ì´í„°ë¥¼ ê°€ì§„ë‹¤.
 	DiffusedVertex pVertices[8];
 	pVertices[0] = DiffusedVertex(XMFLOAT3(-fx, +fy, -fz), RANDOM_COLOR);
 	pVertices[1] = DiffusedVertex(XMFLOAT3(+fx, +fy, -fz), RANDOM_COLOR);
@@ -208,70 +202,73 @@ CubeMeshDiffused::CubeMeshDiffused(ID3D12Device * pd3dDevice, ID3D12GraphicsComm
 	pVertices[5] = DiffusedVertex(XMFLOAT3(+fx, -fy, -fz), RANDOM_COLOR);
 	pVertices[6] = DiffusedVertex(XMFLOAT3(+fx, -fy, +fz), RANDOM_COLOR);
 	pVertices[7] = DiffusedVertex(XMFLOAT3(-fx, -fy, +fz), RANDOM_COLOR);
-
-	// »ï°¢Çü ¸Ş½¬¸¦ ¸®¼Ò½º(Á¤Á¡ ¹öÆÛ)·Î »ı¼ºÇÑ´Ù.
-	// ¸®¼Ò½º¿Í ³»ºÎÀû ÈüÀ» µ¿½Ã¿¡ »ı¼º
-	// µğ¹ÙÀÌ½º, Ä¿¸Çµå ¸®½ºÆ®, Á¤Á¡µ¥ÀÌÅÍ ÁÖ¼Ò, Á¤Á¡ ¹öÆÛ ÀüÃ¼ÀÇ Å©±â, ÈüÀÇ À¯Çü(±âº»), ¸®¼Ò½º ¹öÆÛÀÇ »óÅÂ(»ó¼ö¹öÆÛ), ¾÷·Îµå ¹öÆÛÀÇ ÁÖ¼Ò
+	// [ì •ì  ë°°ì—´ì„ ë©¤ë²„ ë³€ìˆ˜ì— ì €ì¥]
+	m_pVertices = new DiffusedVertex[m_nVertices];
+	memcpy(m_pVertices, pVertices, sizeof(DiffusedVertex) * m_nVertices);
+	// ì‚¼ê°í˜• ë©”ì‰¬ë¥¼ ë¦¬ì†ŒìŠ¤(ì •ì  ë²„í¼)ë¡œ ìƒì„±í•œë‹¤.
+	// ë¦¬ì†ŒìŠ¤ì™€ ë‚´ë¶€ì  í™ì„ ë™ì‹œì— ìƒì„±
+	// ë””ë°”ì´ìŠ¤, ì»¤ë§¨ë“œ ë¦¬ìŠ¤íŠ¸, ì •ì ë°ì´í„° ì£¼ì†Œ, ì •ì  ë²„í¼ ì „ì²´ì˜ í¬ê¸°, í™ì˜ ìœ í˜•(ê¸°ë³¸), ë¦¬ì†ŒìŠ¤ ë²„í¼ì˜ ìƒíƒœ(ìƒìˆ˜ë²„í¼), ì—…ë¡œë“œ ë²„í¼ì˜ ì£¼ì†Œ
 	m_pd3dVertexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, pVertices, m_nStride * m_nVertices,
 		D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dVertexUploadBuffer);
 	
-	//Á¤Á¡ ¹öÆÛ ºä¸¦ »ı¼ºÇÑ´Ù.
-	// Á¤Á¡ ¹öÆÛ ÁÖ¼Ò
+	//ì •ì  ë²„í¼ ë·°ë¥¼ ìƒì„±í•œë‹¤.
+	// ì •ì  ë²„í¼ ì£¼ì†Œ
 	m_d3dVertexBufferView.BufferLocation = m_pd3dVertexBuffer->GetGPUVirtualAddress();
-	// Á¤Á¡ ¹öÆÛ °¢ ¿ø¼ÒÀÇ Å©±â, ÇÏ³ªÀÇ Á¤Á¡ Å©±â
+	// ì •ì  ë²„í¼ ê° ì›ì†Œì˜ í¬ê¸°, í•˜ë‚˜ì˜ ì •ì  í¬ê¸°
 	m_d3dVertexBufferView.StrideInBytes = m_nStride;
-	// Á¤Á¡ ¹öÆÛ ÀüÃ¼ÀÇ Å©±â
+	// ì •ì  ë²„í¼ ì „ì²´ì˜ í¬ê¸°
 	m_d3dVertexBufferView.SizeInBytes = m_nStride * m_nVertices;
 
 
-	// [2] ÀÎµ¦½º ¹öÆÛ
-	/*ÀÎµ¦½º ¹öÆÛ´Â Á÷À°¸éÃ¼ÀÇ 6°³ÀÇ ¸é(»ç°¢Çü)¿¡ ´ëÇÑ ±âÇÏ Á¤º¸¸¦ °®´Â´Ù.
-	»ï°¢Çü ¸®½ºÆ®·Î Á÷À°¸éÃ¼¸¦ Ç¥ÇöÇÒ °ÍÀÌ ¹Ç·Î °¢ ¸éÀº 2°³ÀÇ »ï°¢ÇüÀ» °¡Áö°í °¢ »ï°¢ÇüÀº 3°³ÀÇ Á¤Á¡ÀÌ ÇÊ¿äÇÏ´Ù.
-	Áï, ÀÎµ¦½º ¹öÆÛ´Â ÀüÃ¼ 36(=6*2*3)°³ÀÇ ÀÎ µ¦½º¸¦ °¡Á®¾ß ÇÑ´Ù.*/
+	// [2] ì¸ë±ìŠ¤ ë²„í¼
+	/*ì¸ë±ìŠ¤ ë²„í¼ëŠ” ì§ìœ¡ë©´ì²´ì˜ 6ê°œì˜ ë©´(ì‚¬ê°í˜•)ì— ëŒ€í•œ ê¸°í•˜ ì •ë³´ë¥¼ ê°–ëŠ”ë‹¤.
+	ì‚¼ê°í˜• ë¦¬ìŠ¤íŠ¸ë¡œ ì§ìœ¡ë©´ì²´ë¥¼ í‘œí˜„í•  ê²ƒì´ ë¯€ë¡œ ê° ë©´ì€ 2ê°œì˜ ì‚¼ê°í˜•ì„ ê°€ì§€ê³  ê° ì‚¼ê°í˜•ì€ 3ê°œì˜ ì •ì ì´ í•„ìš”í•˜ë‹¤.
+	ì¦‰, ì¸ë±ìŠ¤ ë²„í¼ëŠ” ì „ì²´ 36(=6*2*3)ê°œì˜ ì¸ ë±ìŠ¤ë¥¼ ê°€ì ¸ì•¼ í•œë‹¤.*/
 	
-	// 8°³ÀÇ Á¤Á¡À¸·Î 36°³ÀÇ »ï°¢Çü ²ÀÁöÁ¡ Á¤ÇÏ±â
-	// ÀÎµ¦½º °³¼ö
+	// 8ê°œì˜ ì •ì ìœ¼ë¡œ 36ê°œì˜ ì‚¼ê°í˜• ê¼­ì§€ì  ì •í•˜ê¸°
+	// ì¸ë±ìŠ¤ ê°œìˆ˜
 	m_nIndices = 36;
 	UINT pnIndices[36];
 
-	//¨Í ¾Õ¸é(Front) »ç°¢ÇüÀÇ À§ÂÊ »ï°¢Çü
+	//â“ ì•ë©´(Front) ì‚¬ê°í˜•ì˜ ìœ„ìª½ ì‚¼ê°í˜•
 	pnIndices[0] = 3; pnIndices[1] = 1; pnIndices[2] = 0;
-	//¨Î ¾Õ¸é(Front) »ç°¢ÇüÀÇ ¾Æ·¡ÂÊ »ï°¢Çü
+	//â“‘ ì•ë©´(Front) ì‚¬ê°í˜•ì˜ ì•„ë˜ìª½ ì‚¼ê°í˜•
 	pnIndices[3] = 2; pnIndices[4] = 1; pnIndices[5] = 3;
-	//¨Ï À­¸é(Top) »ç°¢ÇüÀÇ À§ÂÊ »ï°¢Çü
+	//â“’ ìœ—ë©´(Top) ì‚¬ê°í˜•ì˜ ìœ„ìª½ ì‚¼ê°í˜•
 	pnIndices[6] = 0; pnIndices[7] = 5; pnIndices[8] = 4;
-	//¨Ğ À­¸é(Top) »ç°¢ÇüÀÇ ¾Æ·¡ÂÊ »ï°¢Çü
+	//â““ ìœ—ë©´(Top) ì‚¬ê°í˜•ì˜ ì•„ë˜ìª½ ì‚¼ê°í˜•
 	pnIndices[9] = 1; pnIndices[10] = 5; pnIndices[11] = 0;
-	//¨Ñ µŞ¸é(Back) »ç°¢ÇüÀÇ À§ÂÊ »ï°¢Çü
+	//â“” ë’·ë©´(Back) ì‚¬ê°í˜•ì˜ ìœ„ìª½ ì‚¼ê°í˜•
 	pnIndices[12] = 3; pnIndices[13] = 4; pnIndices[14] = 7;
-	//¨Ò µŞ¸é(Back) »ç°¢ÇüÀÇ ¾Æ·¡ÂÊ »ï°¢Çü
+	//â“• ë’·ë©´(Back) ì‚¬ê°í˜•ì˜ ì•„ë˜ìª½ ì‚¼ê°í˜•
 	pnIndices[15] = 0; pnIndices[16] = 4; pnIndices[17] = 3;
-	//¨Ó ¾Æ·¡¸é(Bottom) »ç°¢ÇüÀÇ À§ÂÊ »ï°¢Çü   
+	//â“– ì•„ë˜ë©´(Bottom) ì‚¬ê°í˜•ì˜ ìœ„ìª½ ì‚¼ê°í˜•   
 	pnIndices[18] = 1; pnIndices[19] = 6; pnIndices[20] = 5;
-	//¨Ô ¾Æ·¡¸é(Bottom) »ç°¢ÇüÀÇ ¾Æ·¡ÂÊ »ï°¢Çü   
+	//â“— ì•„ë˜ë©´(Bottom) ì‚¬ê°í˜•ì˜ ì•„ë˜ìª½ ì‚¼ê°í˜•   
 	pnIndices[21] = 2; pnIndices[22] = 6; pnIndices[23] = 1;
-	//¨Õ ¿·¸é(Left) »ç°¢ÇüÀÇ À§ÂÊ »ï°¢Çü   
+	//â“˜ ì˜†ë©´(Left) ì‚¬ê°í˜•ì˜ ìœ„ìª½ ì‚¼ê°í˜•   
 	pnIndices[24] = 2; pnIndices[25] = 7; pnIndices[26] = 6;
-	//¨Ö ¿·¸é(Left) »ç°¢ÇüÀÇ ¾Æ·¡ÂÊ »ï°¢Çü 
+	//â“™ ì˜†ë©´(Left) ì‚¬ê°í˜•ì˜ ì•„ë˜ìª½ ì‚¼ê°í˜• 
 	pnIndices[27] = 3; pnIndices[28] = 7; pnIndices[29] = 2;
-	//¨× ¿·¸é(Right) »ç°¢ÇüÀÇ À§ÂÊ »ï°¢Çü   
+	//â“š ì˜†ë©´(Right) ì‚¬ê°í˜•ì˜ ìœ„ìª½ ì‚¼ê°í˜•   
 	pnIndices[30] = 6; pnIndices[31] = 4; pnIndices[32] = 5;
-	//¨Ø ¿·¸é(Right) »ç°¢ÇüÀÇ ¾Æ·¡ÂÊ »ï°¢Çü   
+	//â“› ì˜†ë©´(Right) ì‚¬ê°í˜•ì˜ ì•„ë˜ìª½ ì‚¼ê°í˜•   
 	pnIndices[33] = 7; pnIndices[34] = 4; pnIndices[35] = 6;
 
-	//ÀÎµ¦½º ¹öÆÛ¸¦ »ı¼º
-	// µğ¹ÙÀÌ½º, Ä¿¸Çµå ¸®½ºÆ®, Á¤Á¡µ¥ÀÌÅÍ ÁÖ¼Ò, Á¤Á¡ ¹öÆÛ ÀüÃ¼ÀÇ Å©±â, ÈüÀÇ À¯Çü(±âº»), ¸®¼Ò½º ¹öÆÛÀÇ »óÅÂ(ÀÎµ¦½º ¹öÆÛ), ¾÷·Îµå ¹öÆÛÀÇ ÁÖ¼Ò
+	m_pnIndices = new UINT[m_nIndices];
+	memcpy(m_pnIndices, pnIndices, sizeof(UINT) * m_nIndices);
+	//ì¸ë±ìŠ¤ ë²„í¼ë¥¼ ìƒì„±
+	// ë””ë°”ì´ìŠ¤, ì»¤ë§¨ë“œ ë¦¬ìŠ¤íŠ¸, ì •ì ë°ì´í„° ì£¼ì†Œ, ì •ì  ë²„í¼ ì „ì²´ì˜ í¬ê¸°, í™ì˜ ìœ í˜•(ê¸°ë³¸), ë¦¬ì†ŒìŠ¤ ë²„í¼ì˜ ìƒíƒœ(ì¸ë±ìŠ¤ ë²„í¼), ì—…ë¡œë“œ ë²„í¼ì˜ ì£¼ì†Œ
 	m_pd3dIndexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, pnIndices, sizeof(UINT) * m_nIndices,
 		D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_INDEX_BUFFER, &m_pd3dIndexUploadBuffer);
-	
-	//ÀÎµ¦½º ¹öÆÛ ºä¸¦ »ı¼º
-	// ÀÎµ¦½º ¹öÆÛ ÁÖ¼Ò
+	//ì¸ë±ìŠ¤ ë²„í¼ ë·°ë¥¼ ìƒì„±
+	// ì¸ë±ìŠ¤ ë²„í¼ ì£¼ì†Œ
 	m_d3dIndexBufferView.BufferLocation = m_pd3dIndexBuffer->GetGPUVirtualAddress();
-	// ÀÎµ¦½º ¹öÆÛ Æ÷¸ä
+	// ì¸ë±ìŠ¤ ë²„í¼ í¬ë©§
 	m_d3dIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
-	// ÀÎµ¦½º ¹öÆÛ ÀüÃ¼ Å©±â : UINT * ÀÎµ¦½ºÀÇ °³¼ö
+	// ì¸ë±ìŠ¤ ë²„í¼ ì „ì²´ í¬ê¸° : UINT * ì¸ë±ìŠ¤ì˜ ê°œìˆ˜
 	m_d3dIndexBufferView.SizeInBytes = sizeof(UINT) * m_nIndices; 
-	//Áß½É , Å©±â , 0,0,0,1Àº È¸ÀüÀÌ ÀüÇô ¾ø´Â ÄõÅÍ´Ï¾ğÀ» ÀÇ¹ÌÇÔ
+	//ì¤‘ì‹¬ , í¬ê¸° , 0,0,0,1ì€ íšŒì „ì´ ì „í˜€ ì—†ëŠ” ì¿¼í„°ë‹ˆì–¸ì„ ì˜ë¯¸í•¨
 	m_xmOOBB = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fx, fy, fz), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
@@ -290,14 +287,14 @@ AirplaneMeshDiffused::AirplaneMeshDiffused(ID3D12Device *pd3dDevice, ID3D12Graph
 
 	float fx = fWidth * 0.5f, fy = fHeight * 0.5f, fz = fDepth * 0.5f;
 
-	//À§ÀÇ ±×¸²°ú °°Àº ºñÇà±â ¸Ş½¬¸¦ Ç¥ÇöÇÏ±â À§ÇÑ Á¤Á¡ µ¥ÀÌÅÍÀÌ´Ù.
+	//ìœ„ì˜ ê·¸ë¦¼ê³¼ ê°™ì€ ë¹„í–‰ê¸° ë©”ì‰¬ë¥¼ í‘œí˜„í•˜ê¸° ìœ„í•œ ì •ì  ë°ì´í„°ì´ë‹¤.
 	DiffusedVertex pVertices[24 * 3];
 	float x1 = fx * 0.2f, y1 = fy * 0.2f, x2 = fx * 0.1f, y3 = fy * 0.3f, y2 = ((y1 - (fy - y3)) / x1) * x2 + (fy - y3);
 	int i = 0;
 
 	XMFLOAT4 randomcol = RANDOM_COLOR;
 
-	//ºñÇà±â ¸Ş½¬ÀÇ À§ÂÊ ¸é
+	//ë¹„í–‰ê¸° ë©”ì‰¬ì˜ ìœ„ìª½ ë©´
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(0.0f, +(fy + y3), -fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(+x1, -y1, -fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(0.0f, 0.0f, -fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
@@ -311,7 +308,7 @@ AirplaneMeshDiffused::AirplaneMeshDiffused(ID3D12Device *pd3dDevice, ID3D12Graph
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(-x1, -y1, -fz), Vector4::Add(xmf4Color,randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(-fx, -y3, -fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	
-	//ºñÇà±â ¸Ş½¬ÀÇ ¾Æ·¡ÂÊ ¸é
+	//ë¹„í–‰ê¸° ë©”ì‰¬ì˜ ì•„ë˜ìª½ ë©´
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(0.0f, +(fy + y3), +fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(0.0f, 0.0f, +fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(+x1, -y1, +fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
@@ -325,7 +322,7 @@ AirplaneMeshDiffused::AirplaneMeshDiffused(ID3D12Device *pd3dDevice, ID3D12Graph
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(-fx, -y3, +fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(-x1, -y1, +fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	
-	//ºñÇà±â ¸Ş½¬ÀÇ ¿À¸¥ÂÊ ¸é
+	//ë¹„í–‰ê¸° ë©”ì‰¬ì˜ ì˜¤ë¥¸ìª½ ë©´
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(0.0f, +(fy + y3), -fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(0.0f, +(fy + y3), +fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(+x2, +y2, -fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
@@ -339,7 +336,7 @@ AirplaneMeshDiffused::AirplaneMeshDiffused(ID3D12Device *pd3dDevice, ID3D12Graph
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(+x2, +y2, +fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(+fx, -y3, +fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	
-	//ºñÇà±â ¸Ş½¬ÀÇ µÚÂÊ/¿À¸¥ÂÊ ¸é
+	//ë¹„í–‰ê¸° ë©”ì‰¬ì˜ ë’¤ìª½/ì˜¤ë¥¸ìª½ ë©´
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(+x1, -y1, -fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(+fx, -y3, -fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(+fx, -y3, +fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
@@ -353,7 +350,7 @@ AirplaneMeshDiffused::AirplaneMeshDiffused(ID3D12Device *pd3dDevice, ID3D12Graph
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(+x1, -y1, +fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(0.0f, 0.0f, +fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	
-	//ºñÇà±â ¸Ş½¬ÀÇ ¿ŞÂÊ ¸é
+	//ë¹„í–‰ê¸° ë©”ì‰¬ì˜ ì™¼ìª½ ë©´
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(0.0f, +(fy + y3), +fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(0.0f, +(fy + y3), -fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(-x2, +y2, -fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
@@ -367,7 +364,7 @@ AirplaneMeshDiffused::AirplaneMeshDiffused(ID3D12Device *pd3dDevice, ID3D12Graph
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(-fx, -y3, -fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(-fx, -y3, +fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	
-	//ºñÇà±â ¸Ş½¬ÀÇ µÚÂÊ/¿ŞÂÊ ¸é
+	//ë¹„í–‰ê¸° ë©”ì‰¬ì˜ ë’¤ìª½/ì™¼ìª½ ë©´
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(0.0f, 0.0f, -fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(0.0f, 0.0f, +fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
 	pVertices[i++] = DiffusedVertex(XMFLOAT3(-x1, -y1, +fz), Vector4::Add(xmf4Color, randomcol)); randomcol = RANDOM_COLOR;
@@ -395,7 +392,7 @@ AirplaneMeshDiffused::~AirplaneMeshDiffused() {
 CartMesh::CartMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList,
 	float fWidth, float fHeight, float fDepth, XMFLOAT4 xmf4Color) : Mesh(pd3dDevice, pd3dCommandList)
 {
-	// ¹Ùµğ(Á÷À°¸éÃ¼) + ¹ÙÄû(4°³ Å¥ºê)·Î ±¸¼º
+	// ë°”ë””(ì§ìœ¡ë©´ì²´) + ë°”í€´(4ê°œ íë¸Œ)ë¡œ êµ¬ì„±
 	const int nBodyVertices = 8;
 	const int nBodyIndices = 36;
 	const int nWheelVertices = 8 * 4;
@@ -407,13 +404,13 @@ CartMesh::CartMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dComm
 	std::vector<DiffusedVertex> vertices;
 	std::vector<UINT> indices;
 
-	// ¹Ùµğ(Á÷À°¸éÃ¼)
+	// ë°”ë””(ì§ìœ¡ë©´ì²´)
 	float fx = fWidth * 0.5f, fy = fHeight * 0.5f, fz = fDepth * 0.5f;
 	float bodyHeight = fy * 0.6f;
 	float topY = bodyHeight;
 	float bottomY = -bodyHeight;
 
-	// ¹Ùµğ Á¤Á¡
+	// ë°”ë”” ì •ì 
 	XMFLOAT3 bodyVerts[8] = {
 		XMFLOAT3(-fx, bottomY, -fz), // 0
 		XMFLOAT3(+fx, bottomY, -fz), // 1
@@ -427,7 +424,7 @@ CartMesh::CartMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dComm
 	for (int i = 0; i < 8; ++i)
 		vertices.push_back(DiffusedVertex(bodyVerts[i], RANDOM_COLOR));
 
-	// ¹Ùµğ ÀÎµ¦½º (Á÷À°¸éÃ¼)
+	// ë°”ë”” ì¸ë±ìŠ¤ (ì§ìœ¡ë©´ì²´)
 	UINT bodyIdx[36] = {
 		0,1,2, 0,2,3, // Front
 		1,5,6, 1,6,2, // Right
@@ -439,7 +436,7 @@ CartMesh::CartMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dComm
 	for (int i = 0; i < 36; ++i)
 		indices.push_back(bodyIdx[i]);
 
-	// ¹ÙÄû(4°³ Å¥ºê, °¢ 8Á¤Á¡ 36ÀÎµ¦½º)
+	// ë°”í€´(4ê°œ íë¸Œ, ê° 8ì •ì  36ì¸ë±ìŠ¤)
 	float wheelRadius = fy * 0.2f;
 	float wheelWidth = fWidth * 0.15f;
 	float wheelY = -fy + wheelRadius;
@@ -449,7 +446,7 @@ CartMesh::CartMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dComm
 	for (int w = 0; w < 4; ++w) {
 		float cx = (w < 2) ? wheelX[0] : wheelX[1];
 		float cz = (w % 2 == 0) ? wheelZ[0] : wheelZ[1];
-		// ¹ÙÄû Å¥ºêÀÇ 8Á¤Á¡
+		// ë°”í€´ íë¸Œì˜ 8ì •ì 
 		XMFLOAT3 wheelVerts[8] = {
 			XMFLOAT3(cx - wheelWidth / 2, wheelY - wheelRadius, cz - wheelRadius),
 			XMFLOAT3(cx + wheelWidth / 2, wheelY - wheelRadius, cz - wheelRadius),
@@ -463,7 +460,7 @@ CartMesh::CartMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dComm
 		int baseIdx = (int)vertices.size();
 		for (int i = 0; i < 8; ++i)
 			vertices.push_back(DiffusedVertex(wheelVerts[i], RANDOM_COLOR));
-		// ¹ÙÄû ÀÎµ¦½º (Á÷À°¸éÃ¼)
+		// ë°”í€´ ì¸ë±ìŠ¤ (ì§ìœ¡ë©´ì²´)
 		UINT wheelIdx[36] = {
 			0,1,2, 0,2,3, // Front
 			1,5,6, 1,6,2, // Right
@@ -481,14 +478,14 @@ CartMesh::CartMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dComm
 	m_nStride = sizeof(DiffusedVertex);
 	m_d3dPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-	// Á¤Á¡ ¹öÆÛ »ı¼º
+	// ì •ì  ë²„í¼ ìƒì„±
 	m_pd3dVertexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, vertices.data(), m_nStride * m_nVertices,
 		D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dVertexUploadBuffer);
 	m_d3dVertexBufferView.BufferLocation = m_pd3dVertexBuffer->GetGPUVirtualAddress();
 	m_d3dVertexBufferView.StrideInBytes = m_nStride;
 	m_d3dVertexBufferView.SizeInBytes = m_nStride * m_nVertices;
 
-	// ÀÎµ¦½º ¹öÆÛ »ı¼º
+	// ì¸ë±ìŠ¤ ë²„í¼ ìƒì„±
 	m_pd3dIndexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, indices.data(), sizeof(UINT) * m_nIndices,
 		D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_INDEX_BUFFER, &m_pd3dIndexUploadBuffer);
 	m_d3dIndexBufferView.BufferLocation = m_pd3dIndexBuffer->GetGPUVirtualAddress();
@@ -496,20 +493,20 @@ CartMesh::CartMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dComm
 	m_d3dIndexBufferView.SizeInBytes = sizeof(UINT) * m_nIndices;
 }
 
-// CubeMeshDiffusedÃ³·³ Á¤Á¡/ÀÎµ¦½º ¹öÆÛ ±â¹İÀ¸·Î CRollerCoasterMesh_Up ±¸Çö (¿¹½Ã)
+// CubeMeshDiffusedì²˜ëŸ¼ ì •ì /ì¸ë±ìŠ¤ ë²„í¼ ê¸°ë°˜ìœ¼ë¡œ CRollerCoasterMesh_Up êµ¬í˜„ (ì˜ˆì‹œ)
 
 CRollerCoasterMesh_Up::CRollerCoasterMesh_Up(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, float fWidth, float fHeight, float fDepth) : Mesh(pd3dDevice, pd3dCommandList)
 {
-	// µÎ²¨¿î ·¹ÀÏÀ» À§ÇØ °¢ ¸éÀ» ¹Ú½º ÇüÅÂ·Î ±¸¼º (»óÇÏ/ÁÂ¿ì µÎ²² Ãß°¡)
+	// ë‘êº¼ìš´ ë ˆì¼ì„ ìœ„í•´ ê° ë©´ì„ ë°•ìŠ¤ í˜•íƒœë¡œ êµ¬ì„± (ìƒí•˜/ì¢Œìš° ë‘ê»˜ ì¶”ê°€)
 	const int nSegments = 12;
-	const int nRails = 2; // ·¹ÀÏ 2ÁÙ
-	const float railWidth = fDepth * 0.3f; // ·¹ÀÏ µÎ²²(ÁÂ¿ì)
-	const float railHeight = fHeight * 0.02f; // ·¹ÀÏ µÎ²²(»óÇÏ)
+	const int nRails = 2; // ë ˆì¼ 2ì¤„
+	const float railWidth = fDepth * 0.3f; // ë ˆì¼ ë‘ê»˜(ì¢Œìš°)
+	const float railHeight = fHeight * 0.02f; // ë ˆì¼ ë‘ê»˜(ìƒí•˜)
 
 	std::vector<DiffusedVertex> vertices;
 	std::vector<UINT> indices;
 
-	// ·¹ÀÏ Áß½É¼± ÁÂÇ¥ Á¤ÀÇ (±âÁ¸ faceVertsÀÇ Áß½É¼±)
+	// ë ˆì¼ ì¤‘ì‹¬ì„  ì¢Œí‘œ ì •ì˜ (ê¸°ì¡´ faceVertsì˜ ì¤‘ì‹¬ì„ )
 	XMFLOAT3 centers[nSegments + 1] = {
 		XMFLOAT3(0.0f, 0.0f, 0.0f),
 		XMFLOAT3(+fWidth * 0.5f, fHeight, 0.0f),
@@ -526,61 +523,61 @@ CRollerCoasterMesh_Up::CRollerCoasterMesh_Up(ID3D12Device* pd3dDevice, ID3D12Gra
 		XMFLOAT3(0.0f, 0.0f, 0.0f)
 	};
 
-	// ·¹ÀÏ 2ÁÙ(ÁÂ/¿ì) °¢°¢ ¹Ú½º ÇüÅÂ·Î »ı¼º
+	// ë ˆì¼ 2ì¤„(ì¢Œ/ìš°) ê°ê° ë°•ìŠ¤ í˜•íƒœë¡œ ìƒì„±
 	for (int rail = 0; rail < nRails; ++rail) {
 		float xOffset = (rail == 0) ? -railWidth : +railWidth;
 		for (int seg = 0; seg < nSegments; ++seg) {
 			XMFLOAT3 p0 = centers[seg];
 			XMFLOAT3 p1 = centers[seg + 1];
 
-			// ·¹ÀÏ ¹æÇâ º¤ÅÍ
+			// ë ˆì¼ ë°©í–¥ ë²¡í„°
 			XMFLOAT3 dir = XMFLOAT3(p1.x - p0.x, p1.y - p0.y, p1.z - p0.z);
 			float len = sqrtf(dir.x * dir.x + dir.y * dir.y + dir.z * dir.z);
 			if (len < 1e-6f) continue;
 			dir.x /= len; dir.y /= len; dir.z /= len;
 
-			// Up º¤ÅÍ(¿ùµå YÃà)
+			// Up ë²¡í„°(ì›”ë“œ Yì¶•)
 			XMFLOAT3 up(0, 1, 0);
-			// ·¹ÀÏÀÇ ÁÂ¿ì ¹æÇâ(¹ı¼±) ±¸ÇÏ±â
+			// ë ˆì¼ì˜ ì¢Œìš° ë°©í–¥(ë²•ì„ ) êµ¬í•˜ê¸°
 			XMFLOAT3 right = XMFLOAT3(
 				up.y * dir.z - up.z * dir.y,
 				up.z * dir.x - up.x * dir.z,
 				up.x * dir.y - up.y * dir.x
 			);
-			// Á¤±ÔÈ­
+			// ì •ê·œí™”
 			float rlen = sqrtf(right.x * right.x + right.y * right.y + right.z * right.z);
 			if (rlen < 1e-6f) right = XMFLOAT3(1, 0, 0);
 			else { right.x /= rlen; right.y /= rlen; right.z /= rlen; }
 
-			// ·¹ÀÏ ¹Ú½º 8°³ ²ÀÁşÁ¡ °è»ê
+			// ë ˆì¼ ë°•ìŠ¤ 8ê°œ ê¼­ì§“ì  ê³„ì‚°
 			XMFLOAT3 corners[8];
 			for (int i = 0; i < 2; ++i) { // p0, p1
 				XMFLOAT3 base = (i == 0) ? p0 : p1;
-				// ·¹ÀÏ Áß½É¿¡¼­ ÁÂ¿ì ¿ÀÇÁ¼Â
+				// ë ˆì¼ ì¤‘ì‹¬ì—ì„œ ì¢Œìš° ì˜¤í”„ì…‹
 				base.x += right.x * xOffset;
 				base.y += right.y * xOffset;
 				base.z += right.z * xOffset;
-				// »óÇÏ ¿ÀÇÁ¼Â
+				// ìƒí•˜ ì˜¤í”„ì…‹
 				XMFLOAT3 upOffset = XMFLOAT3(up.x * railHeight, up.y * railHeight, up.z * railHeight);
 				XMFLOAT3 downOffset = XMFLOAT3(-up.x * railHeight, -up.y * railHeight, -up.z * railHeight);
-				// 4°³ ²ÀÁşÁ¡(»óÇÏ, ÁÂ¿ì)
+				// 4ê°œ ê¼­ì§“ì (ìƒí•˜, ì¢Œìš°)
 				corners[i * 4 + 0] = XMFLOAT3(base.x + upOffset.x, base.y + upOffset.y, base.z + upOffset.z);
 				corners[i * 4 + 1] = XMFLOAT3(base.x - upOffset.x, base.y - upOffset.y, base.z - upOffset.z);
 				corners[i * 4 + 2] = XMFLOAT3(base.x + downOffset.x, base.y + downOffset.y, base.z + downOffset.z);
 				corners[i * 4 + 3] = XMFLOAT3(base.x - downOffset.x, base.y - downOffset.y, base.z - downOffset.z);
 			}
-			// Á¤Á¡ Ãß°¡ (8°³)
+			// ì •ì  ì¶”ê°€ (8ê°œ)
 			int baseIdx = (int)vertices.size();
 			for (int i = 0; i < 8; ++i)
 				vertices.push_back(DiffusedVertex(corners[i], RANDOM_COLOR));
-			// ÀÎµ¦½º Ãß°¡ (¹Ú½º 12»ï°¢Çü)
+			// ì¸ë±ìŠ¤ ì¶”ê°€ (ë°•ìŠ¤ 12ì‚¼ê°í˜•)
 			UINT boxIdx[36] = {
-				0,1,2, 1,3,2, // ¾Õ¸é
-				4,5,6, 5,7,6, // µŞ¸é
-				0,2,4, 2,6,4, // À§
-				1,5,3, 5,7,3, // ¾Æ·¡
-				0,4,1, 1,4,5, // ¿ŞÂÊ
-				2,3,6, 3,7,6  // ¿À¸¥ÂÊ
+				0,1,2, 1,3,2, // ì•ë©´
+				4,5,6, 5,7,6, // ë’·ë©´
+				0,2,4, 2,6,4, // ìœ„
+				1,5,3, 5,7,3, // ì•„ë˜
+				0,4,1, 1,4,5, // ì™¼ìª½
+				2,3,6, 3,7,6  // ì˜¤ë¥¸ìª½
 			};
 			for (int i = 0; i < 36; ++i)
 				indices.push_back(baseIdx + boxIdx[i]);
@@ -607,13 +604,13 @@ CRollerCoasterMesh_Up::CRollerCoasterMesh_Up(ID3D12Device* pd3dDevice, ID3D12Gra
 
 CFloorMesh::CFloorMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, float fWidth, float fDepth, int nSubRects)
 {
-    // 1. º¯¼ö °è»ê
+    // 1. ë³€ìˆ˜ ê³„ì‚°
     float fHalfWidth = fWidth * 0.5f;
     float fHalfDepth = fDepth * 0.5f;
     float fCellWidth = fWidth / nSubRects;
     float fCellDepth = fDepth / nSubRects;
 
-    // 2. Á¤Á¡/ÀÎµ¦½º ¹öÆÛ »ı¼º
+    // 2. ì •ì /ì¸ë±ìŠ¤ ë²„í¼ ìƒì„±
     std::vector<DiffusedVertex> vertices;
     std::vector<UINT> indices;
 
@@ -630,7 +627,7 @@ CFloorMesh::CFloorMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3d
             vertices.push_back(DiffusedVertex(XMFLOAT3(x1, 0.0f, z1), RANDOM_COLOR));
             vertices.push_back(DiffusedVertex(XMFLOAT3(x0, 0.0f, z1), RANDOM_COLOR));
 
-            // µÎ °³ÀÇ »ï°¢Çü ÀÎµ¦½º
+            // ë‘ ê°œì˜ ì‚¼ê°í˜• ì¸ë±ìŠ¤
             indices.push_back(baseIdx + 0);
             indices.push_back(baseIdx + 1);
             indices.push_back(baseIdx + 2);
@@ -645,14 +642,14 @@ CFloorMesh::CFloorMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3d
     m_nStride = sizeof(DiffusedVertex);
     m_d3dPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-    // 3. Á¤Á¡ ¹öÆÛ »ı¼º
+    // 3. ì •ì  ë²„í¼ ìƒì„±
     m_pd3dVertexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, vertices.data(), m_nStride * m_nVertices,
         D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dVertexUploadBuffer);
     m_d3dVertexBufferView.BufferLocation = m_pd3dVertexBuffer->GetGPUVirtualAddress();
     m_d3dVertexBufferView.StrideInBytes = m_nStride;
     m_d3dVertexBufferView.SizeInBytes = m_nStride * m_nVertices;
 
-    // 4. ÀÎµ¦½º ¹öÆÛ »ı¼º
+    // 4. ì¸ë±ìŠ¤ ë²„í¼ ìƒì„±
     m_pd3dIndexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, indices.data(), sizeof(UINT) * m_nIndices,
         D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_INDEX_BUFFER, &m_pd3dIndexUploadBuffer);
     m_d3dIndexBufferView.BufferLocation = m_pd3dIndexBuffer->GetGPUVirtualAddress();
@@ -674,14 +671,14 @@ CTankMesh::CTankMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCo
 	std::vector<DiffusedVertex> vertices;
 	std::vector<UINT> indices;
 
-	// ¢Æ¢Æ Body (Main box of tank) ¢Æ¢Æ
+	// â–’â–’ Body (Main box of tank) â–’â–’
 	float bodyHeight = fy * 0.6f;
 	float topY = bodyHeight;
 	float bottomY = -bodyHeight;
 
 	XMFLOAT4 randomcol = RANDOM_COLOR;
 
-	// 8°³ ²ÀÁşÁ¡
+	// 8ê°œ ê¼­ì§“ì 
 	XMFLOAT3 bodyVerts[8] = {
 		XMFLOAT3(-fx, bottomY, -fz), // 0
 		XMFLOAT3(+fx, bottomY, -fz), // 1
@@ -695,7 +692,7 @@ CTankMesh::CTankMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCo
 	int baseIdx = (int)vertices.size();
 	for (int i = 0; i < 8; ++i)
 		vertices.push_back(DiffusedVertex(bodyVerts[i], Vector4::Add(xmf4Color, RANDOM_COLOR)));
-	// ÀÎµ¦½º(Á÷À°¸éÃ¼)
+	// ì¸ë±ìŠ¤(ì§ìœ¡ë©´ì²´)
 	UINT bodyIdx[36] = {
 		4,5,6, 4,6,7, // Front (+z)
 		1,0,3, 1,3,2, // Back (-z)
@@ -707,7 +704,7 @@ CTankMesh::CTankMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCo
 	for (int i = 0; i < 36; ++i)
 		indices.push_back(baseIdx + bodyIdx[i]);
 
-	// ¢Æ¢Æ Turret (»ó´Ü ¹Ú½º) ¢Æ¢Æ
+	// â–’â–’ Turret (ìƒë‹¨ ë°•ìŠ¤) â–’â–’
 	float turretWidth = fx * 0.6f;
 	float turretHeight = fy * 0.3f;
 	float turretTop = topY + turretHeight;
@@ -737,7 +734,7 @@ CTankMesh::CTankMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCo
 	for (int i = 0; i < 36; ++i)
 		indices.push_back(baseIdx + turretIdx[i]);
 
-	// ¢Æ¢Æ Cannon (Æ÷½Å) ¢Æ¢Æ
+	// â–’â–’ Cannon (í¬ì‹ ) â–’â–’
 	float cannonLength = fz * 1.0f;
 	float cannonWidth = fx * 0.2f;
 	float cannonTopY = topY + turretHeight * 0.5f;
@@ -765,12 +762,12 @@ CTankMesh::CTankMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCo
 	for (int i = 0; i < 36; ++i)
 		indices.push_back(baseIdx + cannonIdx[i]);
 
-	// ¢Æ¢Æ Wheels (ÁÂ¿ì 4°³¾¿) ¢Æ¢Æ
+	// â–’â–’ Wheels (ì¢Œìš° 4ê°œì”©) â–’â–’
 	float wheelRadius = fy * 0.2f;
 	float wheelWidth = fx * 0.15f;
 	for (int j = 0; j < 4; ++j) {
 		float offsetZ = -fz + (j + 1) * (fDepth / 5.0f);
-		// ¿ŞÂÊ
+		// ì™¼ìª½
 		baseIdx = (int)vertices.size();
 		XMFLOAT3 wheelVertsL[8] = {
 			XMFLOAT3(-fx - wheelWidth, -fy, offsetZ - wheelRadius),
@@ -795,7 +792,7 @@ CTankMesh::CTankMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCo
 		for (int i = 0; i < 36; ++i)
 			indices.push_back(baseIdx + wheelIdx[i]);
 
-		// ¿À¸¥ÂÊ
+		// ì˜¤ë¥¸ìª½
 		baseIdx = (int)vertices.size();
 		XMFLOAT3 wheelVertsR[8] = {
 			XMFLOAT3(+fx, -fy, offsetZ - wheelRadius),
@@ -816,14 +813,14 @@ CTankMesh::CTankMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCo
 	m_nVertices = (UINT)vertices.size();
 	m_nIndices = (UINT)indices.size();
 
-	// Á¤Á¡ ¹öÆÛ »ı¼º
+	// ì •ì  ë²„í¼ ìƒì„±
 	m_pd3dVertexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, vertices.data(), m_nStride * m_nVertices,
 		D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER, &m_pd3dVertexUploadBuffer);
 	m_d3dVertexBufferView.BufferLocation = m_pd3dVertexBuffer->GetGPUVirtualAddress();
 	m_d3dVertexBufferView.StrideInBytes = m_nStride;
 	m_d3dVertexBufferView.SizeInBytes = m_nStride * m_nVertices;
 
-	// ÀÎµ¦½º ¹öÆÛ »ı¼º
+	// ì¸ë±ìŠ¤ ë²„í¼ ìƒì„±
 	m_pd3dIndexBuffer = ::CreateBufferResource(pd3dDevice, pd3dCommandList, indices.data(), sizeof(UINT) * m_nIndices,
 		D3D12_HEAP_TYPE_DEFAULT, D3D12_RESOURCE_STATE_INDEX_BUFFER, &m_pd3dIndexUploadBuffer);
 	m_d3dIndexBufferView.BufferLocation = m_pd3dIndexBuffer->GetGPUVirtualAddress();

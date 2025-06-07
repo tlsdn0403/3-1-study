@@ -33,7 +33,7 @@ public:
 	~DiffusedVertex() {}
 };
 
-
+\
 
 class CPolygon
 {
@@ -66,6 +66,7 @@ protected:
 	DiffusedVertex * m_pVertices = NULL;
 	//메쉬의 인덱스를 저장한다(인덱스 버퍼를 Map()하여 읽지 않아도 되도록).
 		UINT * m_pnIndices = NULL;
+
 public: 
 	void AddRef() { m_nReferences++; }
 	void Release() {
