@@ -50,6 +50,8 @@ using Microsoft::WRL::ComPtr;
 #pragma comment(lib,"dxgi.lib")
 #pragma comment(lib, "d2d1.lib")
 
+#define BULLETS					50
+#define EXPLOSION_DEBRISES		80  //폭발 할 때 애니메이션 나오는 객체 수
 #define FRAME_BUFFER_WIDTH    1280 
 #define FRAME_BUFFER_HEIGHT  960
 #define _WITH_SWAPCHAIN_FULLSCREEN_STATE
@@ -124,6 +126,7 @@ namespace Vector3 {
 		return(xmf3Result.x);
 	}
 
+
 	inline float Angle(XMVECTOR& xmvVector1, XMVECTOR& xmvVector2) {
 		XMVECTOR xmvAngle = XMVector3AngleBetweenNormals(xmvVector1, xmvVector2);
 		return(XMConvertToDegrees(acosf(XMVectorGetX(xmvAngle))));
@@ -175,7 +178,12 @@ namespace Matrix4x4 {
 		XMStoreFloat4x4(&xmmtx4x4Result, XMMatrixIdentity());
 		return(xmmtx4x4Result);
 	}
-
+	inline XMFLOAT4X4 RotationYawPitchRoll(float fPitch, float fYaw, float fRoll)
+	{
+		XMFLOAT4X4 xmmtx4x4Result;
+		XMStoreFloat4x4(&xmmtx4x4Result, XMMatrixRotationRollPitchYaw(XMConvertToRadians(fPitch), XMConvertToRadians(fYaw), XMConvertToRadians(fRoll)));
+		return(xmmtx4x4Result);
+	}
 	inline XMFLOAT4X4 Multiply(XMFLOAT4X4& xmmtx4x4Matrix1, XMFLOAT4X4& xmmtx4x4Matrix2)
 	{
 		XMFLOAT4X4 xmmtx4x4Result; XMStoreFloat4x4(&xmmtx4x4Result, XMLoadFloat4x4(&xmmtx4x4Matrix1) * XMLoadFloat4x4(&xmmtx4x4Matrix2)); return(xmmtx4x4Result);
@@ -214,6 +222,12 @@ namespace Matrix4x4 {
 	inline XMFLOAT4X4 LookAtLH(XMFLOAT3& xmf3EyePosition, XMFLOAT3& xmf3LookAtPosition, XMFLOAT3& xmf3UpDirection) {
 		XMFLOAT4X4 xmmtx4x4Result;
 		XMStoreFloat4x4(&xmmtx4x4Result, XMMatrixLookAtLH(XMLoadFloat3(&xmf3EyePosition), XMLoadFloat3(&xmf3LookAtPosition), XMLoadFloat3(&xmf3UpDirection)));
+		return(xmmtx4x4Result);
+	}
+	inline XMFLOAT4X4 RotationAxis(XMFLOAT3& xmf3Axis, float fAngle)
+	{
+		XMFLOAT4X4 xmmtx4x4Result;
+		XMStoreFloat4x4(&xmmtx4x4Result, XMMatrixRotationAxis(XMLoadFloat3(&xmf3Axis), XMConvertToRadians(fAngle)));
 		return(xmmtx4x4Result);
 	}
 }

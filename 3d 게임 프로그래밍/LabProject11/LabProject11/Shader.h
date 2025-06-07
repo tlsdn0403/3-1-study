@@ -13,6 +13,7 @@ struct CB_GAMEOBJECT_INFO {
  public: 
 	 Shader(); 
 	 virtual ~Shader();
+	 //셰이더에 포함되어 있는 모든 게임 객체들에 대한 마우스 픽킹을 수행한다.
 
 private:
 	int m_nReferences = 0;
@@ -49,8 +50,7 @@ public:
 
 protected: 
 	// Pipeline State 객체들의 리스트(배열)이다.(?)
-	// - 파이프라인에 1세트의 쉐이더 5개가 들어가는거 아닌가??????????????
-	// 그러면 파이프라인은 항상 1개아닌가?????????????
+
 	ID3D12PipelineState **m_ppd3dPipelineStates = NULL;
 	int m_nPipelineStates = 0;
  };
@@ -71,7 +71,7 @@ protected:
  public:
 	 ObjectsShader();
 	 virtual ~ObjectsShader();
-
+	virtual GameObject* PickObjectByRayIntersection(XMFLOAT3& xmf3PickPosition, XMFLOAT4X4& xmf4x4View, float* pfNearHitDistance);
 	virtual void BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList);
 	virtual void AnimateObjects(float fTimeElapsed);
 	virtual void ReleaseObjects();

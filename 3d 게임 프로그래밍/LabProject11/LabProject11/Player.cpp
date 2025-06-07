@@ -52,7 +52,7 @@ void Player::Move(ULONG nDirection, float fDistance, bool bVelocity){
 		if (nDirection & DIR_DOWN) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Up, -fDistance);
 
 		//플레이어를 현재 위치 벡터에서 xmf3Shift 벡터만큼 이동한다.
-		Move(xmf3Shift, bVelocity);
+		Move(xmf3Shift, true);
 	}
 }
 
@@ -71,13 +71,27 @@ void Player::Move(const XMFLOAT3& xmf3Shift, bool bUpdateVelocity) {
 		m_pCamera->Move(Shiftfloat3);
 	}
 }
-
+//void Player::Move(DWORD dwDirection, float fDistance)
+//{
+//	if (dwDirection)
+//	{
+//		XMFLOAT3 xmf3Shift = XMFLOAT3(0, 0, 0);
+//		if (dwDirection & DIR_FORWARD) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Look, fDistance);
+//		if (dwDirection & DIR_BACKWARD) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Look, -fDistance);
+//		if (dwDirection & DIR_RIGHT) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Right, fDistance);
+//		if (dwDirection & DIR_LEFT) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Right, -fDistance);
+//		if (dwDirection & DIR_UP) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Up, fDistance);
+//		if (dwDirection & DIR_DOWN) xmf3Shift = Vector3::Add(xmf3Shift, m_xmf3Up, -fDistance);
+//
+//		Move(xmf3Shift, true);
+//	}
+//}
 void Player::Move(float fxOffset, float fyOffset, float fzOffset){
-
+	Move(XMFLOAT3(fxOffset, fyOffset, fzOffset), false);
 }
 
 //플레이어를 로컬 x-축, y-축, z-축을 중심으로 회전한다.
-void Player::Rotate(float fxOffset = 0.0f, float fyOffset = 0.0f, float fzOffset = 0.0f) {
+void Player::Rotate(float fxOffset , float fyOffset , float fzOffset) {
 
 	DWORD nCameraMode = m_pCamera->GetMode();
 
@@ -89,41 +103,41 @@ void Player::Rotate(float fxOffset = 0.0f, float fyOffset = 0.0f, float fzOffset
 		x는 현재의 m_fPitch에서 실제 회전하는 각도이므로
 		x만큼 회전한 다음 Pitch가 +89도 보다 크거나 -89도 보다 작으면
 		m_fPitch가 +89도 또는 -89도가 되도록 회전각도(x)를 수정한다.*/
-		if (fxOffset != 0.0f) {
-			m_fPitch += fxOffset;
+		//if (fxOffset != 0.0f) {
+		//	m_fPitch += fxOffset;
 
-			if (m_fPitch > +89.0f) {
-				fxOffset -= (m_fPitch - 89.0f);
-				m_fPitch = +89.0f;
-			}
+		//	if (m_fPitch > +89.0f) {
+		//		fxOffset -= (m_fPitch - 89.0f);
+		//		m_fPitch = +89.0f;
+		//	}
 
-			if (m_fPitch < -89.0f) {
-				fxOffset -= (m_fPitch + 89.0f);
-				m_fPitch = -89.0f;
-			}
-		}
+		//	if (m_fPitch < -89.0f) {
+		//		fxOffset -= (m_fPitch + 89.0f);
+		//		m_fPitch = -89.0f;
+		//	}
+		//}
 
-		if (fyOffset != 0.0f) {
-			//로컬 y-축을 중심으로 회전하는 것은 몸통을 돌리는 것이므로 회전 각도의 제한이 없다.
-			m_fYaw += fyOffset;
-			if (m_fYaw > 360.0f)	m_fYaw -= 360.0f;
-			if (m_fYaw < 0.0f)		m_fYaw += 360.0f;
-		}
+		//if (fyOffset != 0.0f) {
+		//	//로컬 y-축을 중심으로 회전하는 것은 몸통을 돌리는 것이므로 회전 각도의 제한이 없다.
+		//	m_fYaw += fyOffset;
+		//	if (m_fYaw > 360.0f)	m_fYaw -= 360.0f;
+		//	if (m_fYaw < 0.0f)		m_fYaw += 360.0f;
+		//}
 
-		if (fzOffset != 0.0f) {
-			/*로컬 z-축을 중심으로 회전하는 것은 몸통을 좌우로 기울이는 것이므로 회전 각도는 -20.0~+20.0도 사이로 제한된다.
-			z는 현재의 m_fRoll에서 실제 회전하는 각도이므로
-			z만큼 회전한 다음 m_fRoll이 +20도 보다 크거나 -20도보다 작으면 m_fRoll이 +20도 또는 -20도가 되도록 회전각도(z)를 수정한다.*/
-			m_fRoll += fzOffset;
-			if (m_fRoll > +20.0f) {
-				fzOffset -= (m_fRoll - 20.0f);
-				m_fRoll = +20.0f;
-			}
-			if (m_fRoll < -20.0f) {
-				fzOffset -= (m_fRoll + 20.0f);
-				m_fRoll = -20.0f;
-			}
-		}
+		//if (fzOffset != 0.0f) {
+		//	/*로컬 z-축을 중심으로 회전하는 것은 몸통을 좌우로 기울이는 것이므로 회전 각도는 -20.0~+20.0도 사이로 제한된다.
+		//	z는 현재의 m_fRoll에서 실제 회전하는 각도이므로
+		//	z만큼 회전한 다음 m_fRoll이 +20도 보다 크거나 -20도보다 작으면 m_fRoll이 +20도 또는 -20도가 되도록 회전각도(z)를 수정한다.*/
+		//	m_fRoll += fzOffset;
+		//	if (m_fRoll > +20.0f) {
+		//		fzOffset -= (m_fRoll - 20.0f);
+		//		m_fRoll = +20.0f;
+		//	}
+		//	if (m_fRoll < -20.0f) {
+		//		fzOffset -= (m_fRoll + 20.0f);
+		//		m_fRoll = -20.0f;
+		//	}
+		//}
 
 		//카메라를 x, y, z 만큼 회전한다. 플레이어를 회전하면 카메라가 회전하게 된다.
 		m_pCamera->Rotate(fxOffset, fyOffset, fzOffset);
@@ -131,11 +145,36 @@ void Player::Rotate(float fxOffset = 0.0f, float fyOffset = 0.0f, float fzOffset
 		/*플레이어를 회전한다. 1인칭 카메라 또는 3인칭 카메라에서 플레이어의 회전은 로컬 y-축에서만 일어난다.
 		플레이어 의 로컬 y-축(Up 벡터)을 기준으로 로컬 z-축(Look 벡터)와 로컬 x-축(Right 벡터)을 회전시킨다.
 		기본적으로 Up 벡 터를 기준으로 회전하는 것은 플레이어가 똑바로 서있는 것을 가정한다는 의미이다.*/
-		if (fyOffset != 0.0f) {
+		/*if (fyOffset != 0.0f) {
 			XMMATRIX xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Up), XMConvertToRadians(fyOffset));
 			m_xmf3Look = Vector3::TransformNormal(m_xmf3Look, xmmtxRotate);
 			m_xmf3Right = Vector3::TransformNormal(m_xmf3Right, xmmtxRotate);
+		}*/
+
+
+
+		if (fxOffset != 0.0f)
+		{
+			XMMATRIX mtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Right), XMConvertToRadians(fxOffset));
+			m_xmf3Look = Vector3::TransformNormal(m_xmf3Look, mtxRotate);
+			m_xmf3Up = Vector3::TransformNormal(m_xmf3Up, mtxRotate);
 		}
+		if (fyOffset != 0.0f)
+		{
+			XMMATRIX mtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Up), XMConvertToRadians(fyOffset));
+			m_xmf3Look = Vector3::TransformNormal(m_xmf3Look, mtxRotate);
+			m_xmf3Right = Vector3::TransformNormal(m_xmf3Right, mtxRotate);
+		}
+		if (fzOffset != 0.0f)
+		{
+			XMMATRIX mtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Look), XMConvertToRadians(fzOffset));
+			m_xmf3Up = Vector3::TransformNormal(m_xmf3Up, mtxRotate);
+			m_xmf3Right = Vector3::TransformNormal(m_xmf3Right, mtxRotate);
+		}
+
+		m_xmf3Look = Vector3::Normalize(m_xmf3Look);
+		m_xmf3Right = Vector3::Normalize(Vector3::CrossProduct(m_xmf3Up, m_xmf3Look));
+		m_xmf3Up = Vector3::Normalize(Vector3::CrossProduct(m_xmf3Look, m_xmf3Right));
 	}
 
 	else if (nCameraMode == SPACESHIP_CAMERA) {
@@ -342,9 +381,9 @@ void Player::Render(ID3D12GraphicsCommandList * pd3dCommandList, Camera * pCamer
 		GameObject::Render(pd3dCommandList, pCamera); 
 }
 
-AirplanePlayer::AirplanePlayer(ID3D12Device * pd3dDevice, ID3D12GraphicsCommandList * pd3dCommandList, ID3D12RootSignature * pd3dGraphicsRootSignature){
+TankPlayer::TankPlayer(ID3D12Device * pd3dDevice, ID3D12GraphicsCommandList * pd3dCommandList, ID3D12RootSignature * pd3dGraphicsRootSignature){
 	//비행기 메쉬를 생성한다.
-	Mesh *pAirplaneMesh = new CartMesh(pd3dDevice, pd3dCommandList, 20.0f, 15.0f, 20.0f, XMFLOAT4(0.0f, 0.5f, 0.0f, 0.0f));
+	Mesh *pAirplaneMesh = new CTankMesh(pd3dDevice, pd3dCommandList, 10.0f, 7.0f, 10.0f, XMFLOAT4(0.0f, 0.5f, 0.0f, 0.0f));
 	SetMesh(pAirplaneMesh);
 	
 	//플레이어의 카메라를 스페이스-쉽 카메라로 변경(생성)한다.
@@ -367,12 +406,12 @@ AirplanePlayer::AirplanePlayer(ID3D12Device * pd3dDevice, ID3D12GraphicsCommandL
 	SetShader(pShader); 
 }
 
-AirplanePlayer::~AirplanePlayer(){
+TankPlayer::~TankPlayer(){
 
 }
 
 //카메라를 변경할 때 호출되는 함수이다. nNewCameraMode는 새로 설정할 카메라 모드이다. 
-Camera * AirplanePlayer::ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed){
+Camera * TankPlayer::ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed){
 	DWORD nCurrentCameraMode = (m_pCamera) ? m_pCamera->GetMode() : 0x00;
 	if (nCurrentCameraMode == nNewCameraMode) 
 		return(m_pCamera);
@@ -448,13 +487,58 @@ Camera * AirplanePlayer::ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed){
 	return(m_pCamera);
 }
 
-void AirplanePlayer::OnPrepareRender(){
+void TankPlayer::OnPrepareRender(){
 	Player::OnPrepareRender();
 
 	//비행기 모델을 그리기 전, 회전
 	/*XMMATRIX mtxRotate = XMMatrixRotationRollPitchYaw(XMConvertToRadians(90.0f), 0.0f, 0.0f);
 	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);*/
 }
+
+void TankPlayer::FireBullet(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList,GameObject* pLockedObject)
+{
+	CBulletObject* pBulletObject = NULL;
+	for (int i = 0; i < BULLETS; i++)
+	{
+		if (!m_ppBullets[i]->m_bActive)
+		{
+			pBulletObject = m_ppBullets[i];
+			break;
+		}
+	}
+
+	if (pBulletObject)
+	{
+		XMFLOAT3 xmf3Position = GetPosition();
+		XMFLOAT3 xmf3Direction = Vector3::ScalarProduct(GetLook(), 1.0f); // 방향 반전
+		XMFLOAT3 xmf3FirePosition = Vector3::Add(xmf3Position, Vector3::ScalarProduct(xmf3Direction, 6.0f, false));
+
+		pBulletObject->m_xmf4x4World = m_xmf4x4World;
+
+		pBulletObject->SetFirePosition(xmf3FirePosition);
+		pBulletObject->SetMovingDirection(xmf3Direction);
+		pBulletObject->SetActive(true);
+
+
+
+		Mesh* pBulletMesh = new CubeMeshDiffused(pd3dDevice, pd3dCommandList, 2.0f, 2.0f, 4.0f);
+		pBulletObject->SetMesh(pBulletMesh);
+
+		if (pLockedObject)
+		{
+			pBulletObject->m_pLockedObject = pLockedObject;
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
 
 
 CartPlayer::CartPlayer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, ID3D12RootSignature* pd3dGraphicsRootSignature) {

@@ -61,8 +61,8 @@ public:
 	void SetRotationSpeed(float fSpeed) { m_fRotationSpeed = fSpeed; }
 
 	void InitializeBullets();
-;	void FireBullet();
-void AutoFire(float fElapsedTime);
+	void FireBullet();
+	void AutoFire(float fElapsedTime);
 
 	void MoveStrafe(float fDistance = 1.0f);
 	void MoveUp(float fDistance = 1.0f);

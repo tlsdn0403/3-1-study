@@ -9,6 +9,7 @@
 
 #include "GameObject.h" 
 #include "Camera.h"
+#include "Shader.h"
 
 class Player : public GameObject{
 protected:
@@ -90,7 +91,7 @@ public:
 	void Move(ULONG nDirection, float fDistance, bool bVelocity = false);
 	void Move(const XMFLOAT3& xmf3Shift, bool bVelocity = false); 
 	void Move(float fxOffset = 0.0f, float fyOffset = 0.0f, float fzOffset = 0.0f);
-	
+	/*void Move(DWORD dwDirection, float fDistance);*/
 	//플레이어를 회전하는 함수이다.
 	void Rotate(float x, float y, float z);
 	
@@ -119,14 +120,31 @@ public:
 	virtual void Render(ID3D12GraphicsCommandList *pd3dCommandList, Camera *pCamera = NULL); 
 };
 
-class AirplanePlayer : public Player {
+class TankPlayer : public Player {
 public:
-	AirplanePlayer(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, ID3D12RootSignature *pd3dGraphicsRootSignature);
-	virtual ~AirplanePlayer();
+	TankPlayer(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, ID3D12RootSignature *pd3dGraphicsRootSignature);
+	virtual ~TankPlayer();
 	
+	float m_fShieldDuration = 0.0;
+	float m_fShieldElapsedTime = 0.0;
+
+
+
+	float						m_fBulletEffectiveRange = 150.0f;
+
+
+	CBulletObject* m_ppBullets[BULLETS];
+
+	void FireBullet(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList ,GameObject* pLockedObject);
+
 	virtual Camera *ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed);
 	virtual void OnPrepareRender();
 };
+
+
+
+
+
 class CartPlayer : public Player {
 public:
 	CartPlayer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, ID3D12RootSignature* pd3dGraphicsRootSignature);

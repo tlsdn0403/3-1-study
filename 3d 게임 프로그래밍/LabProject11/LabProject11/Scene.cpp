@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Scene.h"
+#include"GameObject.h"
 #include <d3d9.h>
 #include <tchar.h>
 
@@ -719,12 +720,22 @@ void MenuScene::OnMouseClick(int x, int y) {
     float level1_left = 300;
     float level1_right = 900;
     float level1_top = 200;
-    float level1_bottom = 400;
+    float level1_bottom = 399;
+
+
+    float level2_left = 300;
+    float level2_right = 900;
+    float level2_top = 400;
+    float level2_bottom = 600;
 
 
     if (x >= level1_left && x <= level1_right &&
         y >= level1_top && y <= level1_bottom) {
         CGameState::ChangeGameState(CGameState::GAME_1);
+    }
+    else if (x >= level2_left && x <= level2_right &&
+        y >= level2_top && y <= level2_bottom) {
+        CGameState::ChangeGameState(CGameState::GAME);
     }
 }
 void MenuScene::ReleaseObjects() {
@@ -775,7 +786,13 @@ void Scene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd
 	m_pShaders = new ObjectsShader[m_nShaders];
 	m_pShaders[0].CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
 
+    CExplosiveObject::PrepareExplosion(pd3dDevice, pd3dCommandList);
 
+    float fHalfWidth = 45.0f, fHalfHeight = 45.0f, fHalfDepth = 200.0f;
+    CFloorMesh* pWallCubeMesh = new CFloorMesh(pd3dDevice, pd3dCommandList, fHalfWidth * 2.0f, fHalfDepth * 2.0f, 30);
+
+   
+   
 	// 2. 오브젝트 생성 및 셰이더 할당
 	int xObjects = 1, yObjects = 1, zObjects = 1;
 	float rectSize = 12.0f;
@@ -785,16 +802,15 @@ void Scene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd
 	int nObjects = (xObjects * 2 + 1) * (yObjects * 2 + 1) * (zObjects * 2 + 1);
 	m_nObjects = nObjects + 1 ;
 	m_ppObjects = new GameObject * [m_nObjects];
-
     CRollerCoasterMesh_Up* pRailMesh = new CRollerCoasterMesh_Up(pd3dDevice, pd3dCommandList,20.0f, 10.0f, 6.0f);
 
-	CubeMeshDiffused* pCubeMesh = new CubeMeshDiffused(pd3dDevice, pd3dCommandList, rectSize, rectSize, rectSize);
+	CubeMeshDiffused* pCubeMesh = new CubeMeshDiffused(pd3dDevice, pd3dCommandList, 4, 4, 4);
 
 	int i = 0;
 	for (int x = -xObjects; x <= xObjects; x++) {
 		for (int y = -yObjects; y <= yObjects; y++) {
 			for (int z = -zObjects; z <= zObjects; z++) {
-				GameObject* obj = new GameObject();
+                CBulletObject* obj = new CBulletObject(150.0f);
 				obj->SetMesh(pCubeMesh);
 				obj->SetShader(&m_pShaders[0]);
 				obj->SetPosition(fxPitch * x, fyPitch * y, fzPitch * z);
@@ -808,6 +824,21 @@ void Scene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd
     obj->SetShader(&m_pShaders[0]);
     obj->SetPosition(0,0,0);
     m_ppObjects[i++] = obj;
+
+    m_pFloorObject = new CFloorObject();
+    m_pFloorObject->SetPosition(0.0f, 0.0f, 0.0f);
+    m_pFloorObject->SetMesh(pWallCubeMesh);
+    m_pFloorObject->m_pxmf4WallPlanes[0] = XMFLOAT4(0.0f, +1.0f, 0.0f, fHalfHeight);
+    m_pFloorObject->m_pxmf4WallPlanes[1] = XMFLOAT4(0.0f, -1.0f, 0.0f, fHalfHeight);
+    m_pFloorObject->m_xmOOBBPlayerMoveCheck = BoundingOrientedBox(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(fHalfWidth, fHalfHeight, fHalfDepth * 0.05f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+    m_pFloorObject->SetShader(&m_pShaders[0]);
+
+    for (int i = 0; i < m_nBullets; i++) {
+        m_ppBullets[i] = new CBulletObject(150.0f); // 적절한 range 값
+        m_ppBullets[i]->SetMesh(pCubeMesh); // 미리 Mesh 연결 (공유)
+        m_ppBullets[i]->SetShader(&m_pShaders[0]);
+    }
+ 
 }
 void Scene::ReleaseObjects() {
 	if (m_ppObjects) {
@@ -817,6 +848,10 @@ void Scene::ReleaseObjects() {
 		delete[] m_ppObjects;
 		m_ppObjects = nullptr;
 	}
+    if (m_pFloorObject) {
+        delete m_pFloorObject;
+        m_pFloorObject = nullptr;
+    }
 	if (m_pShaders) {
 		for (int i = 0; i < m_nShaders; i++) {
 			m_pShaders[i].ReleaseShaderVariables();
@@ -824,11 +859,26 @@ void Scene::ReleaseObjects() {
 		delete[] m_pShaders;
 		m_pShaders = nullptr;
 	}
+    if (m_ppBullets) {
+        for (int i = 0; i < m_nBullets; i++) {
+            delete m_ppBullets[i];
+            m_ppBullets[i] = nullptr;
+        }
+    }
+    
+    
 }
 void Scene::AnimateObjects(float fTimeElapsed) {
 	for (int i = 0; i < m_nObjects; i++) {
 		if (m_ppObjects[i]) m_ppObjects[i]->Animate(fTimeElapsed);
 	}
+    // [추가] 총알 렌더링
+    for (int i = 0; i < m_nBullets; i++) {
+        if (m_ppBullets[i] && m_ppBullets[i]->m_bActive) {
+            m_ppBullets[i]->Animate(fTimeElapsed);
+        }
+    }
+
 }
 void Scene::Render(ID3D12GraphicsCommandList* pd3dCommandList, Camera* pCamera) {
 	pCamera->SetViewportsAndScissorRects(pd3dCommandList);
@@ -838,6 +888,13 @@ void Scene::Render(ID3D12GraphicsCommandList* pd3dCommandList, Camera* pCamera) 
 	for (int i = 0; i < m_nObjects; i++) {
 		if (m_ppObjects[i]) m_ppObjects[i]->Render(pd3dCommandList, pCamera);
 	}
+    // [추가] 총알 렌더링
+    for (int i = 0; i < m_nBullets; i++) {
+        if (m_ppBullets[i] && m_ppBullets[i]->m_bActive) {
+            m_ppBullets[i]->Render(pd3dCommandList, pCamera);
+        }
+    }
+    if (m_pFloorObject) m_pFloorObject->Render(pd3dCommandList, pCamera);
 }
 
 
@@ -859,9 +916,67 @@ void Scene::ReleaseUploadBuffers() {
 		m_pShaders[i].ReleaseUploadBuffers();
 }
 
+GameObject* Scene::PickObjectPointedByCursor(int xClient, int yClient, Camera* pCamera)
+{
+    if (!pCamera) return(NULL);
+    XMFLOAT4X4 xmf4x4View = pCamera->GetViewMatrix();
+    XMFLOAT4X4 xmf4x4Projection = pCamera->GetProjectionMatrix();
+    D3D12_VIEWPORT d3dViewport = pCamera->GetViewport();
+    XMFLOAT3 xmf3PickPosition;
+    /*화면 좌표계의 점 (xClient, yClient)를 화면 좌표 변환의 역변환과 투영 변환의 역변환을 한다. 그 결과는 카메라
+   좌표계의 점이다. 투영 평면이 카메라에서 z-축으로 거리가 1이므로 z-좌표는 1로 설정한다.*/
+    xmf3PickPosition.x = (((2.0f * xClient) / d3dViewport.Width) - 1) /
+        xmf4x4Projection._11;
+    xmf3PickPosition.y = -(((2.0f * yClient) / d3dViewport.Height) - 1) /
+        xmf4x4Projection._22;
+    xmf3PickPosition.z = 1.0f;
+    int nIntersected = 0;
+    float fHitDistance = FLT_MAX, fNearestHitDistance = FLT_MAX;
+    GameObject* pIntersectedObject = NULL, * pNearestObject = NULL;
+    //셰이더의 모든 게임 객체들에 대한 마우스 픽킹을 수행하여 카메라와 가장 가까운 게임 객체를 구한다.
+    for (int i = 0; i < m_nShaders; i++)
+    {
+        pIntersectedObject = m_pShaders[i].PickObjectByRayIntersection(xmf3PickPosition,
+            xmf4x4View, &fHitDistance);
+        if (pIntersectedObject && (fHitDistance < fNearestHitDistance))
+        {
+            fNearestHitDistance = fHitDistance;
+            pNearestObject = pIntersectedObject;
+        }
+    }
+    return(pNearestObject);
+}
+
 ID3D12RootSignature *Scene::GetGraphicsRootSignature() {
 	return(m_pd3dGraphicsRootSignature);
 }
 
+void Scene::FireBulletFromPlayer(Player* pPlayer, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, GameObject* pLockedObject)
+{
+    CBulletObject* pBulletObject = nullptr;
+    for (int i = 0; i < m_nBullets; i++)
+    {
+        if (m_ppBullets[i] && !m_ppBullets[i]->m_bActive)
+        {
+            pBulletObject = m_ppBullets[i];
+            break;
+        }
+    }
+    if (pBulletObject && pPlayer)
+    {
+        XMFLOAT3 xmf3Position = pPlayer->GetPosition();
+        XMFLOAT3 xmf3Direction = Vector3::ScalarProduct(pPlayer->GetLookVector(), 1.0f);
+        XMFLOAT3 xmf3FirePosition = Vector3::Add(xmf3Position, Vector3::ScalarProduct(xmf3Direction, 6.0f, false));
 
+        pBulletObject->m_xmf4x4World = pPlayer->m_xmf4x4World;
+        pBulletObject->SetFirePosition(xmf3FirePosition);
+        pBulletObject->SetMovingDirection(xmf3Direction);
+        pBulletObject->SetActive(true);
+
+        if (pLockedObject)
+        {
+            pBulletObject->m_pLockedObject = pLockedObject;
+        }
+    }
+}
 
