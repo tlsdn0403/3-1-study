@@ -272,20 +272,7 @@ ObjectsShader::~ObjectsShader() {
 
 GameObject* ObjectsShader::PickObjectByRayIntersection(XMFLOAT3& xmf3PickPosition, XMFLOAT4X4& xmf4x4View, float* pfNearHitDistance)
 {
-	int nIntersected = 0;
-	*pfNearHitDistance = FLT_MAX;
-	float fHitDistance = FLT_MAX;
-	GameObject* pSelectedObject = NULL;
-	for (int j = 0; j < m_nObjects; j++)
-	{
-		nIntersected = m_ppObjects[j]->PickObjectByRayIntersection(xmf3PickPosition, xmf4x4View, &fHitDistance);
-		if ((nIntersected > 0) && (fHitDistance < *pfNearHitDistance))
-		{
-			*pfNearHitDistance = fHitDistance;
-			pSelectedObject = m_ppObjects[j];
-		}
-	}
-	return(pSelectedObject);
+	return 0;
 }
 
 D3D12_INPUT_LAYOUT_DESC ObjectsShader::CreateInputLayout() {

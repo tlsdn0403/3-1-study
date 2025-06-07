@@ -62,6 +62,7 @@ void GameObject::ReleaseUploadBuffers() {
 
 void GameObject::Animate(float fTimeElapsed) {
 
+	UpdateBoundingBox();
 }
 
 void GameObject::OnPrepareRender() {
@@ -127,10 +128,13 @@ void GameObject::ReleaseShaderVariables(){
 }
 void GameObject::UpdateBoundingBox()
 {
-	if (m_pMesh)  //m_pMesh가 널을 가르키지 않을 때
-	{
-		m_pMesh->m_xmOOBB.Transform(m_xmOOBB, XMLoadFloat4x4(&m_xmf4x4World));
-		XMStoreFloat4(&m_xmOOBB.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_xmOOBB.Orientation)));
+	if (m_pMesh) {
+		// 1. 모델좌표계 OBB (피킹용)
+		m_xmModelOOBB = m_pMesh->m_xmOOBB; // Mesh 생성시의 로컬 OBB
+
+		// 2. 월드좌표계 OBB (충돌용, 총알 등)
+		m_pMesh->m_xmOOBB.Transform(m_xmWorldOOBB, XMLoadFloat4x4(&m_xmf4x4World));
+		XMStoreFloat4(&m_xmWorldOOBB.Orientation, XMQuaternionNormalize(XMLoadFloat4(&m_xmWorldOOBB.Orientation)));
 	}
 }
 XMFLOAT3 GameObject::GetPosition(){
@@ -210,32 +214,30 @@ void GameObject::SetPosition(XMFLOAT3 xmf3Position){
 }
 
 
-void GameObject::GenerateRayForPicking(XMFLOAT3& xmf3PickPosition, XMFLOAT4X4&xmf4x4View, XMFLOAT3* pxmf3PickRayOrigin, XMFLOAT3* pxmf3PickRayDirection)
+void GameObject::GenerateRayForPicking(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, XMVECTOR& xmvPickRayOrigin, XMVECTOR& xmvPickRayDirection)
 {
-	XMFLOAT4X4 xmf4x4WorldView = Matrix4x4::Multiply(m_xmf4x4World, xmf4x4View);
-	XMFLOAT4X4 xmf4x4Inverse = Matrix4x4::Inverse(xmf4x4WorldView);
+	//카메라 좌표계를 모델 좌표계로 바꿔주는 행렬의 의미가 된다.
+	XMMATRIX xmmtxToModel = XMMatrixInverse(NULL, XMLoadFloat4x4(&m_xmf4x4World) * xmmtxView);  //월드변환 행렬과 카메라 변환 행렬을 곱한거의 역행렬을 구한다.  
+
 	XMFLOAT3 xmf3CameraOrigin(0.0f, 0.0f, 0.0f);
-	//카메라 좌표계의 원점을 모델 좌표계로 변환한다.
-	*pxmf3PickRayOrigin = Vector3::TransformCoord(xmf3CameraOrigin, xmf4x4Inverse);
-	//카메라 좌표계의 점(마우스 좌표를 역변환하여 구한 점)을 모델 좌표계로 변환한다.
-	*pxmf3PickRayDirection = Vector3::TransformCoord(xmf3PickPosition, xmf4x4Inverse);
-	//광선의 방향 벡터를 구한다.
-	*pxmf3PickRayDirection = Vector3::Normalize(Vector3::Subtract(*pxmf3PickRayDirection,
-		*pxmf3PickRayOrigin));
+	xmvPickRayOrigin = XMVector3TransformCoord(XMLoadFloat3(&xmf3CameraOrigin), xmmtxToModel); //카메라 좌표계의 0,0,0을 모델 좌표계로 바꿔주는 변환.
+	xmvPickRayDirection = XMVector3TransformCoord(xmvPickPosition, xmmtxToModel); //피킹 포지션도 모델 좌표계로 바꿔준다.
+
+	xmvPickRayDirection = XMVector3Normalize(xmvPickRayDirection - xmvPickRayOrigin); //모델 좌표계의 광선의 방향
 }
 
-int GameObject::PickObjectByRayIntersection(XMFLOAT3& xmf3PickPosition, XMFLOAT4X4&
-	xmf4x4View, float* pfHitDistance)
+int GameObject::PickObjectByRayIntersection(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, float* pfHitDistance) //포지션 , 카메라 변환행렬
 {
 	int nIntersected = 0;
 	if (m_pMesh)
 	{
-		XMFLOAT3 xmf3PickRayOrigin, xmf3PickRayDirection;
-		//모델 좌표계의 광선을 생성한다.
-		GenerateRayForPicking(xmf3PickPosition, xmf4x4View, &xmf3PickRayOrigin,&xmf3PickRayDirection);
-		//모델 좌표계의 광선과 메쉬의 교차를 검사한다.
-		nIntersected = m_pMesh->CheckRayIntersection(xmf3PickRayOrigin,
-			xmf3PickRayDirection, pfHitDistance);
+		XMVECTOR xmvPickRayOrigin, xmvPickRayDirection;
+		//우리는 충돌이라고 하는 것을 월드좌표게에서 할 것이다.
+		GenerateRayForPicking(xmvPickPosition, xmmtxView, xmvPickRayOrigin, xmvPickRayDirection); //광선을 월드좌표게의 벡터로 만든다.
+		//xmvPickRayOrigin과 xmvPickRayDirection은 월드좌표게의 벡터가 된다.
+
+		//바운딩 박스에 대한 충돌검사를 먼저하고 바운딩 박스 안에 있는 메쉬에 대해서 충돌 검사를 하겠다.
+		nIntersected = m_pMesh->CheckRayIntersection(xmvPickRayOrigin, xmvPickRayDirection, pfHitDistance);  //여기서는 모델좌표게에서 피킹을 하겠다.
 	}
 	return(nIntersected);
 }
@@ -296,28 +298,26 @@ void CExplosiveObject::Animate(float fElapsedTime)
 
 void CExplosiveObject::Render(ID3D12GraphicsCommandList* pd3dCommandList, Camera* pCamera)
 {
-    if (m_bBlowingUp)
-    {
-        for (int i = 0; i < EXPLOSION_DEBRISES; i++)
-        {
-            // 각 파편의 변환 행렬을 셰이더에 복사
-            XMFLOAT4X4 xmf4x4World = m_pxmf4x4Transforms[i];
-            XMStoreFloat4x4(&xmf4x4World, XMMatrixTranspose(XMLoadFloat4x4(&xmf4x4World)));
-            pd3dCommandList->SetGraphicsRoot32BitConstants(0, 16, &xmf4x4World, 0);
+	if (m_bBlowingUp)
+	{
+		for (int i = 0; i < EXPLOSION_DEBRISES; i++)
+		{
+			XMFLOAT4X4 xmf4x4World = m_pxmf4x4Transforms[i];
+			// XMStoreFloat4x4(&xmf4x4World, XMMatrixTranspose(XMLoadFloat4x4(&xmf4x4World))); // 셰이더에서 알아서 처리할 수도 있음
 
-            if (m_pShader)
-            {
-                m_pShader->UpdateShaderVariable(pd3dCommandList, &xmf4x4World);
-                m_pShader->Render(pd3dCommandList, pCamera);
-            }
-            if (m_pExplosionMesh)
-                m_pExplosionMesh->Render(pd3dCommandList);
-        }
-    }
-    else
-    {
-        GameObject::Render(pd3dCommandList, pCamera);
-    }
+			if (m_pShader)
+			{
+				m_pShader->UpdateShaderVariable(pd3dCommandList, &xmf4x4World);
+				m_pShader->Render(pd3dCommandList, pCamera);
+			}
+			if (m_pExplosionMesh)
+				m_pExplosionMesh->Render(pd3dCommandList);
+		}
+	}
+	else
+	{
+		GameObject::Render(pd3dCommandList, pCamera);
+	}
 }
 
 //------------------------------------------------------------------------------------------------------------------------

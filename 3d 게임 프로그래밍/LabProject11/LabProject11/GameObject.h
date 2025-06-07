@@ -52,7 +52,8 @@ virtual void Render(ID3D12GraphicsCommandList *pd3dCommandListt, Camera *pCamera
 
 public:
 	//바운딩 오리엔티드 박스로 충돌검사를 할 것임.
-	BoundingOrientedBox			m_xmOOBB = BoundingOrientedBox(); //게임 오브젝트가 가지고 있는 바운딩 박스는 월드 좌표계이다.
+	BoundingOrientedBox			m_xmWorldOOBB = BoundingOrientedBox(); //게임 오브젝트가 가지고 있는 바운딩 박스는 월드 좌표계이다.
+	BoundingOrientedBox			m_xmModelOOBB = BoundingOrientedBox(); //게임 오브젝트가 가지고 있는 바운딩 박스는 월드 좌표계이다.
 
 	GameObject* m_pObjectCollided = NULL; //다른 충돌된 오브젝트에 대한 포인터
 	float						m_fMovingSpeed = 0.0f; //움직이는 속도
@@ -90,10 +91,13 @@ public:
 	// 게임 객체를 회전 (x-축, y-축, z-축) 
 	void Rotate(float fPitch = 10.0f, float fYaw = 10.0f, float fRoll = 10.0f);
 	void Revolve(const XMFLOAT3& center, const XMFLOAT3& axis, float angleDegrees);
+
+
+
 	//모델 좌표계의 픽킹 광선을 생성한다.
-	void GenerateRayForPicking(XMFLOAT3& xmf3PickPosition, XMFLOAT4X4& xmf4x4View, XMFLOAT3* pxmf3PickRayOrigin, XMFLOAT3* pxmf3PickRayDirection);
+	void GenerateRayForPicking(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, XMVECTOR& xmvPickRayOrigin, XMVECTOR& xmvPickRayDirection);
 	//카메라 좌표계의 한 점에 대한 모델 좌표계의 픽킹 광선을 생성하고 객체와의 교차를 검사한다
-	int PickObjectByRayIntersection(XMFLOAT3& xmf3PickPosition, XMFLOAT4X4& xmf4x4View,float* pfHitDistance);
+	int PickObjectByRayIntersection(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, float* pfHitDistance);
 };
 class CExplosiveObject : public GameObject //게임 오브젝트에서 파생시킴
 {

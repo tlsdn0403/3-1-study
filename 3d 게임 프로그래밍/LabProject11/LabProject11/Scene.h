@@ -55,6 +55,7 @@ public:
 	//그래픽 루트 시그너쳐를 생성한다.
 	virtual ID3D12RootSignature *GetGraphicsRootSignature();
 	void FireBulletFromPlayer(Player* pPlayer, ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, GameObject* pLockedObject = nullptr);
+
 protected: 
 	//배치(Batch) 처리를 하기 위하여 씬을 셰이더들의 리스트로 표현한다.
 	ObjectsShader *m_pShaders = NULL;
@@ -64,9 +65,10 @@ protected:
 
 	CBulletObject* m_ppBullets[BULLETS] = { nullptr }; // BULLETS는 기존과 동일하게 사용
 	int m_nBullets = BULLETS;
-
+	void CheckObjectByBulletCollisions();
 protected:
 	GameObject** m_ppObjects = NULL;
+
 	CFloorObject* m_pFloorObject = NULL;
 	CBulletObject* pBulletObjects;
 	int m_nObjects = 0;
@@ -90,7 +92,7 @@ public:
 	ID3D12RootSignature* m_pd3dGraphicsRootSignature = NULL;
 	void ReleaseObjects();
 
-
+	
 	float explosionTime = 0.0f;
 private:
 	ObjectsShader* m_pStartSceneShader = nullptr;
