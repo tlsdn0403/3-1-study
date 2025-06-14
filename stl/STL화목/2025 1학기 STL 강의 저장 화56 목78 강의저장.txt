@@ -62546,3 +62546,2371 @@ int main()
     }
     save("메인.cpp");
 }
+
+==============================================
+저장한 시간 :2025-06-12 오후 3:56:34 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition
+// 2. nth_element
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<int> v(100);
+    iota(v.begin(), v.end(),0);
+    {
+        cout << "홀수와 짝수로 분리" << endl;
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partion 하기 전:" << endl;
+        for (int num : v) {
+            print("{:8}");
+        }
+        cout << endl;
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 3:56:46 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition
+// 2. nth_element
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<int> v(100);
+    iota(v.begin(), v.end(),0);
+    {
+        cout << "홀수와 짝수로 분리" << endl;
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partion 하기 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 3:58:20 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition
+// 2. nth_element
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<int> v(100);
+    iota(v.begin(), v.end(),0);
+    {
+        cout << "홀수와 짝수로 분리" << endl;
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partion 하기 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+        cout << "partion 한 후:" << endl;
+        partition(v.begin(), v.end(), [](int num) {
+            return num & 1;
+            }); //유너릭 프레디킷
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 3:58:35 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition
+// 2. nth_element
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<int> v(100);
+    iota(v.begin(), v.end(),0);
+    {
+        cout << "홀수와 짝수로 분리" << endl;
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partion 하기 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+        cout << "partion 한 후:" << endl;
+        partition(v.begin(), v.end(), [](int num) {
+            return num & 1;
+            }); //유너릭 프레디킷
+        for (int num : v) {
+            print("{:8}", num);
+        }
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:00:18 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition
+// 2. nth_element
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<int> v(100);
+    iota(v.begin(), v.end(),0);
+    {
+        cout << "홀수와 짝수로 분리" << endl;
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partion 하기 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        auto p =partition(v.begin(), v.end(), [](int num) {
+            return num & 1;
+            }); //유너릭 프레디킷
+
+        cout << "홀수:" << endl;
+        for (auto i = v.begin(); i<p; ++i) {
+            print("{:8}", *i);
+        }
+        cout << "짝수:" << endl;
+        for (auto i = p; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:00:29 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition
+// 2. nth_element
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<int> v(100);
+    iota(v.begin(), v.end(),0);
+    {
+        cout << "홀수와 짝수로 분리" << endl;
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partion 하기 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        auto p =partition(v.begin(), v.end(), [](int num) {
+            return num & 1;
+            }); //유너릭 프레디킷
+
+        cout << "홀수:" << endl;
+        for (auto i = v.begin(); i<p; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "짝수:" << endl;
+        for (auto i = p; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:09:12 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<int> v(100);
+    iota(v.begin(), v.end(),0);
+    {
+        cout << "홀수와 짝수로 분리" << endl;
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partion 하기 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        // 1 2 3 4 5 6 7 8 9 0 동그람가 들어간 숫자랑 아닌 숫자로 나눠라  6, 8, 9, 0 들어가 있으면 참
+        //파티션은 나눠지는 부분을 리턴한다.
+        auto p =partition(v.begin(), v.end(), [](int num) {
+            return num & 1;
+            }); //유너릭 프레디킷
+
+        cout << "홀수:" << endl;
+        for (auto i = v.begin(); i<p; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "짝수:" << endl;
+        for (auto i = p; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+    }
+
+    {
+        cout << "10번째 까지와 나머지를 분리" << endl;  //홀수 30개와 나머지로 분리해봐
+        shuffle(v.begin(), v.end(), dre);
+        cout << "nth_element 실행 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        // 1 2 3 4 5 6 7 8 9 0 동그람가 들어간 숫자랑 아닌 숫자로 나눠라  6, 8, 9, 0 들어가 있으면 참
+        //파티션은 나눠지는 부분을 리턴한다.
+        nth_element(v.begin(), v.begin() + 10, v.end());
+
+        cout << "홀수:" << endl;
+        for (auto i = v.begin(); i < v.begin()+10; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "나머지:" << endl;
+        for (auto i = v.begin()+ 10; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:09:39 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<int> v(100);
+    iota(v.begin(), v.end(),1);
+    {
+        cout << "홀수와 짝수로 분리" << endl;
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partion 하기 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        // 1 2 3 4 5 6 7 8 9 0 동그람가 들어간 숫자랑 아닌 숫자로 나눠라  6, 8, 9, 0 들어가 있으면 참
+        //파티션은 나눠지는 부분을 리턴한다.
+        auto p =partition(v.begin(), v.end(), [](int num) {
+            return num & 1;
+            }); //유너릭 프레디킷
+
+        cout << "홀수:" << endl;
+        for (auto i = v.begin(); i<p; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "짝수:" << endl;
+        for (auto i = p; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+    }
+
+    {
+        cout << "10번째 까지와 나머지를 분리" << endl;  //홀수 30개와 나머지로 분리해봐
+        shuffle(v.begin(), v.end(), dre);
+        cout << "nth_element 실행 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        // 1 2 3 4 5 6 7 8 9 0 동그람가 들어간 숫자랑 아닌 숫자로 나눠라  6, 8, 9, 0 들어가 있으면 참
+        //파티션은 나눠지는 부분을 리턴한다.
+        nth_element(v.begin(), v.begin() + 10, v.end());
+
+        cout << "홀수:" << endl;
+        for (auto i = v.begin(); i < v.begin()+10; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "나머지:" << endl;
+        for (auto i = v.begin()+ 10; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:10:24 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<int> v(100);
+    iota(v.begin(), v.end(),1);
+    {
+        cout << "홀수와 짝수로 분리" << endl;
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partion 하기 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        // 1 2 3 4 5 6 7 8 9 0 동그람가 들어간 숫자랑 아닌 숫자로 나눠라  6, 8, 9, 0 들어가 있으면 참
+        //파티션은 나눠지는 부분을 리턴한다.
+        auto p =partition(v.begin(), v.end(), [](int num) {
+            return num & 1;
+            }); //유너릭 프레디킷
+
+        cout << "홀수:" << endl;
+        for (auto i = v.begin(); i<p; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "짝수:" << endl;
+        for (auto i = p; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+    }
+
+    {
+        cout << "40번째 까지와 나머지를 분리" << endl;  //홀수 30개와 나머지로 분리해봐
+        shuffle(v.begin(), v.end(), dre);
+        cout << "nth_element 실행 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        // 1 2 3 4 5 6 7 8 9 0 동그람가 들어간 숫자랑 아닌 숫자로 나눠라  6, 8, 9, 0 들어가 있으면 참
+        //파티션은 나눠지는 부분을 리턴한다.
+        nth_element(v.begin(), v.begin() + 40, v.end());
+
+        cout << "앞에서부터 40 개:" << endl;
+        for (auto i = v.begin(); i < v.begin()+40; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "나머지:" << endl;
+        for (auto i = v.begin()+ 40; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:10:46 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<int> v(100);
+    iota(v.begin(), v.end(),1);
+    {
+        cout << "홀수와 짝수로 분리" << endl;
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partion 하기 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        // 1 2 3 4 5 6 7 8 9 0 동그람가 들어간 숫자랑 아닌 숫자로 나눠라  6, 8, 9, 0 들어가 있으면 참
+        //파티션은 나눠지는 부분을 리턴한다.
+        auto p =partition(v.begin(), v.end(), [](int num) {
+            return num & 1;
+            }); //유너릭 프레디킷
+
+        cout << "홀수:" << endl;
+        for (auto i = v.begin(); i<p; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "짝수:" << endl;
+        for (auto i = p; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+    }
+
+    {
+        cout << "40번째 까지와 나머지를 분리" << endl;  //홀수 30개와 나머지로 분리해봐
+        shuffle(v.begin(), v.end(), dre);
+        cout << "nth_element 실행 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        // 정렬해주지않는다 정렬된 거 같으면 그냥 우연이다.
+        nth_element(v.begin(), v.begin() + 40, v.end());
+
+        cout << "앞에서부터 40 개:" << endl;
+        for (auto i = v.begin(); i < v.begin()+40; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "나머지:" << endl;
+        for (auto i = v.begin()+ 40; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+    }
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:12:39 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<int> v(100);
+    iota(v.begin(), v.end(),1);
+    {
+        cout << "홀수와 짝수로 분리" << endl;
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partion 하기 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        // 1 2 3 4 5 6 7 8 9 0 동그람가 들어간 숫자랑 아닌 숫자로 나눠라  6, 8, 9, 0 들어가 있으면 참
+        //파티션은 나눠지는 부분을 리턴한다.
+        auto p =partition(v.begin(), v.end(), [](int num) {
+            return num & 1;
+            }); //유너릭 프레디킷
+
+        cout << "홀수:" << endl;
+        for (auto i = v.begin(); i<p; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "짝수:" << endl;
+        for (auto i = p; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+    }
+
+    {
+        cout << "40번째 까지와 나머지를 분리" << endl;  //홀수 30개와 나머지로 분리해봐
+        shuffle(v.begin(), v.end(), dre);
+        cout << "nth_element 실행 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        // 정렬해주지않는다 정렬된 거 같으면 그냥 우연이다.
+        // 순서를 맞추고 싶으면 파샬 쇼트야
+        nth_element(v.begin(), v.begin() + 40, v.end());
+
+        cout << "앞에서부터 40 개:" << endl;
+        for (auto i = v.begin(); i < v.begin()+40; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "나머지:" << endl;
+        for (auto i = v.begin()+ 40; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+    }
+
+
+
+
+
+
+    {
+        cout << "40번째까지만 정렬" << endl;  //홀수 30개와 나머지로 분리해봐
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partial_sort 실행 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        
+        partial_sort(v.begin(), v.begin() + 40, v.end()); //값을 리턴하지 않는다.
+
+        cout << "앞에서부터 40 개만 정렬:" << endl;
+        for (auto i = v.begin(); i < v.begin() + 40; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "나머지:" << endl;
+        for (auto i = v.begin() + 40; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+    }
+
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:14:11 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<int> v(100);
+    iota(v.begin(), v.end(),1);
+    {
+        cout << "홀수와 짝수로 분리" << endl;
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partion 하기 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        // 1 2 3 4 5 6 7 8 9 0 동그람가 들어간 숫자랑 아닌 숫자로 나눠라  6, 8, 9, 0 들어가 있으면 참
+        //파티션은 나눠지는 부분을 리턴한다.
+        auto p =partition(v.begin(), v.end(), [](int num) {
+            return num & 1;
+            }); //유너릭 프레디킷
+
+        cout << "홀수:" << endl;
+        for (auto i = v.begin(); i<p; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "짝수:" << endl;
+        for (auto i = p; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+    }
+
+    {
+        cout << "40번째 까지와 나머지를 분리" << endl;  //홀수 30개와 나머지로 분리해봐
+        shuffle(v.begin(), v.end(), dre);
+        cout << "nth_element 실행 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        // 정렬해주지않는다 정렬된 거 같으면 그냥 우연이다.
+        // 순서를 맞추고 싶으면 파샬 쇼트야
+        nth_element(v.begin(), v.begin() + 40, v.end());
+
+        cout << "앞에서부터 40 개:" << endl;
+        for (auto i = v.begin(); i < v.begin()+40; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "나머지:" << endl;
+        for (auto i = v.begin()+ 40; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+    }
+
+
+
+
+
+
+    {
+        cout << "40번째까지만 정렬" << endl;  //홀수 30개와 나머지로 분리해봐
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partial_sort 실행 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        
+        partial_sort(v.begin(), v.begin() + 40, v.end(),greater<int>{}); //값을 리턴하지 않는다.
+
+        cout << "앞에서부터 40 개만 정렬:" << endl;
+        for (auto i = v.begin(); i < v.begin() + 40; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "나머지:" << endl;
+        for (auto i = v.begin() + 40; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+    }
+
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:15:48 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<int> v(100);
+    iota(v.begin(), v.end(),1);
+    {
+        cout << "홀수와 짝수로 분리" << endl;
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partion 하기 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        // 1 2 3 4 5 6 7 8 9 0 동그람가 들어간 숫자랑 아닌 숫자로 나눠라  6, 8, 9, 0 들어가 있으면 참
+        //파티션은 나눠지는 부분을 리턴한다.
+        auto p =partition(v.begin(), v.end(), [](int num) {
+            return num & 1;
+            }); //유너릭 프레디킷
+
+        cout << "홀수:" << endl;
+        for (auto i = v.begin(); i<p; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "짝수:" << endl;
+        for (auto i = p; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+    }
+
+    {
+        cout << "40번째 까지와 나머지를 분리" << endl;  //홀수 30개와 나머지로 분리해봐
+        shuffle(v.begin(), v.end(), dre);
+        cout << "nth_element 실행 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        // 정렬해주지않는다 정렬된 거 같으면 그냥 우연이다.
+        // 순서를 맞추고 싶으면 파샬 쇼트야
+        nth_element(v.begin(), v.begin() + 40, v.end());
+
+        cout << "앞에서부터 40 개:" << endl;
+        for (auto i = v.begin(); i < v.begin()+40; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "나머지:" << endl;
+        for (auto i = v.begin()+ 40; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+    }
+
+
+
+
+
+
+    {
+        cout << "40번째까지만 정렬" << endl;  //홀수 30개와 나머지로 분리해봐
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partial_sort 실행 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        
+        partial_sort(v.begin(), v.begin() + 40, v.end(),greater<int>{}); //값을 리턴하지 않는다.
+
+        cout << "앞에서부터 40 개만 정렬:" << endl;
+        for (auto i = v.begin(); i < v.begin() + 40; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "나머지:" << endl;
+        for (auto i = v.begin() + 40; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+    }
+
+
+    {
+        cout << " 정렬" << endl;  //홀수 30개와 나머지로 분리해봐
+        shuffle(v.begin(), v.end(), dre);
+        cout << "sort 실행 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+
+        sort(v.begin(), v.end()); //값을 리턴하지 않는다.
+
+        cout << "정렬 후:" << endl;
+        for (auto i = v.begin(); i < v.begin(); ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+    }
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:16:07 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<int> v(100);
+    iota(v.begin(), v.end(),1);
+    {
+        cout << "홀수와 짝수로 분리" << endl;
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partion 하기 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        // 1 2 3 4 5 6 7 8 9 0 동그람가 들어간 숫자랑 아닌 숫자로 나눠라  6, 8, 9, 0 들어가 있으면 참
+        //파티션은 나눠지는 부분을 리턴한다.
+        auto p =partition(v.begin(), v.end(), [](int num) {
+            return num & 1;
+            }); //유너릭 프레디킷
+
+        cout << "홀수:" << endl;
+        for (auto i = v.begin(); i<p; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "짝수:" << endl;
+        for (auto i = p; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+    }
+
+    {
+        cout << "40번째 까지와 나머지를 분리" << endl;  //홀수 30개와 나머지로 분리해봐
+        shuffle(v.begin(), v.end(), dre);
+        cout << "nth_element 실행 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        // 정렬해주지않는다 정렬된 거 같으면 그냥 우연이다.
+        // 순서를 맞추고 싶으면 파샬 쇼트야
+        nth_element(v.begin(), v.begin() + 40, v.end());
+
+        cout << "앞에서부터 40 개:" << endl;
+        for (auto i = v.begin(); i < v.begin()+40; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "나머지:" << endl;
+        for (auto i = v.begin()+ 40; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+    }
+
+
+
+
+
+
+    {
+        cout << "40번째까지만 정렬" << endl;  //홀수 30개와 나머지로 분리해봐
+        shuffle(v.begin(), v.end(), dre);
+        cout << "partial_sort 실행 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+        
+        partial_sort(v.begin(), v.begin() + 40, v.end(),greater<int>{}); //값을 리턴하지 않는다.
+
+        cout << "앞에서부터 40 개만 정렬:" << endl;
+        for (auto i = v.begin(); i < v.begin() + 40; ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+        cout << "나머지:" << endl;
+        for (auto i = v.begin() + 40; i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+    }
+
+
+    {
+        cout << " 정렬" << endl;  //홀수 30개와 나머지로 분리해봐
+        shuffle(v.begin(), v.end(), dre);
+        cout << "sort 실행 전:" << endl;
+        for (int num : v) {
+            print("{:8}", num);
+        }
+        cout << endl;
+
+
+        sort(v.begin(), v.end()); //값을 리턴하지 않는다.
+
+        cout << "정렬 후:" << endl;
+        for (auto i = v.begin(); i < v.end(); ++i) {
+            print("{:8}", *i);
+        }
+        cout << endl;
+    }
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:23:16 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+uniform_int_distribution<int> uidChar{ 'A', 'Z' };
+uniform_int_distribution<int> uidint{ 1, 100 };
+class Dog {
+    char c{ static_cast<char>(uidChar(dre)) };  //  {} 이기호가 막강한 기호에요
+    int n{ uidint(dre) };
+
+    friend ostream& operator<<(ostream& os, const Dog& dog) {
+         print(os, "{} - {:3}", dog.c, dog.n);
+         return os;
+    }
+};
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<Dog> dogs(100);
+
+    for (const Dog& dog : dogs)
+        cout << dog << endl;
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:24:49 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+uniform_int_distribution<int> uidChar{ 'A', 'Z' };
+uniform_int_distribution<int> uidint{ 1, 100 };
+struct Dog {
+    char c{ static_cast<char>(uidChar(dre)) };  //  {} 이기호가 막강한 기호에요
+    int n{ uidint(dre) };
+
+    friend ostream& operator<<(ostream& os, const Dog& dog) {
+         print(os, "{} - {:3}", dog.c, dog.n);
+         return os;
+    }
+};
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<Dog> dogs(100);
+
+    /*c 오름차순으로 출력*/
+    sort(dogs.begin(), dogs.end(), [](const Dog& a, const Dog& b) {
+        return a.c < b.c;
+        });
+    for (const Dog& dog : dogs)
+        cout << dog << endl;
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:28:20 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+uniform_int_distribution<int> uidChar{ 'A', 'Z' };
+uniform_int_distribution<int> uidint{ 1, 100 };
+struct Dog {
+    char c{ static_cast<char>(uidChar(dre)) };  //  {} 이기호가 막강한 기호에요
+    int n{ uidint(dre) };
+
+    friend ostream& operator<<(ostream& os, const Dog& dog) {
+         print(os, "{} - {:3}", dog.c, dog.n);
+         return os;
+    }
+};
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<Dog> dogs(100);
+
+    //*c 오름차순으로 출력
+   /* sort(dogs.begin(), dogs.end(), [](const Dog& a, const Dog& b) {
+        return a.c < b.c;
+        });*/
+
+    ranges::sort(dogs, {}, &Dog::c); //char c 는 pod데이터라서 디폴트로 가능하다 less가 정의되어있다 난 dog이지만 나를 dog로 생각해도 좋아 맴버 포인터 투 ㅁㅁ버를 활ㅇ
+
+    for (const Dog& dog : dogs)
+        cout << dog << endl;
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:29:24 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+uniform_int_distribution<int> uidChar{ 'A', 'Z' };
+uniform_int_distribution<int> uidint{ 1, 100 };
+struct Dog {
+    char c{ static_cast<char>(uidChar(dre)) };  //  {} 이기호가 막강한 기호에요
+    int n{ uidint(dre) };
+
+    friend ostream& operator<<(ostream& os, const Dog& dog) {
+         print(os, "{} - {:3}", dog.c, dog.n);
+         return os;
+    }
+};
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<Dog> dogs(100);
+
+    //*c 오름차순으로 출력
+   /* sort(dogs.begin(), dogs.end(), [](const Dog& a, const Dog& b) {
+        return a.c < b.c;
+        });*/
+
+    cout << " DOG::c 기준 오른차순으로 정렬" << endl;
+    ranges::sort(dogs, {}, &Dog::c); //char c 는 pod데이터라서 디폴트로 가능하다 less가 정의되어있다 난 dog이지만 나를 dog로 생각해도 좋아 맴버 포인터 투 맴버를 활용
+
+    for (const Dog& dog : dogs)
+        cout << dog << endl;
+
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:30:40 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+uniform_int_distribution<int> uidChar{ 'A', 'Z' };
+uniform_int_distribution<int> uidint{ 1, 100 };
+struct Dog {
+    char c{ static_cast<char>(uidChar(dre)) };  //  {} 이기호가 막강한 기호에요
+    int n{ uidint(dre) };
+
+    friend ostream& operator<<(ostream& os, const Dog& dog) {
+         print(os, "{} - {:3}", dog.c, dog.n);
+         return os;
+    }
+};
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<Dog> dogs(100);
+
+    //*c 오름차순으로 출력
+   /* sort(dogs.begin(), dogs.end(), [](const Dog& a, const Dog& b) {
+        return a.c < b.c;
+        });*/
+
+    cout << " DOG::c 기준 오른차순으로 정렬" << endl;
+    ranges::sort(dogs, {}, &Dog::c); //char c 는 pod데이터라서 디폴트로 가능하다 less가 정의되어있다 난 dog이지만 나를 dog로 생각해도 좋아 맴버 포인터 투 맴버를 활용
+
+    for (const Dog& dog : dogs)
+        cout << dog << endl;
+
+
+    cout << " DOG::n 기준 오른차순으로 정렬" << endl;
+    ranges::sort(dogs, less<int>{}, & Dog::n);
+
+    for (const Dog& dog : dogs)
+        cout << dog << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:31:36 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+uniform_int_distribution<int> uidChar{ 'A', 'Z' };
+uniform_int_distribution<int> uidint{ 1, 100 };
+struct Dog {
+    char c{ static_cast<char>(uidChar(dre)) };  //  {} 이기호가 막강한 기호에요
+    int n{ uidint(dre) };
+
+    friend ostream& operator<<(ostream& os, const Dog& dog) {
+         print(os, "{} - {:3}", dog.c, dog.n);
+         return os;
+    }
+};
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<Dog> dogs(100);
+
+    //*c 오름차순으로 출력
+   /* sort(dogs.begin(), dogs.end(), [](const Dog& a, const Dog& b) {
+        return a.c < b.c;
+        });*/
+
+    cout << " DOG::c 기준 오른차순으로 정렬" << endl;
+    ranges::sort(dogs, {}, &Dog::c); //char c 는 pod데이터라서 디폴트로 가능하다 less가 정의되어있다 난 dog이지만 나를 dog로 생각해도 좋아 맴버 포인터 투 맴버를 활용
+
+    for (const Dog& dog : dogs)
+        cout << dog << endl;
+
+
+    cout << " DOG::n 기준 오른차순으로 정렬" << endl;
+    ranges::sort(dogs, less<int>{}, & Dog::n); //객체가 아니니까 객체{}이걸 less에 해줘야 한다.
+
+    for (const Dog& dog : dogs)
+        cout << dog << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:32:49 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+uniform_int_distribution<int> uidChar{ 'A', 'Z' };
+uniform_int_distribution<int> uidint{ 1, 100 };
+struct Dog {
+    char c{ static_cast<char>(uidChar(dre)) };  //  {} 이기호가 막강한 기호에요
+    int n{ uidint(dre) };
+
+    friend ostream& operator<<(ostream& os, const Dog& dog) {
+         print(os, "{} - {:3}", dog.c, dog.n);
+         return os;
+    }
+};
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<Dog> dogs(100);
+
+    //*c 오름차순으로 출력
+   /* sort(dogs.begin(), dogs.end(), [](const Dog& a, const Dog& b) {
+        return a.c < b.c;
+        });*/
+
+    cout << " DOG::c 기준 오른차순으로 정렬" << endl;
+    ranges::sort(dogs, {}, &Dog::c); //char c 는 pod데이터라서 디폴트로 가능하다 less가 정의되어있다 난 dog이지만 나를 dog로 생각해도 좋아 맴버 포인터 투 맴버를 활용
+
+    for (const Dog& dog : dogs)
+        cout << dog << endl;
+
+
+    cout << " DOG::n 기준 오른차순으로 정렬" << endl;
+    ranges::stable_sort(dogs, less<int>{}, & Dog::n); //객체가 아니니까 객체{}이걸 less에 해줘야 한다.
+
+    for (const Dog& dog : dogs)
+        cout << dog << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:33:32 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<random>
+#include<vector>
+#include<algorithm>
+#include<print>
+#include<numeric>
+#include<ranges>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+uniform_int_distribution<int> uidChar{ 'A', 'Z' };
+uniform_int_distribution<int> uidint{ 1, 20 };
+struct Dog {
+    char c{ static_cast<char>(uidChar(dre)) };  //  {} 이기호가 막강한 기호에요
+    int n{ uidint(dre) };
+
+    friend ostream& operator<<(ostream& os, const Dog& dog) {
+         print(os, "{} - {:3}", dog.c, dog.n);
+         return os;
+    }
+};
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    vector<Dog> dogs(100);
+
+    //*c 오름차순으로 출력
+   /* sort(dogs.begin(), dogs.end(), [](const Dog& a, const Dog& b) {
+        return a.c < b.c;
+        });*/
+
+    cout << " DOG::c 기준 오른차순으로 정렬" << endl;
+    ranges::sort(dogs, {}, &Dog::c); //char c 는 pod데이터라서 디폴트로 가능하다 less가 정의되어있다 난 dog이지만 나를 dog로 생각해도 좋아 맴버 포인터 투 맴버를 활용
+
+    for (const Dog& dog : dogs)
+        cout << dog << endl;
+
+
+    cout << " DOG::n 기준 오른차순으로 정렬" << endl;
+    ranges::stable_sort(dogs, less<int>{}, & Dog::n); //객체가 아니니까 객체{}이걸 less에 해줘야 한다.
+
+    for (const Dog& dog : dogs)
+        cout << dog << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:47:15 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    // 반보자간의 거리를 재는 idstance 함수
+    vector<int> v{ 1,2,3,4,5 };
+    list<int> c{ 1,2,3,4,5 };
+
+    cout << "vector의 distance - " << distance ( v.begin(), v.end()) << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:47:33 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    // 반보자간의 거리를 재는 idstance 함수
+    vector<int> v{ 1,2,3,4,5 };
+    list<int> c{ 1,2,3,4,5 };
+
+    cout << "vector의 distance - " << distance(v.begin(), v.end()) << endl;
+    cout << "list의 distance - " << distance ( c.begin(), c.end()) << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:48:35 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    // 반보자간의 거리를 재는 idstance 함수
+    vector<int> v{ 1,2,3,4,5 };
+    list<int> c{ 1,2,3,4,5 };
+
+    cout << "vector의 distance - " << distance(v.end(), v.begin()) << endl;
+    cout << "list의 distance - " << distance ( c.end(), c.begin()) << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:55:05 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class iter>
+typename iterator_traits<iter>::difference_type  my_distance(iter b, iter e)
+{
+    typename iterator_traits<iter>::difference_type d{};
+    while (b != e) {
+        ++b;
+        ++d;
+    }
+    return d;
+}
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    // 반보자간의 거리를 재는 idstance 함수
+    vector<int> v{ 1,2,3,4,5 };
+    list<int> c{ 1,2,3,4,5 };
+
+    cout << "vector의 distance - " << my_distance(v.begin(), v.end()) << endl;
+    cout << "list의 distance - " << my_distance(c.begin(), c.end()) << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 4:58:12 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<list>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class iter>
+typename iterator_traits<iter>::difference_type  my_distance(iter b, iter e)
+{
+    //만일 iter가 random_access_iterator_tag라면 
+    return e - b;
+
+    typename iterator_traits<iter>::difference_type d{};
+    while (b != e) {
+        ++b;
+        ++d;
+    }
+    return d;
+}
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    // 반보자간의 거리를 재는 idstance 함수
+    vector<int> v{ 1,2,3,4,5 };
+    list<int> c{ 1,2,3,4,5 };
+
+    cout << "vector의 distance - " << my_distance(v.end(), v.begin()) << endl;
+    /*cout << "list의 distance - " << my_distance(c.begin(), c.end()) << endl;*/
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 5:00:17 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<list>
+#include<concepts>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class iter>
+typename iterator_traits<iter>::difference_type  my_distance(iter b, iter e)
+{
+    //만일 iter가 random_access_iterator_tag라면 
+    // C++20의 concept을 이용하면 판별이 쉽다.
+    if(random_access_iterator<iter>)
+        return e - b;
+    
+
+    typename iterator_traits<iter>::difference_type d{};
+    while (b != e) {
+        ++b;
+        ++d;
+    }
+    return d;
+}
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    // 반보자간의 거리를 재는 idstance 함수
+    vector<int> v{ 1,2,3,4,5 };
+    list<int> c{ 1,2,3,4,5 };
+
+    cout << "vector의 distance - " << my_distance(v.end(), v.begin()) << endl;
+    /*cout << "list의 distance - " << my_distance(c.begin(), c.end()) << endl;*/
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 5:02:20 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<list>
+#include<concepts>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class iter>
+typename iterator_traits<iter>::difference_type  my_distance(iter b, iter e)
+{
+    //만일 iter가 random_access_iterator_tag라면 
+    // C++20의 concept을 이용하면 판별이 쉽다.
+    if (random_access_iterator<iter>) {
+        return e - b;
+    }
+    else {
+        typename iterator_traits<iter>::difference_type d{};
+        while (b != e) {
+            ++b;
+            ++d;
+        }
+        return d;
+    }
+}
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    // 반보자간의 거리를 재는 idstance 함수
+    vector<int> v{ 1,2,3,4,5 };
+    list<int> c{ 1,2,3,4,5 };
+
+    cout << "vector의 distance - " << my_distance(v.end(), v.begin()) << endl;
+    /*cout << "list의 distance - " << my_distance(c.begin(), c.end()) << endl;*/
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 5:09:19 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<list>
+#include<concepts>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class iter>
+typename iterator_traits<iter>::difference_type  my_distance(iter b, iter e)
+{
+    //만일 iter가 random_access_iterator_tag라면 
+    // C++17이후에 방식
+    if constexpr (random_access_iterator<iter>) {  //컴파일시에 판단하는 조건씩
+        return e - b;
+    }
+    else {
+        typename iterator_traits<iter>::difference_type d{};
+        while (b != e) {
+            ++b;
+            ++d;
+        }
+        return d;
+    }
+}
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    // 반보자간의 거리를 재는 idstance 함수
+    vector<int> v{ 1,2,3,4,5 };
+    list<int> c{ 1,2,3,4,5 };
+
+ //   cout << "vector의 distance - " << my_distance(v.end(), v.begin()) << endl;
+    cout << "list의 distance - " << my_distance(c.begin(), c.end()) << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 5:09:27 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<list>
+#include<concepts>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class iter>
+typename iterator_traits<iter>::difference_type  my_distance(iter b, iter e)
+{
+    //만일 iter가 random_access_iterator_tag라면 
+    // C++17이후에 방식
+    if constexpr (random_access_iterator<iter>) {  //컴파일시에 판단하는 조건씩
+        return e - b;
+    }
+    else {
+        typename iterator_traits<iter>::difference_type d{};
+        while (b != e) {
+            ++b;
+            ++d;
+        }
+        return d;
+    }
+}
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    // 반보자간의 거리를 재는 idstance 함수
+    vector<int> v{ 1,2,3,4,5 };
+    list<int> c{ 1,2,3,4,5 };
+
+    cout << "vector의 distance - " << my_distance(v.end(), v.begin()) << endl;
+    cout << "list의 distance - " << my_distance(c.begin(), c.end()) << endl;
+    save("메인.cpp");
+}
+
+==============================================
+저장한 시간 :2025-06-12 오후 5:09:39 목요일 
+==============================================
+
+//-------------------------------------------------------------------------------------------
+// 2025 STL 화56 목78  6월 5일 목요일      (13주 2일차 강의) 
+//  6월 19일 목 15주 2일 - 기말시험 , E320 에서 ....
+//-------------------------------------------------------------------------------------------
+// 정렬관련 algorithms을 알아본다 - 복잡도 순으로
+// 
+// aaaaaaaaaaaaaabbbbbbcccccccccccccccccdddeeeeeeeeeeeeee------zzzzz 
+// a개수가 10개라고? 그러면 a가 9번쨰 자리에 존재하면 O(1) 알고리즘 가능하다
+// 카운트는 정렬과 관련없이 개수를 센다.
+// 1. partition             O(N)
+// 2. nth_element           
+// 3. partial_sort
+// 4. sort
+// 5. stavle_sort
+//-----------------------------------------------------
+#include<iostream>
+#include<vector>
+#include<list>
+#include<concepts>
+#include"save.h"
+#include"STRING.h"
+using namespace std;
+
+
+
+extern bool 관찰; // 관찰하려면 true로
+
+template<class iter>
+typename iterator_traits<iter>::difference_type  my_distance(iter b, iter e)
+{
+    //만일 iter가 random_access_iterator_tag라면 
+    // C++17이후에 방식
+    if constexpr (random_access_iterator<iter>) {  //컴파일시에 판단하는 조건씩
+        return e - b;
+    }
+    else {
+        typename iterator_traits<iter>::difference_type d{};
+        while (b != e) {
+            ++b;
+            ++d;
+        }
+        return d;
+    }
+}
+
+//----------
+int main()
+//------------------------------------------------------------
+{  
+    // 반보자간의 거리를 재는 idstance 함수
+    vector<int> v{ 1,2,3,4,5 };
+    list<int> c{ 1,2,3,4,5 };
+
+    cout << "vector의 distance - " << my_distance(v.end(), v.begin()) << endl;
+    cout << "list의 distance - " << my_distance(c.end(), c.begin()) << endl;
+    save("메인.cpp");
+}
