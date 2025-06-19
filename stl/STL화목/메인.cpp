@@ -21,6 +21,7 @@
 #include <vector>
 #include <numeric>
 #include <set>
+#include<unordered_set>
 #include <cctype>
 #include<print>
 #include<map>
@@ -28,51 +29,87 @@
 #include"STRING.h"
 using namespace std;
 
-// 강의자료 "이상한 나라의 앨리스.txt" 를 다운
-// 여기에 있는 모든 단어를 multiset<STRING>에 저장하라.
-// 단어의 개수를 출력하라 26626
-// [3] 단어와 사용횟수를 화면에 출력하라.
-// [4] 가장많이 사용된 단어부터 단어와 횟수를 모두 출력하라.
-//      the - 1xxx
-default_random_engine dre{ random_device{}() }; // 리얼 랜덤 디바이스를 생성해서 호출
+// 1. "시험.txt" 파일을 연다.
+// 2. 파일에서 id와 name을 읽어 Test 객체를 생성한다.
+// 3. id 기준 오름차순으로 정렬된 컨테이너(예: std::set)로 저장한다.
+// 4. 컨테이너의 크기를 출력한다.
+extern bool 관찰; // 관찰하려면 true로
+class Test {
+public:
+    size_t id;
+    STRING name;
+    Test(size_t i, const STRING& n) : id(i), name(n) {}
+    bool operator<(const Test& other) const { return id < other.id; }
+    friend std::ostream& operator<<(std::ostream& os, const Test& test) {
+        os << test.id << " " << test.name << " ";
+        return os;
+    }
+    friend std::istream& operator>>(std::istream& is, Test& test) {
+        is >> test.id >> test.name;
+        return is;
+    }
+    void read(std::istream& is) {
+        is >> id >> name;
+    }
+};
 
+template<>
+struct std::hash<STRING> { //스페셜라이제이션 한다
+    size_t operator()(const STRING& s)const {
+        std::string str(s.begin(), s.end());
+        return hash<std::string>{}(string{ s.begin(),s.end() }); //템플릿 스트럭쳐이기에 템플릿 스트럭쳐를 타입을 주지 않고 생성할 방법은 없다.
+    }
+};
 //---------
 int main()
 //---------
 {
-    vector<int> v(100);
-    iota(v.begin(), v.end(), 1);
-    {
-        cout << "홀수와 짝수로 분리" << endl;
-        shuffle(v.begin(), v.end(), dre);
-        cout << "partion 하기 전:" << endl;
-        for (int num : v) {
-            print("{:8}", num);
-        }
-        cout << endl;
-
-        // 1 2 3 4 5 6 7 8 9 0 동그람가 들어간 숫자랑 아닌 숫자로 나눠라  6, 8, 9, 0 들어가 있으면 참
-        auto it = partition(v.begin(), v.end(), [](int n) {
-            while (n > 0) {
-                int d = n % 10;
-                if (d == 0 || d == 6 || d == 8 || d == 9) return true;
-                n /= 10;
-            }
-            return false;
-            });
-
-        cout << "동그라미가 들어간 숫자:" << endl;
-        for (auto i = v.begin(); i != it; ++i) {
-            print("{:8}", *i);
-        }
-        cout << endl;
-
-        cout << "동그라미가 없는 숫자:" << endl;
-        for (auto i = it; i != v.end(); ++i) {
-            print("{:8}", *i);
-        }
-        cout << endl;
-
-
+    std::ifstream in("시험.txt");
+    if (not in) {
+        cout << "2025 06 19" << endl;
+        return 0;
     }
+
+    std::set<Test> tests;
+    Test t(0, "");
+    while (in >> t) {
+        tests.insert(t);
+    }
+    cout << tests.size() << endl;
+
+    /*관찰 = true;
+    Test k = *tests.rbegin();
+    관찰 = false;
+    cout << k << endl;*/
+
+    // "비교.txt" 파일을 연다.
+    std::ifstream fin("비교.txt");
+    std::vector<STRING> v;
+    STRING s;
+    while (fin >> s) {
+        v.push_back(s);    
+    }
+    //관찰 = true;
+    //STRING S = *v.rbegin();
+    //관찰 = false;
+    //// vector<STRING>에 저장한 STRING의 개수 출력
+    //cout << v.size() << endl;
+
+    
+    std::set<STRING> vset(v.begin(), v.end());
+
+    for (const auto& test : tests) {
+        if (vset.contains(test.name)) {
+            cout << test.name << endl;
+        }
+    }
+    //for (const auto& test : tests) {
+    //    auto p = find(v.begin(), v.end(), test.name);
+    //    if (p != v.end()) {
+    //        // test.name이 v에 존재함
+    //        cout << *p << endl;
+    //    }
+    //}
+    
 }
+ 
