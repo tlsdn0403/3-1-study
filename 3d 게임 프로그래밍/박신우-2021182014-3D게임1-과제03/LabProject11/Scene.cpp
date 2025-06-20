@@ -960,6 +960,24 @@ Scene::~Scene() {
 void Scene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, ID3D12RootSignature* rootSignature) {
 	m_pd3dGraphicsRootSignature = rootSignature;
 
+    //지형을 확대할 스케일 벡터이다. x-축과 z-축은 8배, y-축은 2배 확대한다.
+    XMFLOAT3 xmf3Scale(8.0f, 2.0f, 8.0f);
+    XMFLOAT4 xmf4Color(0.0f, 0.2f, 0.0f, 0.0f);
+    //지형을 높이 맵 이미지 파일(HeightMap.raw)을 사용하여 생성한다. 높이 맵의 크기는 가로x세로(257x257)이다.
+#ifdef _WITH_TERRAIN_PARTITION
+/*하나의 격자 메쉬의 크기는 가로x세로(17x17)이다. 지형 전체는 가로 방향으로 16개, 세로 방향으로 16의 격자 메
+쉬를 가진다. 지형을 구성하는 격자 메쉬의 개수는 총 256(16x16)개가 된다.*/
+    m_pTerrain = new CHeightMapTerrain(pd3dDevice, pd3dCommandList,
+        m_pd3dGraphicsRootSignature, _T("HeightMap.raw"), 257, 257, 17,
+        17, xmf3Scale, xmf4Color);
+#else
+//지형을 하나의 격자 메쉬(257x257)로 생성한다.  
+    m_pTerrain = new CHeightMapTerrain(pd3dDevice, pd3dCommandList,
+        m_pd3dGraphicsRootSignature, _T("HeightMap.raw"), 257, 257, 257,
+        257, xmf3Scale, xmf4Color);
+#endif
+    m_pTerrain->SetPosition(0, 0, 0);
+
 	// 1. 셰이더 생성
 	m_nShaders = 1;
 	m_pShaders = new ObjectsShader[m_nShaders];
@@ -970,8 +988,10 @@ void Scene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd
     float fHalfWidth = 45.0f, fHalfHeight = 45.0f, fHalfDepth = 200.0f;
     CFloorMesh* pWallCubeMesh = new CFloorMesh(pd3dDevice, pd3dCommandList, fHalfWidth * 2.0f, fHalfDepth * 2.0f, 30);
 
-   
-   
+    float fTerrainWidth = m_pTerrain->GetWidth(), fTerrainLength = m_pTerrain->GetLength();
+
+
+
     // 2. 오브젝트 생성 및 셰이더 할당
     int xObjects = 0, yObjects = 0, zObjects = 0; // 중심에 하나만
     float rectSize = 12.0f;
@@ -1004,6 +1024,9 @@ void Scene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd
         XMFLOAT3(-20.0f, 5.0f, -30.0f),
         XMFLOAT3(20.0f, 5.0f, -30.0f)
     };
+
+
+
 
     // 3. 장애물 오브젝트 생성 및 속성 설정
     for (int i = 0; i < 6; ++i) {
@@ -1099,7 +1122,7 @@ void Scene::ReleaseObjects() {
         shield_object = nullptr;
     }
   
-    
+    if (m_pTerrain) delete m_pTerrain;
     
 }
 
@@ -1167,6 +1190,7 @@ void Scene::Render(ID3D12GraphicsCommandList* pd3dCommandList, Camera* pCamera) 
     if (shield_object && m_bShieldActive) {
         shield_object->Render(pd3dCommandList, pCamera);
     }
+    if (m_pTerrain) m_pTerrain->Render(pd3dCommandList, pCamera);
 }
 
 

@@ -1,6 +1,10 @@
 ﻿#include "stdafx.h"
 #include "GameObject.h"
 #include "Shader.h"
+#include "CShader.h"
+
+
+
 
 inline float RandF(float fMin, float fMax)
 {
@@ -88,6 +92,16 @@ void GameObject::SetShader(Shader *pShader) {
 	if (m_pShader) m_pShader->Release();
 	m_pShader = pShader;
 	if (m_pShader) m_pShader->AddRef();
+}
+
+void GameObject::SetMesh(int nIndex, Mesh* pMesh)
+{
+	if (m_ppMeshes)
+	{
+		if (m_ppMeshes[nIndex]) m_ppMeshes[nIndex]->Release();
+		m_ppMeshes[nIndex] = pMesh;
+		if (pMesh) pMesh->AddRef();
+	}
 }
 
 void GameObject::SetMesh(Mesh *pMesh) {
@@ -509,6 +523,15 @@ void CBulletObject::Animate(float fElapsedTime)
 		Reset();
 }
 
+
+
+//--------------------------------------------------------------------------------------------------------------------------
+// 맵
+//--------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 CHeightMapTerrain::CHeightMapTerrain(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList
 	* pd3dCommandList, ID3D12RootSignature* pd3dGraphicsRootSignature, LPCTSTR pFileName, int
 	nWidth, int nLength, int nBlockWidth, int nBlockLength, XMFLOAT3 xmf3Scale, XMFLOAT4
@@ -540,7 +563,7 @@ CHeightMapTerrain::CHeightMapTerrain(ID3D12Device* pd3dDevice, ID3D12GraphicsCom
 		{
 			//지형의 일부분을 나타내는 격자 메쉬의 시작 위치(좌표)이다.
 			xStart = x * (nBlockWidth - 1);
-			zStart = z * (nBlockLength – 1);
+			zStart = z * (nBlockLength  - 1);
 			//지형의 일부분을 나타내는 격자 메쉬를 생성하여 지형 메쉬에 저장한다.
 			pHeightMapGridMesh = new CHeightMapGridMesh(pd3dDevice, pd3dCommandList, xStart,
 				zStart, nBlockWidth, nBlockLength, xmf3Scale, xmf4Color, m_pHeightMapImage);
@@ -556,3 +579,31 @@ CHeightMapTerrain::~CHeightMapTerrain(void)
 {
 	if (m_pHeightMapImage) delete m_pHeightMapImage;
 }
+
+void CHeightMapTerrain::Render(ID3D12GraphicsCommandList* pd3dCommandList, Camera* pCamera)
+{
+	OnPrepareRender();
+	UpdateShaderVariables(pd3dCommandList);
+
+	if (m_pShader)
+		m_pShader->Render(pd3dCommandList, pCamera);
+
+	//게임 객체가 포함하는 모든 메쉬를 렌더링한다.
+	if (m_ppMeshes) {
+		for (int i = 0; i < m_nMeshes; i++) {
+			if (m_ppMeshes[i])
+				m_ppMeshes[i]->Render(pd3dCommandList);
+		}
+	}
+}
+
+void CHeightMapTerrain::SetMesh(int nIndex, Mesh* pMesh)
+{
+	if (m_ppMeshes)
+	{
+		if (m_ppMeshes[nIndex]) m_ppMeshes[nIndex]->Release();
+		m_ppMeshes[nIndex] = pMesh;
+		if (pMesh) pMesh->AddRef();
+	}
+}
+

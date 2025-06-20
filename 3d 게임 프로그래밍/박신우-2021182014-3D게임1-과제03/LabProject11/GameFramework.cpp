@@ -658,7 +658,7 @@ void GameFramework::BuildObjects() {
         m_pScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList, m_pd3dGraphicsRootSignature);
         m_pPlayer = std::make_unique<TankPlayer>(m_pd3dDevice, m_pd3dCommandList, m_pScene->GetGraphicsRootSignature());
         m_pCamera = m_pPlayer->GetCamera();
-		m_pPlayer->SetPosition(XMFLOAT3(0.0f, 0.0f, 0.0f));
+		m_pPlayer->SetPosition(XMFLOAT3(1000.0f, 250.0f, 1000.0f));
 
 		if (m_pPlayer)
 			m_pCamera = m_pPlayer->ChangeCamera((DWORD)(3), m_GameTimer.GetTimeElapsed());

@@ -1,8 +1,7 @@
 //-----------------------------------------------------------------------------
 // File: CPlayer.cpp
 //-----------------------------------------------------------------------------
-
-#include "stdafx.h"
+#include "stdafx.h" // 반드시 첫
 #include "Player.h"
 #include "Shader.h"
 
@@ -239,11 +238,11 @@ CAirplanePlayer::CAirplanePlayer(ID3D12Device *pd3dDevice, ID3D12GraphicsCommand
 {
 	m_pCamera = ChangeCamera(/*SPACESHIP_CAMERA*/THIRD_PERSON_CAMERA, 0.0f);
 
-//	CGameObject *pGameObject = CGameObject::LoadGeometryFromFile(pd3dDevice, pd3dCommandList, pd3dGraphicsRootSignature, "Model/Apache.bin");
-	CGameObject *pGameObject = CGameObject::LoadGeometryFromFile(pd3dDevice, pd3dCommandList, pd3dGraphicsRootSignature, "Model/Gunship.bin");
+	CGameObject *pGameObject = CGameObject::LoadGeometryFromFile(pd3dDevice, pd3dCommandList, pd3dGraphicsRootSignature, "Model/M26.bin");
+	//CGameObject *pGameObject = CGameObject::LoadGeometryFromFile(pd3dDevice, pd3dCommandList, pd3dGraphicsRootSignature, "Model/Gunship.bin");
 
-	pGameObject->Rotate(15.0f, 0.0f, 0.0f);
-	pGameObject->SetScale(8.5f, 8.5f, 8.5f);
+	pGameObject->Rotate(0.0f, 0.0f, 0.0f);
+	pGameObject->SetScale(5.5f, 5.5f, 5.5f);
 	SetChild(pGameObject, true);
 
 	OnInitialize();

@@ -1,9 +1,14 @@
 #pragma once
 #include "Mesh.h"
 #include "Camera.h"
+#include"CShader.h"
 #include<array>
+
+
+
 class Shader;
 class CBulletObject; // 전방 선언
+
 class GameObject{
 public:
 	GameObject();
@@ -41,6 +46,7 @@ public:
 	void SetMovingDirection(XMFLOAT3& xmf3MovingDirection) { m_xmf3MovingDirection = Vector3::Normalize(xmf3MovingDirection); }
 	XMFLOAT3					m_xmf3MovingDirection = XMFLOAT3(0.0f, 0.0f, 1.0f); //움직이는 방향
 	XMFLOAT4X4 m_xmf4x4World;
+
 	void ReleaseUploadBuffers();
 	
 	void SetMesh(int nIndex, Mesh* pMesh);
@@ -48,6 +54,8 @@ public:
 	virtual void SetShader(Shader *pShader);
 	
 	virtual void Animate(float fTimeElapsed);
+
+
 	virtual void OnPrepareRender();
 	
 virtual void Render(ID3D12GraphicsCommandList *pd3dCommandListt, Camera *pCamera);
@@ -97,6 +105,8 @@ public:
 
 	void Rotate(float fPitch = 10.0f, float fYaw = 10.0f, float fRoll = 10.0f);
 	void Rotate(XMFLOAT3& xmf3RotationAxis, float fAngle);
+
+
 
 	void Revolve(const XMFLOAT3& center, const XMFLOAT3& axis, float angleDegrees);
 
@@ -209,13 +219,17 @@ public:
 		xmf4Color);
 	virtual ~CHeightMapTerrain();
 private:
-	CHeightMapImage* m_pHeightMapImage;
+	CHeightMapImage*	m_pHeightMapImage;
+	Mesh**				m_ppMeshes = NULL;
 		//높이 맵의 가로와 세로 크기이다.
 		int m_nWidth;
 		int m_nLength;
 		//지형을 실제로 몇 배 확대할 것인가를 나타내는 스케일 벡터이다.
 		XMFLOAT3
 			m_xmf3Scale;
+public:
+	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, Camera* pCamera);
+
 public:
 	//지형의 높이를 계산하는 함수이다(월드 좌표계). 높이 맵의 높이에 스케일의 y를 곱한 값이다.
 	float GetHeight(float x, float z) {
@@ -227,6 +241,8 @@ public:
 		return(m_pHeightMapImage->GetHeightMapNormal(int(x / m_xmf3Scale.x), int(z /
 			m_xmf3Scale.z)));
 	}
+
+	void SetMesh(int nIndex, Mesh* pMesh);
 	int GetHeightMapWidth() { return(m_pHeightMapImage->GetHeightMapWidth()); }
 	int GetHeightMapLength() { return(m_pHeightMapImage->GetHeightMapLength()); }
 	XMFLOAT3 GetScale() { return(m_xmf3Scale); }
@@ -234,4 +250,4 @@ public:
 	float GetWidth() { return(m_nWidth * m_xmf3Scale.x); }
 	float GetLength() { return(m_nLength * m_xmf3Scale.z); }
 };
-	
+

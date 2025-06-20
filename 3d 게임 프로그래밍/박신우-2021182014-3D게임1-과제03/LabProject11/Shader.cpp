@@ -332,46 +332,6 @@ void ObjectsShader::Render(ID3D12GraphicsCommandList * pd3dCommandList, Camera *
 }
 
 void ObjectsShader::BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList) {
-	
-	//float RectSize = 12.0f;
-
-	//// 가로x세로x높이가 12x12x12인 정육면체 메쉬를 생성
-	//CubeMeshDiffused *pCubeMesh = new CubeMeshDiffused(pd3dDevice, pd3dCommandList, RectSize, RectSize, RectSize);
-
-	//// x-축, y-축, z-축 양의 방향의 객체 개수이다.
-	//int xObjects = 1, yObjects = 1, zObjects = 1, i = 0;
-	//
-	////x-축, y-축, z-축으로 21개씩 총 21 x 21 x 21 = 9261개의 정육면체를 생성하고 배치한다.
-	//m_nObjects = (xObjects * 2 + 1) * (yObjects * 2 + 1) * (zObjects * 2 + 1);
-	//
-	//// 객체 수에 맞는 메모리 할당
-	//m_ppObjects = new GameObject*[m_nObjects];
-
-	//float fxPitch = RectSize * 2.5f;
-	//float fyPitch = RectSize * 2.5f;
-	//float fzPitch = RectSize * 2.5f;
-
-	//RotatingObject *pRotatingObject = NULL;
-
-	//for (int x = -xObjects; x <= xObjects; x++) {
-	//	for (int y = -yObjects; y <= yObjects; y++) {
-	//		for (int z = -zObjects; z <= zObjects; z++) {
-	//			// 새로운 OBJ 메모리 할당
-	//			pRotatingObject = new RotatingObject();
-	//			// 주소에 메쉬 생성
-	//			pRotatingObject->SetMesh(pCubeMesh);
-
-	//			// 각 정육면체 객체의 위치를 설정
-	//			pRotatingObject->SetPosition(fxPitch*x, fyPitch*y, fzPitch*z);
-	//			// 각 정육면체 객체의 회전축 결정
-	//			pRotatingObject->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
-	//			// 각 정육면체 객체의 회전 속도 결정
-	//			pRotatingObject->SetRotationSpeed(10.0f*(i % 10) + 3.0f);
-	//			// 메모리에 하나씩 저장
-	//			m_ppObjects[i++] = pRotatingObject;
-	//		}
-	//	}
-	//}
 
 	CreateShaderVariables(pd3dDevice, pd3dCommandList);
 }
@@ -390,5 +350,45 @@ void ObjectsShader::ReleaseObjects(){
 		delete[] m_ppObjects;
 	}*/
 
+}
+
+CTerrainShader::CTerrainShader()
+{
+}
+CTerrainShader::~CTerrainShader()
+{
+}
+
+D3D12_INPUT_LAYOUT_DESC CTerrainShader::CreateInputLayout()
+{
+	UINT nInputElementDescs = 2;
+	D3D12_INPUT_ELEMENT_DESC* pd3dInputElementDescs = new
+		D3D12_INPUT_ELEMENT_DESC[nInputElementDescs];
+	pd3dInputElementDescs[0] = { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
+   D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
+	pd3dInputElementDescs[1] = { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12,
+   D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
+	D3D12_INPUT_LAYOUT_DESC d3dInputLayoutDesc;
+	d3dInputLayoutDesc.pInputElementDescs = pd3dInputElementDescs;
+	d3dInputLayoutDesc.NumElements = nInputElementDescs;
+	return(d3dInputLayoutDesc);
+}
+
+D3D12_SHADER_BYTECODE CTerrainShader::CreateVertexShader(ID3DBlob** ppd3dShaderBlob)
+{
+	return(Shader::CompileShaderFromFile(L"Shaders.hlsl", "VSDiffused", "vs_5_1",
+		ppd3dShaderBlob));
+}
+D3D12_SHADER_BYTECODE CTerrainShader::CreatePixelShader(ID3DBlob** ppd3dShaderBlob)
+{
+	return(Shader::CompileShaderFromFile(L"Shaders.hlsl", "PSDiffused", "ps_5_1",
+		ppd3dShaderBlob));
+}
+void CTerrainShader::CreateShader(ID3D12Device* pd3dDevice, ID3D12RootSignature
+	* pd3dGraphicsRootSignature)
+{
+	m_nPipelineStates = 1;
+	m_ppd3dPipelineStates = new ID3D12PipelineState * [m_nPipelineStates];
+	Shader::CreateShader(pd3dDevice, pd3dGraphicsRootSignature);
 }
 

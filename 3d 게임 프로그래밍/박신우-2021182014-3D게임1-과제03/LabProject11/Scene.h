@@ -70,6 +70,11 @@ public:
 	float m_fShieldDuration = 0.0;
 	float m_fShieldElapsedTime = 0.0;
 	void RotateTanksToFacePlayer(Player* pPlayer);
+protected:
+	CHeightMapTerrain* m_pTerrain = NULL;
+public:
+	CHeightMapTerrain* GetTerrain() { return(m_pTerrain); }
+
 protected: 
 	//배치(Batch) 처리를 하기 위하여 씬을 셰이더들의 리스트로 표현한다.
 	ObjectsShader *m_pShaders = NULL;
