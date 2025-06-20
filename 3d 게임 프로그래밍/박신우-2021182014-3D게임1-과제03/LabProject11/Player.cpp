@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "Shader.h"
-
+#include "Object.h"
 
 Player::Player(){
 
@@ -381,31 +381,31 @@ void Player::Render(ID3D12GraphicsCommandList * pd3dCommandList, Camera * pCamer
 		GameObject::Render(pd3dCommandList, pCamera); 
 }
 
-TankPlayer::TankPlayer(ID3D12Device * pd3dDevice, ID3D12GraphicsCommandList * pd3dCommandList, ID3D12RootSignature * pd3dGraphicsRootSignature){
-	//비행기 메쉬를 생성한다.
-	Mesh *pAirplaneMesh = new CTankMesh(pd3dDevice, pd3dCommandList, 5.0f, 3.0f, 5.0f, XMFLOAT4(0.0f, 0.5f, 0.0f, 0.0f));
+TankPlayer::TankPlayer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, ID3D12RootSignature* pd3dGraphicsRootSignature) {
+
+
+	Mesh* pAirplaneMesh = new CTankMesh(pd3dDevice, pd3dCommandList, 5.0f, 3.0f, 5.0f, XMFLOAT4(0.0f, 0.5f, 0.0f, 0.0f));
 	SetMesh(pAirplaneMesh);
-	
-	//플레이어의 카메라를 스페이스-쉽 카메라로 변경(생성)한다.
+
+
 	m_pCamera = ChangeCamera(SPACESHIP_CAMERA, 0.0f);
 
-	//플레이어를 위한 셰이더 변수를 생성한다.
+
 	CreateShaderVariables(pd3dDevice, pd3dCommandList);
 
-	//플레이어의 위치를 설정한다. 
+
 	SetPosition(XMFLOAT3(0.0f, 0.0f, -50.0f));
 
-	//플레이어(비행기) 메쉬를 렌더링할 때 사용할 셰이더를 생성한다.
-	PlayerShader *pShader = new PlayerShader();
+
+	PlayerShader* pShader = new PlayerShader();
 	pShader->CreateShader(pd3dDevice, pd3dGraphicsRootSignature);
 
-	// 쉐이더 해야하나
+
 	pShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
 
-	// 이거 뭐지(?)  - 쉐이더에 객체가 있는데
-	SetShader(pShader); 
-}
+	SetShader(pShader);
 
+}
 TankPlayer::~TankPlayer(){
 
 }

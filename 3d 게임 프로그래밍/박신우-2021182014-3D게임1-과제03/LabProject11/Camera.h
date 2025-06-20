@@ -8,7 +8,7 @@
 #define THIRD_PERSON_CAMERA 0x03
 
 class Player;
-
+class CPlayer;
 
 struct VS_CB_CAMERA_INFO {
 	XMFLOAT4X4 m_xmf4x4View;
@@ -52,7 +52,7 @@ protected:
 	D3D12_RECT m_d3dScissorRect;
 
 	// 카메라를 가지고 있는 플레이어에 대한 포인터
-	Player *m_pPlayer = NULL;
+	Player* m_pPlayer = NULL;
 
 public: 
 	Camera();
@@ -85,7 +85,7 @@ public:
 	virtual void SetViewportsAndScissorRects(ID3D12GraphicsCommandList *pd3dCommandList);
 
 	// Player Set & Get
-	void SetPlayer(Player *pPlayer) { m_pPlayer = pPlayer; }
+	void SetPlayer(Player* pPlayer) { m_pPlayer = pPlayer; }
 	Player *GetPlayer() { return(m_pPlayer); }
 
 	// Mode Set & Get

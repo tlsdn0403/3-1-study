@@ -9,6 +9,7 @@
 
 #include "GameObject.h" 
 #include "Camera.h"
+#include "Object.h"
 #include "Shader.h"
 
 class Player : public GameObject{
@@ -127,7 +128,8 @@ public:
 	
 	float m_fShieldDuration = 0.0;
 	float m_fShieldElapsedTime = 0.0;
-
+	CGameObject* m_pMainRotorFrame = NULL;
+	CGameObject* m_pTailRotorFrame = NULL;
 
 
 	float						m_fBulletEffectiveRange = 150.0f;
@@ -136,7 +138,6 @@ public:
 	CBulletObject* m_ppBullets[BULLETS];
 
 	void FireBullet(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList ,GameObject* pLockedObject);
-
 	virtual Camera *ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed);
 	virtual void OnPrepareRender();
 };
