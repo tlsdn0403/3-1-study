@@ -978,6 +978,8 @@ void Scene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd
 #endif
     m_pTerrain->SetPosition(0, 0, 0);
 
+  
+
 	// 1. 셰이더 생성
 	m_nShaders = 1;
 	m_pShaders = new ObjectsShader[m_nShaders];
@@ -993,21 +995,21 @@ void Scene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd
 
 
     // 2. 오브젝트 생성 및 셰이더 할당
-    int xObjects = 0, yObjects = 0, zObjects = 0; // 중심에 하나만
-    float rectSize = 12.0f;
-    float fxPitch = rectSize * 2.5f;
-    float fyPitch = rectSize * 2.5f;
-    float fzPitch = rectSize * 2.5f;
-    int nObjects = 10;
+    float fxPitch = 120.0f * 3.5f;
+    float fyPitch = 120.0f * 3.5f;
+    float fzPitch = 120.0f * 3.5f;
+    //직육면체를 지형 표면에 그리고 지형보다 높은 위치에 일정한 간격으로 배치한다.
+    int xObjects = int(fTerrainWidth / fxPitch), yObjects = 1, zObjects = int(fTerrainLength / fzPitch);
+    int nObjects = xObjects * yObjects * zObjects;
     m_nObjects = nObjects;
     m_ppObjects = new GameObject * [nObjects];
-    CRollerCoasterMesh_Up* pRailMesh = new CRollerCoasterMesh_Up(pd3dDevice, pd3dCommandList, 20.0f, 10.0f, 6.0f);
 
-    CTankMesh* pTankMesh = new CTankMesh(pd3dDevice, pd3dCommandList, 5, 3.0f, 5);
+
+    CTankMesh* pTankMesh = new CTankMesh(pd3dDevice, pd3dCommandList, 15, 9.0f, 15);
     CubeMeshDiffused* pBulletMesh = new CubeMeshDiffused(pd3dDevice, pd3dCommandList, 2, 2, 2);
     CubeMeshDiffused* cubeMesh = new CubeMeshDiffused(pd3dDevice, pd3dCommandList, 10, 10, 10);
-    int i = 0;
-    // 중심에 하나만 생성
+
+
 
 
 
@@ -1036,31 +1038,31 @@ void Scene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd
         m_pObstacle[i]->SetPosition(obstaclePositions[i].x, obstaclePositions[i].y, obstaclePositions[i].z);
         m_pObstacle[i]->SetShader(&m_pShaders[0]);
     }
-    const int NUM_OBJECTS = 10;
+    const int NUM_OBJECTS = 16;
 
-    ExplosiveObjectDesc descs[NUM_OBJECTS] = {
-        { XMFLOAT3(-13.5f, 1.5f, -77.0f),  XMFLOAT3(1.0f, 0.0f, 0.0f),   10.5f },
-        { XMFLOAT3(+13.5f, 1.5f, -74.0f),  XMFLOAT3(-1.0f, 0.0f, 0.0f),   8.8f },
-        { XMFLOAT3(0.0f, 1.5f, 93.0f),     XMFLOAT3(1.0f, 0.0f, 0.0f),    5.2f },
-        { XMFLOAT3(5.0f, 1.5f, -93.0f),    XMFLOAT3(1.0f, 0.0f, 0.0f),   20.4f },
-        { XMFLOAT3(10.0f, 1.5f, 83.0f),    XMFLOAT3(1.0f, 0.0f, 0.0f),    6.4f },
-        { XMFLOAT3(-10.0f, 1.5f, -100.0f), XMFLOAT3(1.0f, 0.0f, 0.0f),    8.9f },
-        { XMFLOAT3(-10.0f, 1.5f, -87.0f),  XMFLOAT3(1.0f, 0.0f, 0.0f),    9.7f },
-        { XMFLOAT3(-10.0f, 1.5f, 92.0f),   XMFLOAT3(-1.0f, 0.0f, 0.0f),  15.6f },
-        { XMFLOAT3(-15.0f, 1.5f, 77.0f),   XMFLOAT3(1.0f, 0.0f, 0.0f),   15.0f },
-        { XMFLOAT3(+15.0f, 1.5f, 80.0f),   XMFLOAT3(1.0f, 0.0f, 0.0f),   15.0f }
-    };
 
-    for (int i = 0; i < NUM_OBJECTS; ++i)
+    XMFLOAT3 xmf3RotateAxis, xmf3SurfaceNormal;
+    for (int i = 0, x = 0; x < xObjects; x++)
     {
-        m_ppObjects[i] = new CExplosiveObject();
-        m_ppObjects[i]->SetMesh(pTankMesh);
-        m_ppObjects[i]->SetPosition(descs[i].position.x, descs[i].position.y, descs[i].position.z);
-        m_ppObjects[i]->SetMovingDirection(descs[i].direction);
-        m_ppObjects[i]->SetMovingSpeed(descs[i].speed);
-        m_ppObjects[i]->SetShader(&m_pShaders[0]);
-    }
+        for (int z = 0; z < zObjects; z++)
+        {
+            for (int y = 0; y < yObjects; y++)
+            {
+                
+                float xPosition = x * fxPitch;
+                float zPosition = z * fzPitch;
+                float fHeight = m_pTerrain->GetHeight(xPosition, zPosition);
+                m_ppObjects[i] = new CExplosiveObject();
+                m_ppObjects[i]->SetMesh(pTankMesh);
 
+                m_ppObjects[i]->SetPosition(xPosition, fHeight + (y  * fyPitch) +6.0f, zPosition);
+                m_ppObjects[i]->SetMovingSpeed(10.0f);
+                m_ppObjects[i]->SetRotationAxis(XMFLOAT3(0.0f, 1.0f, 0.0f));
+                m_ppObjects[i++]->SetShader(&m_pShaders[0]);
+
+            }
+        }
+    }
 
     m_pFloorObject = new CFloorObject();
     m_pFloorObject->SetPosition(0.0f, 0.0f, 0.0f);
@@ -1111,7 +1113,7 @@ void Scene::ReleaseObjects() {
         }
     }
     if (m_ppEnemyBullets) {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 16; i++) {
             delete m_ppEnemyBullets[i];
             m_ppEnemyBullets[i] = nullptr;
         }
@@ -1133,10 +1135,9 @@ void Scene::AnimateObjects(Player* pPlayer ,float fTimeElapsed) {
             FireBulletFromEnemy(m_ppObjects[i], i);
             XMFLOAT3 pos = m_ppObjects[i]->GetPosition();
             XMFLOAT3 dir = m_ppObjects[i]->m_xmf3MovingDirection;
-            if (pos.x > 40.0f || pos.x < -40.0f) {
-                dir.x = -dir.x;
-                m_ppObjects[i]->SetMovingDirection(dir);
-            }
+            dir.z = -dir.z;
+            m_ppObjects[i]->SetMovingDirection(dir);
+                
             m_ppObjects[i]->Animate(fTimeElapsed);
         }
     }
@@ -1151,11 +1152,12 @@ void Scene::AnimateObjects(Player* pPlayer ,float fTimeElapsed) {
             m_ppBullets[i]->Animate(fTimeElapsed);
         }
     }
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 16; i++) {
         if (m_ppEnemyBullets[i] && m_ppEnemyBullets[i]->m_bActive) {
             m_ppEnemyBullets[i]->Animate(fTimeElapsed);
         }
     }
+    ClampTanksToTerrain();
     RotateTanksToFacePlayer(pPlayer);
     UpdateShield(pPlayer,0.01f);
     CheckObjectByBulletCollisions(); //오브젝트랑 총알
@@ -1180,7 +1182,7 @@ void Scene::Render(ID3D12GraphicsCommandList* pd3dCommandList, Camera* pCamera) 
             m_ppBullets[i]->Render(pd3dCommandList, pCamera);
         }
     }
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 16; i++) {
         if (m_ppEnemyBullets[i] && m_ppEnemyBullets[i]->m_bActive) {
             m_ppEnemyBullets[i]->Render(pd3dCommandList, pCamera);
         }
@@ -1482,6 +1484,50 @@ void Scene::CheckBulletByWallCollisions()
 void Scene::RotateTanksToFacePlayer(Player* pPlayer) {
     XMFLOAT3 playerPosition = pPlayer->GetPosition();
     for (int i = 0; i < m_nObjects; i++) {
-        m_ppObjects[i]->RotateTowardsPlayer(playerPosition);
+        if (m_ppObjects[i]) {
+            m_ppObjects[i]->RotateTowardsPlayer(playerPosition);
+           
+        }
+    }
+}
+void Scene::ClampTanksToTerrain()
+{
+    if (!m_pTerrain) return;
+
+    float minX = 0.0f;
+    float maxX = m_pTerrain->GetWidth() - 1.0f;
+    float minZ = 0.0f;
+    float maxZ = m_pTerrain->GetLength() - 1.0f;
+
+    for (int i = 0; i < m_nObjects; ++i)
+    {
+        if (!m_ppObjects[i]) continue;
+
+        XMFLOAT3 pos = m_ppObjects[i]->GetPosition();
+
+        // x, z 좌표 클램프
+        if (pos.x < minX) pos.x = minX;
+        if (pos.x > maxX) pos.x = maxX;
+        if (pos.z < minZ) pos.z = minZ;
+        if (pos.z > maxZ) pos.z = maxZ;
+
+        // 지형 높이 계산
+        float fHeight = m_pTerrain->GetHeight(pos.x, pos.z) + 6.0f;
+
+        // 탱크가 지형 아래로 내려가지 않도록 y값 보정
+        if (pos.y < fHeight)
+        {
+            XMFLOAT3 vel = m_ppObjects[i]->m_xmf3MovingDirection;
+            vel.y = 0.0f;
+            m_ppObjects[i]->SetMovingDirection(vel);
+            pos.y = fHeight;
+            m_ppObjects[i]->SetPosition(pos);
+        }
+        else
+        {
+            // 공중에 있으면 중력 적용
+            m_ppObjects[i]->SetGravity(XMFLOAT3(0.0f, -100.0f, 0.0f));
+            m_ppObjects[i]->SetPosition(pos);
+        }
     }
 }

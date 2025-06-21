@@ -40,9 +40,11 @@ void GameObject::RotateTowardsPlayer(XMFLOAT3 playerPosition)
 	// 플레이어를 향한 방향 벡터 계산
 	XMFLOAT3 directionToPlayer = Vector3::Subtract(playerPosition, objectPosition);
 	directionToPlayer = Vector3::Normalize(directionToPlayer);
-
-
+	directionToPlayer.z = -directionToPlayer.z;
+	SetMovingDirection(directionToPlayer);
 	directionToPlayer.x = -directionToPlayer.x; // x축 방향 반전
+	directionToPlayer.z = -directionToPlayer.z;
+
 
 
 	// 업벡터를 y축으로
@@ -53,6 +55,7 @@ void GameObject::RotateTowardsPlayer(XMFLOAT3 playerPosition)
 
 	// 오브젝트의 회전 변환 설정
 	SetRotationTransform(&rotationMatrix);
+
 }
 void GameObject::SetRotationTransform(XMFLOAT4X4* pmxf4x4Transform)
 {
@@ -127,13 +130,27 @@ void GameObject::Rotate(XMFLOAT3& xmf3RotationAxis, float fAngle)
 	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);
 }
 
-void GameObject::Animate(float fTimeElapsed) {
-	//각각의 오브젝트를 회전을 시키고 이동을 시킨다.
-	if (m_fRotationSpeed != 0.0f) Rotate(m_xmf3RotationAxis, m_fRotationSpeed * fTimeElapsed);
-	if (m_fMovingSpeed != 0.0f) Move(m_xmf3MovingDirection, m_fMovingSpeed * fTimeElapsed);
-	UpdateBoundingBox();
-}
+//void GameObject::Animate(float fTimeElapsed) {
+//	//각각의 오브젝트를 회전을 시키고 이동을 시킨다.
+//	if (m_fRotationSpeed != 0.0f) Rotate(m_xmf3RotationAxis, m_fRotationSpeed * fTimeElapsed);
+//	if (m_fMovingSpeed != 0.0f) Move(m_xmf3MovingDirection, m_fMovingSpeed * fTimeElapsed);
+//	UpdateBoundingBox();
+//}
 
+void GameObject::Animate(float fTimeElapsed) {
+	// 회전
+	if (m_fRotationSpeed != 0.0f)
+		Rotate(m_xmf3RotationAxis, m_fRotationSpeed * fTimeElapsed);
+
+
+	if (m_fMovingSpeed != 0.0f)
+		Move(m_xmf3MovingDirection, m_fMovingSpeed * fTimeElapsed);
+	// 중력 적용 등은 MoveUp으로 제어
+	if (m_xmf3Gravity.y != 0.0f)
+		MoveUp(m_xmf3Gravity.y * fTimeElapsed);
+	UpdateBoundingBox();
+
+}
 void GameObject::OnPrepareRender() {
 
 }
@@ -272,7 +289,6 @@ void GameObject::SetPosition(float x, float y, float z){
 	m_xmf4x4World._41 = x;
 	m_xmf4x4World._42 = y;
 	m_xmf4x4World._43 = z;
-
 }
 
 void GameObject::SetPosition(XMFLOAT3 xmf3Position){
@@ -369,7 +385,6 @@ void CExplosiveObject::Render(ID3D12GraphicsCommandList* pd3dCommandList, Camera
 		for (int i = 0; i < EXPLOSION_DEBRISES; i++)
 		{
 			XMFLOAT4X4 xmf4x4World = m_pxmf4x4Transforms[i];
-			// XMStoreFloat4x4(&xmf4x4World, XMMatrixTranspose(XMLoadFloat4x4(&xmf4x4World))); // 셰이더에서 알아서 처리할 수도 있음
 
 			if (m_pShader)
 			{
@@ -471,12 +486,14 @@ void CBulletObject::Reset()
 
 void CBulletObject::Animate(float fElapsedTime)
 {
+
 	m_fElapsedTimeAfterFire += fElapsedTime;
 
 	float fDistance = m_fMovingSpeed * fElapsedTime;
 
 	if ((m_fElapsedTimeAfterFire > m_fLockingDelayTime) && m_pLockedObject)
 	{
+
 		XMFLOAT3 xmf3Position = GetPosition();
 		XMVECTOR xmvPosition = XMLoadFloat3(&xmf3Position);
 

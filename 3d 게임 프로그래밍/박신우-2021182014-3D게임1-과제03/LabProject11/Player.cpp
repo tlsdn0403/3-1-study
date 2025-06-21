@@ -378,7 +378,7 @@ void Player::Render(ID3D12GraphicsCommandList * pd3dCommandList, Camera * pCamer
 TankPlayer::TankPlayer(ID3D12Device * pd3dDevice, ID3D12GraphicsCommandList * pd3dCommandList, ID3D12RootSignature * pd3dGraphicsRootSignature , void* pContext){
 	
 
-	Mesh *pAirplaneMesh = new CTankMesh(pd3dDevice, pd3dCommandList, 5.0f, 3.0f, 5.0f, XMFLOAT4(0.0f, 0.5f, 0.0f, 0.0f));
+	Mesh *pAirplaneMesh = new CTankMesh(pd3dDevice, pd3dCommandList, 10.0f, 6.0f, 10.0f, XMFLOAT4(0.0f, 0.5f, 0.0f, 0.0f));
 	SetMesh(pAirplaneMesh);
 	
 
@@ -806,11 +806,7 @@ void CTerrainPlayer::OnPlayerUpdateCallback(float fTimeElapsed)
    중심이 직육면체의 가운데이므로 y 값에 메쉬의 높이의 절반을 더하면 플레이어의 위치가 된다.*/
 	float fHeight = pTerrain->GetHeight(xmf3PlayerPosition.x, xmf3PlayerPosition.z) +
 		6.0f;
-	/*플레이어의 위치 벡터의 y-값이 음수이면(예를 들어, 중력이 적용되는 경우) 플레이어의 위치 벡터의 y-값이 점점
-   작아지게 된다. 이때 플레이어의 현재 위치 벡터의 y 값이 지형의 높이(실제로 지형의 높이 + 6)보다 작으면 플레이어
-   의 일부가 지형 아래에 있게 된다. 이러한 경우를 방지하려면 플레이어의 속도 벡터의 y 값을 0으로 만들고 플레이어
-   의 위치 벡터의 y-값을 지형의 높이(실제로 지형의 높이 + 6)로 설정한다. 그러면 플레이어는 항상 지형 위에 있게 된
-   다.*/
+
 	if (xmf3PlayerPosition.y < fHeight)
 	{
 		XMFLOAT3 xmf3PlayerVelocity = GetVelocity();

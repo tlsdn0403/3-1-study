@@ -14,6 +14,14 @@ public:
 	GameObject();
 	virtual ~GameObject();
 
+	// 중력 가속도 (기본값: 9.8f, y축 방향)
+	XMFLOAT3 m_xmf3Gravity = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	XMFLOAT3 m_xmf3Velocity;
+	bool m_bUseGravity = false;
+
+	void SetGravity(const XMFLOAT3& xmf3Gravity) { m_xmf3Gravity = xmf3Gravity; }
+	void EnableGravity(bool bEnable) { m_bUseGravity = bEnable; }
+
 	Mesh** m_ppMeshes = NULL;
 	int m_nMeshes = 0;
 
@@ -196,7 +204,7 @@ public:
 public:
 	virtual void Animate(float fElapsedTime);
 	void SetActive(bool bActive) { m_bActive = bActive; }
-	float						m_fBulletEffectiveRange = 50.0f;
+	float						m_fBulletEffectiveRange = 100.0f;
 	float						m_fMovingDistance = 0.0f;
 	float						m_fRotationAngle = 0.0f;
 	XMFLOAT3					m_xmf3FirePosition = XMFLOAT3(0.0f, 0.0f, 1.0f);

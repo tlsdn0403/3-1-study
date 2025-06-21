@@ -70,6 +70,7 @@ public:
 	float m_fShieldDuration = 0.0;
 	float m_fShieldElapsedTime = 0.0;
 	void RotateTanksToFacePlayer(Player* pPlayer);
+	void ClampTanksToTerrain();
 protected:
 	CHeightMapTerrain* m_pTerrain = NULL;
 public:
@@ -83,7 +84,7 @@ protected:
 	ID3D12RootSignature *m_pd3dGraphicsRootSignature = NULL;
 
 	CBulletObject* m_ppBullets[BULLETS] = { nullptr }; // BULLETS는 기존과 동일하게 사용
-	CBulletObject* m_ppEnemyBullets[10] = { nullptr }; // BULLETS는 기존과 동일하게 사용
+	CBulletObject* m_ppEnemyBullets[32] = { nullptr }; // BULLETS는 기존과 동일하게 사용
 	int m_nBullets = BULLETS;
 	void CheckObjectByBulletCollisions();
 protected:
