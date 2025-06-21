@@ -654,9 +654,10 @@ void GameFramework::BuildObjects() {
 
     switch (pGameState->GetCurrentState()) {
     case GAME:
+
         m_pScene = new Scene();
         m_pScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList, m_pd3dGraphicsRootSignature);
-        m_pPlayer = std::make_unique<TankPlayer>(m_pd3dDevice, m_pd3dCommandList, m_pScene->GetGraphicsRootSignature());
+        m_pPlayer = std::make_unique<TankPlayer>(m_pd3dDevice, m_pd3dCommandList, m_pScene->GetGraphicsRootSignature(), m_pScene->GetTerrain());
         m_pCamera = m_pPlayer->GetCamera();
 		m_pPlayer->SetPosition(XMFLOAT3(1000.0f, 250.0f, 1000.0f));
 
@@ -668,21 +669,21 @@ void GameFramework::BuildObjects() {
         m_pStartScene = new StartScene();
         m_pStartScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList, m_pd3dGraphicsRootSignature);
 
-		m_pPlayer = std::make_unique<TankPlayer>(m_pd3dDevice, m_pd3dCommandList, m_pStartScene->GetGraphicsRootSignature());
+		m_pPlayer = std::make_unique<CartPlayer>(m_pd3dDevice, m_pd3dCommandList, m_pStartScene->GetGraphicsRootSignature());
 		m_pCamera = m_pPlayer->GetCamera();
         break;
 	case WIN:
 		m_pWinScene = new WinScene();
 		m_pWinScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList, m_pd3dGraphicsRootSignature);
 
-		m_pPlayer = std::make_unique<TankPlayer>(m_pd3dDevice, m_pd3dCommandList, m_pStartScene->GetGraphicsRootSignature());
+		m_pPlayer = std::make_unique<CartPlayer>(m_pd3dDevice, m_pd3dCommandList, m_pStartScene->GetGraphicsRootSignature());
 		m_pCamera = m_pPlayer->GetCamera();
 		break;
 	case MENU:
 		m_pMenuScene = new MenuScene();
 		m_pMenuScene->BuildObjects(m_pd3dDevice, m_pd3dCommandList, m_pd3dGraphicsRootSignature);
 
-		m_pPlayer = std::make_unique<TankPlayer>(m_pd3dDevice, m_pd3dCommandList, m_pMenuScene->GetGraphicsRootSignature());
+		m_pPlayer = std::make_unique<CartPlayer>(m_pd3dDevice, m_pd3dCommandList, m_pMenuScene->GetGraphicsRootSignature());
 		m_pCamera = m_pPlayer->GetCamera();
 		break;
 

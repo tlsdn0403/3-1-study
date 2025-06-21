@@ -150,7 +150,6 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CGameScene_1.h" />
-    <ClInclude Include="CPlayer.h" />
     <ClInclude Include="CShader.h" />
     <ClInclude Include="GameFramework.h" />
     <ClInclude Include="GameObject.h" />
@@ -170,7 +169,6 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CGameScene_1.cpp" />
-    <ClCompile Include="CPlayer.cpp" />
     <ClCompile Include="CShader.cpp" />
     <ClCompile Include="GameFramework.cpp" />
     <ClCompile Include="GameObject.cpp" />

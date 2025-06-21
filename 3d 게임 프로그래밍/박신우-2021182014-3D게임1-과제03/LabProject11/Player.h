@@ -123,7 +123,7 @@ public:
 
 class TankPlayer : public Player {
 public:
-	TankPlayer(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, ID3D12RootSignature *pd3dGraphicsRootSignature);
+	TankPlayer(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, ID3D12RootSignature *pd3dGraphicsRootSignature , void* pContext);
 	virtual ~TankPlayer();
 	
 	float m_fShieldDuration = 0.0;
@@ -140,6 +140,9 @@ public:
 	void FireBullet(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList ,GameObject* pLockedObject);
 	virtual Camera *ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed);
 	virtual void OnPrepareRender();
+
+	virtual void OnPlayerUpdateCallback(float fTimeElapsed);
+	virtual void OnCameraUpdateCallback(float fTimeElapsed);
 };
 
 

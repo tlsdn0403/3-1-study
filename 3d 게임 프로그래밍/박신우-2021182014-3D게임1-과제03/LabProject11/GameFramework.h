@@ -27,7 +27,7 @@ private:
 	// Camera
 	Camera *m_pCamera = NULL;
 	// Player
-	std::unique_ptr<CPlayer> m_pPlayer = nullptr;
+	std::unique_ptr<Player> m_pPlayer = nullptr;
 	std::unique_ptr<CPlayer> m_pPlayer2 = nullptr;
 
 	GameObject* m_pLockedObject = NULL;

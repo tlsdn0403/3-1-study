@@ -81,9 +81,6 @@
     <ClInclude Include="Timer.h">
       <Filter>Timer</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Player</Filter>
-    </ClInclude>
     <ClInclude Include="TextMesh.h">
       <Filter>textMesh</Filter>
     </ClInclude>
@@ -96,11 +93,11 @@
     <ClInclude Include="Object.h">
       <Filter>GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="CPlayer.h">
-      <Filter>Player</Filter>
-    </ClInclude>
     <ClInclude Include="CCamera.h">
       <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -145,9 +142,6 @@
     </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>GameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="CPlayer.cpp">
-      <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="CCamera.cpp">
       <Filter>Camera</Filter>

@@ -251,12 +251,6 @@ void Player::Update(float fTimeElapsed){
 	//카메라의 카메라 변환 행렬을 다시 생성한다.
 	m_pCamera->RegenerateViewMatrix();
 
-	/*플레이어의 속도 벡터가 마찰력 때문에 감속이 되어야 한다면 감속 벡터를 생성한다.
-	속도 벡터의 반대 방향 벡터를 구하고 단위 벡터로 만든다.
-	마찰 계수를 시간에 비례하도록 하여 마찰력을 구한다.
-	단위 벡터에 마찰력을 곱하여 감 속 벡터를 구한다. 
-	속도 벡터에 감속 벡터를 더하여 속도 벡터를 줄인다.
-	마찰력이 속력보다 크면 속력은 0이 될 것이다.*/
 	fLength = Vector3::Length(m_xmf3Velocity);
 	float fDeceleration = (m_fFriction * fTimeElapsed);
 	if (fDeceleration > fLength) fDeceleration = fLength;
@@ -381,31 +375,41 @@ void Player::Render(ID3D12GraphicsCommandList * pd3dCommandList, Camera * pCamer
 		GameObject::Render(pd3dCommandList, pCamera); 
 }
 
-TankPlayer::TankPlayer(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, ID3D12RootSignature* pd3dGraphicsRootSignature) {
+TankPlayer::TankPlayer(ID3D12Device * pd3dDevice, ID3D12GraphicsCommandList * pd3dCommandList, ID3D12RootSignature * pd3dGraphicsRootSignature , void* pContext){
+	
 
-
-	Mesh* pAirplaneMesh = new CTankMesh(pd3dDevice, pd3dCommandList, 5.0f, 3.0f, 5.0f, XMFLOAT4(0.0f, 0.5f, 0.0f, 0.0f));
+	Mesh *pAirplaneMesh = new CTankMesh(pd3dDevice, pd3dCommandList, 5.0f, 3.0f, 5.0f, XMFLOAT4(0.0f, 0.5f, 0.0f, 0.0f));
 	SetMesh(pAirplaneMesh);
-
+	
 
 	m_pCamera = ChangeCamera(SPACESHIP_CAMERA, 0.0f);
+	CHeightMapTerrain* pTerrain = (CHeightMapTerrain*)pContext;
 
+	/*플레이어의 위치를 지형의 가운데(y-축 좌표는 지형의 높이보다 1500 높게)로 설정한다.
+	플레이어 위치 벡터의 y좌표가 지형의 높이보다 크고 중력이 작용하도록 플레이어를 설정하였으므로
+	플레이어는 점차적으로 하강하게 된다.*/
+	float fHeight = pTerrain->GetHeight(pTerrain->GetWidth() * 0.5f, pTerrain->GetLength() * 0.5f);
+	SetPosition(XMFLOAT3(pTerrain->GetWidth() * 0.5f, fHeight + 1500.0f, pTerrain->GetLength() * 0.5f));
+
+	//플레이어의 위치가 변경될 때 지형의 정보에 따라 플레이어의 위치를 변경할 수 있도록 설정한다.
+	SetPlayerUpdatedContext(pTerrain);
+
+	//카메라의 위치가 변경될 때 지형의 정보에 따라 카메라의 위치를 변경할 수 있도록 설정한다.
+	SetCameraUpdatedContext(pTerrain);
 
 	CreateShaderVariables(pd3dDevice, pd3dCommandList);
 
 
-	SetPosition(XMFLOAT3(0.0f, 0.0f, -50.0f));
 
-
-	PlayerShader* pShader = new PlayerShader();
+	PlayerShader *pShader = new PlayerShader();
 	pShader->CreateShader(pd3dDevice, pd3dGraphicsRootSignature);
 
 
 	pShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
 
-	SetShader(pShader);
+	SetShader(pShader); 
 
-}
+	}
 TankPlayer::~TankPlayer(){
 
 }
@@ -533,6 +537,71 @@ void TankPlayer::FireBullet(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList*
 
 
 
+void TankPlayer::OnPlayerUpdateCallback(float fTimeElapsed)
+{
+
+	XMFLOAT3 xmf3PlayerPosition = GetPosition();
+	CHeightMapTerrain* pTerrain = (CHeightMapTerrain*)m_pPlayerUpdatedContext;
+	/*지형에서 플레이어의 현재 위치 (x, z)의 지형 높이(y)를 구한다. 그리고 플레이어 메쉬의 높이가 12이고 플레이어의
+   중심이 직육면체의 가운데이므로 y 값에 메쉬의 높이의 절반을 더하면 플레이어의 위치가 된다.*/
+	float fHeight = pTerrain->GetHeight(xmf3PlayerPosition.x, xmf3PlayerPosition.z) +
+		6.0f;
+	/*플레이어의 위치 벡터의 y-값이 음수이면(예를 들어, 중력이 적용되는 경우) 플레이어의 위치 벡터의 y-값이 점점
+   작아지게 된다. 이때 플레이어의 현재 위치 벡터의 y 값이 지형의 높이(실제로 지형의 높이 + 6)보다 작으면 플레이어
+   의 일부가 지형 아래에 있게 된다. 이러한 경우를 방지하려면 플레이어의 속도 벡터의 y 값을 0으로 만들고 플레이어
+   의 위치 벡터의 y-값을 지형의 높이(실제로 지형의 높이 + 6)로 설정한다. 그러면 플레이어는 항상 지형 위에 있게 된
+   다.*/
+	if (xmf3PlayerPosition.y < fHeight)
+	{
+		XMFLOAT3 xmf3PlayerVelocity = GetVelocity();
+		xmf3PlayerVelocity.y = 0.0f;
+		SetVelocity(xmf3PlayerVelocity);
+		xmf3PlayerPosition.y = fHeight;
+		SetPosition(xmf3PlayerPosition);
+	}
+	else
+	{
+		// 지형 위에 있지 않을 경우(공중에 있을 경우) 중력이 적용되도록 한다.
+		SetGravity(XMFLOAT3(0.0f, -20.0f, 0.0f));
+	}
+}
+
+void TankPlayer::OnCameraUpdateCallback(float fTimeElapsed)
+{
+	XMFLOAT3 xmf3PlayerPosition = GetPosition();
+	CHeightMapTerrain* pTerrain = (CHeightMapTerrain*)m_pPlayerUpdatedContext;
+
+	// 맵의 경계값을 구함
+	float minX = 0.0f;
+	float maxX = (float)pTerrain->GetWidth() - 1.0f;
+	float minZ = 0.0f;
+	float maxZ = (float)pTerrain->GetLength() - 1.0f;
+
+	// x, z 좌표가 맵 밖으로 나가지 않도록 클램프
+	if (xmf3PlayerPosition.x < minX) xmf3PlayerPosition.x = minX;
+	if (xmf3PlayerPosition.x > maxX) xmf3PlayerPosition.x = maxX;
+	if (xmf3PlayerPosition.z < minZ) xmf3PlayerPosition.z = minZ;
+	if (xmf3PlayerPosition.z > maxZ) xmf3PlayerPosition.z = maxZ;
+
+	// 지형에서 플레이어의 현재 위치 (x, z)의 지형 높이(y)를 구한다.
+	float fHeight = pTerrain->GetHeight(xmf3PlayerPosition.x, xmf3PlayerPosition.z) + 6.0f;
+
+	// y축 처리
+	if (xmf3PlayerPosition.y < fHeight)
+	{
+		XMFLOAT3 xmf3PlayerVelocity = GetVelocity();
+		xmf3PlayerVelocity.y = 0.0f;
+		SetVelocity(xmf3PlayerVelocity);
+		xmf3PlayerPosition.y = fHeight;
+		SetPosition(xmf3PlayerPosition);
+	}
+	else
+	{
+		// 지형 위에 있지 않을 경우(공중에 있을 경우) 중력이 적용되도록 한다.
+		SetGravity(XMFLOAT3(0.0f, -100.0f, 0.0f));
+		SetPosition(xmf3PlayerPosition); // x, z 경계 반영
+	}
+}
 
 
 
